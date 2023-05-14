@@ -1,22 +1,22 @@
-package LabVisuals;
+package LabForms;
 
-import LabLogic.Map;
+import LabVisuals.BallDrawer;
 
 import javax.swing.*;
 import java.awt.*;
 
-public class VisualMap extends JPanel {
+public class MapForm extends JPanel {
     private final LabLogic.Map map;
-    public VisualMap(LabLogic.Map inMap) {
+    public MapForm(LabLogic.Map inMap) {
         map = inMap;
     }
-    public Map GetMap() { return map.clone(); }
     @Override
     public void paintComponent(Graphics g){
         super.paintComponent(g);
         Graphics2D g2 = (Graphics2D)g;
-        for(Ballwww b : ) {
-            b.Draw(g2);
+        for(LabLogic.Ball b : map.GetBalls()) {
+            BallDrawer.Draw(g2, b);
         }
+        repaint();;
     }
 }

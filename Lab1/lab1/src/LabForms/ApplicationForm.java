@@ -1,18 +1,18 @@
-import LabVisuals.VisualMap;
+package LabForms;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class BounceFrame extends JFrame {
-    private VisualMap canvas;
+public class ApplicationForm extends JFrame {
+    private MapForm canvas;
     public static final int WIDTH = 450;
     public static final int HEIGHT = 350;
-    public BounceFrame() {
+    public ApplicationForm() {
         this.setSize(WIDTH, HEIGHT);
         this.setTitle("Bounce programm");
-        this.canvas = new VisualMap();
+        this.canvas = new MapForm();
         System.out.println("In Frame Thread name = " + Thread.currentThread().getName());
         Container content = this.getContentPane();
         content.add(this.canvas, BorderLayout.CENTER);

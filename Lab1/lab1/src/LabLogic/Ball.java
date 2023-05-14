@@ -51,7 +51,7 @@ public class Ball {
         location.SetY(resY.GetX());
         velocity.SetY(resY.GetY());
     }
-    private Point GetBounceResult(int inAx, int inVelocity, int inSize, int inMaxAx) {
+    private Point GetBounceResult(double inAx, double inVelocity, double inSize, double inMaxAx) {
         var res = new Point();
         if(inAx < 0) {
             res.SetX(0);
