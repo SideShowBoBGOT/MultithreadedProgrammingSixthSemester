@@ -1,43 +1,47 @@
 package LabForms;
 
+import LabLogic.Ball;
+import LabThreads.BallThread;
+
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 public class ApplicationForm extends JFrame {
-    private MapForm canvas;
-    public static final int WIDTH = 450;
-    public static final int HEIGHT = 350;
-    public ApplicationForm() {
-        this.setSize(WIDTH, HEIGHT);
-        this.setTitle("Bounce programm");
-        this.canvas = new MapForm();
-        System.out.println("In Frame Thread name = " + Thread.currentThread().getName());
+    private static final String Title = "Bounce program";
+    private static final String ButtonStartText = "Start";
+    private static final String ButtonStopText = "Stop";
+    private static final String InFrameThreadName = "In Frame thread name = ";
+    private final MapForm mapForm;
+
+    public ApplicationForm(int width, int height) {
+        this.setSize(width, height);
+        this.setTitle(Title);
+        this.mapForm = new MapForm(new LabLogic.Map(new Point(width, height)));
+        SetUpLayout();
+        System.out.println(InFrameThreadName + Thread.currentThread().getName());
+    }
+
+    private void SetUpLayout() {
         Container content = this.getContentPane();
-        content.add(this.canvas, BorderLayout.CENTER);
+        content.add(this.mapForm, BorderLayout.CENTER);
         JPanel buttonPanel = new JPanel();
         buttonPanel.setBackground(Color.lightGray);
-        JButton buttonStart = new JButton("Start");
-        JButton buttonStop = new JButton("Stop");
-        buttonStart.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                Ballwww b = new Ballwww(canvas);
-                canvas.add(b);
-                BallThread thread = new BallThread(b);
-                thread.start();
-                System.out.println("Thread name = " + thread.getName());
-            }
-        });
-        buttonStop.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                System.exit(0);
-            }
-        });
+        var buttonStart = new JButton(ButtonStartText);
+        var buttonStop = new JButton(ButtonStopText);
+        buttonStart.addActionListener(e -> OnButtonStart());
+        buttonStop.addActionListener(e -> OnButtonStop());
         buttonPanel.add(buttonStart);
         buttonPanel.add(buttonStop);
         content.add(buttonPanel, BorderLayout.SOUTH);
+    }
+
+    private void OnButtonStart() {
+        var ball = new Ball(mapForm.map);
+        BallThread thread = new BallThread(ball);
+        thread.start();
+    }
+
+    private void OnButtonStop() {
+        System.exit(0);
     }
 }

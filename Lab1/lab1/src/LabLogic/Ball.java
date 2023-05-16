@@ -1,64 +1,80 @@
 package LabLogic;
 
+import java.awt.Point;
+
 public class Ball {
     private static final double MinDistance = 1;
     private Point location = new Point();
     private Point velocity = new Point();
     private Point size = new Point();
     private Color color = Color.Blue;
-    private Map map;
-    public Ball(Map map) { this.map = map; }
-    public void SetLocation(Point inLocation) { location = inLocation.clone(); }
-    public Point GetLocation() { return location.clone(); }
-    public void SetSize(Point inSize) { size = inSize.clone(); }
-    public Point GetSize() { return size.clone(); }
-    public void SetVelocity(Point inVelocity) { velocity = inVelocity.clone(); }
-    public Point GetVelocity() { return velocity.clone(); }
-    public Color GetColor() { return color; }
-    public void SetColor(Color inColor) { color = inColor; }
-    public Point GetCenterLocation() {
+    public final Map map;
+
+    public Ball(Map map) {
+        this.map = map;
+        map.addBall(this);
+    }
+
+    public void setLocation(Point inLocation) { location = (Point) inLocation.clone(); }
+
+    public Point getLocation() { return (Point) location.clone(); }
+
+    public void setSize(Point inSize) { size = (Point) inSize.clone(); }
+
+    public Point getSize() { return (Point) size.clone(); }
+
+    public void setVelocity(Point inVelocity) { velocity = (Point) inVelocity.clone(); }
+
+    public Point getVelocity() { return (Point) velocity.clone(); }
+
+    public Color getColor() { return color; }
+
+    public void setColor(Color inColor) { color = inColor; }
+
+    public Point getCenterLocation() {
         var center = new Point();
-        center.SetX(location.GetX() + size.GetX() / 2);
-        center.SetY(location.GetY() + size.GetY() / 2);
+        center.setLocation(location.x + size.x / 2, location.y + size.y / 2);
         return center;
     }
-    public void Tick() {
-        location.Add(velocity);
-        BounceMap();
-        BounceAnyBalls();
+
+    public void tick() {
+        location.move(velocity.x, velocity.y);
+        bounceMap();
+        bounceAnyBalls();
     }
-    private void BounceAnyBalls() {
-        var center = GetCenterLocation();
-        for(Ball b : map.GetBalls()) {
+
+    private void bounceAnyBalls() {
+        var center = getCenterLocation();
+        for(Ball b : map.getBalls()) {
             if(b==this) continue;
-            var otherCenter = b.GetCenterLocation();
-            var distance = Point.DistanceBetween(center, otherCenter);
+            var otherCenter = b.getCenterLocation();
+            var distance = center.distance(otherCenter);
             if(distance < MinDistance) {
-                BounceBall();
+                bounceBall();
             }
         }
     }
-    private void BounceBall() {
-        velocity.SetX(-velocity.GetX());
-        velocity.SetY(-velocity.GetY());
+
+    private void bounceBall() {
+        velocity.setLocation(-velocity.x, -velocity.y);
     }
-    private void BounceMap() {
-        var mapSize = map.GetSize();
-        var resX = GetBounceResult(location.GetX(), velocity.GetX(), size.GetX(), mapSize.GetX());
-        var resY = GetBounceResult(location.GetY(), velocity.GetY(), size.GetY(), mapSize.GetY());
-        location.SetX(resX.GetX());
-        velocity.SetX(resX.GetY());
-        location.SetY(resY.GetX());
-        velocity.SetY(resY.GetY());
+
+    private void bounceMap() {
+        var mapSize = map.getSize();
+        var resX = getBounceResult(location.x, velocity.x, size.x, mapSize.x);
+        var resY = getBounceResult(location.y, velocity.y, size.y, mapSize.y);
+        location.setLocation(resX.x, resY.x);
+        velocity.setLocation(resX.y, resY.y);
     }
-    private Point GetBounceResult(double inAx, double inVelocity, double inSize, double inMaxAx) {
+
+    private Point getBounceResult(double inAx, double inVelocity, double inSize, double inMaxAx) {
         var res = new Point();
         if(inAx < 0) {
-            res.SetX(0);
+            res.x = 0;
         } else if(inAx + inSize >= inMaxAx) {
-            res.SetX(inMaxAx - inSize);
+            res.x = (int)(inMaxAx - inSize);
         }
-        res.SetY(-inVelocity);
+        res.y = (int)(-inVelocity);
         return res;
     }
 }
