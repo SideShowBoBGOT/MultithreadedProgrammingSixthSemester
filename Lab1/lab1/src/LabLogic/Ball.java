@@ -4,26 +4,37 @@ import java.awt.Point;
 
 public class Ball {
     private static final double MinDistance = 1;
+    private static final String AssertionErrorNotPositiveMessage = "Value is not positive";
+
     private Point location = new Point();
     private Point velocity = new Point();
-    private Point size = new Point();
+    private int radius = 0;
     private Color color = Color.Blue;
-    public final Map map;
+    public final BallMap ballMap;
 
-    public Ball(Map map) {
-        this.map = map;
-        map.addBall(this);
+    public Ball(BallMap ballMap) {
+        this.ballMap = ballMap;
+        ballMap.addBall(this);
     }
 
-    public void setLocation(Point inLocation) { location = (Point) inLocation.clone(); }
+    public void setLocation(Point inLocation) {
+        assert inLocation.x >= 0 && inLocation.y >= 0 : AssertionErrorNotPositiveMessage;
+        location = (Point) inLocation.clone();
+    }
 
     public Point getLocation() { return (Point) location.clone(); }
 
-    public void setSize(Point inSize) { size = (Point) inSize.clone(); }
+    public void setRadius(int inRadius) {
+        assert inRadius >= 0 : AssertionErrorNotPositiveMessage;
+        radius = inRadius;
+    }
 
-    public Point getSize() { return (Point) size.clone(); }
+    public int getRadius() { return radius; }
 
-    public void setVelocity(Point inVelocity) { velocity = (Point) inVelocity.clone(); }
+    public void setVelocity(Point inVelocity) {
+        assert inVelocity.x >= 0 && inVelocity.y >= 0 : AssertionErrorNotPositiveMessage;
+        velocity = (Point) inVelocity.clone();
+    }
 
     public Point getVelocity() { return (Point) velocity.clone(); }
 
@@ -33,7 +44,7 @@ public class Ball {
 
     public Point getCenterLocation() {
         var center = new Point();
-        center.setLocation(location.x + size.x / 2, location.y + size.y / 2);
+        center.setLocation(location.x + radius, location.y + radius);
         return center;
     }
 
@@ -45,7 +56,7 @@ public class Ball {
 
     private void bounceAnyBalls() {
         var center = getCenterLocation();
-        for(Ball b : map.getBalls()) {
+        for(Ball b : ballMap.getBalls()) {
             if(b==this) continue;
             var otherCenter = b.getCenterLocation();
             var distance = center.distance(otherCenter);
@@ -60,19 +71,19 @@ public class Ball {
     }
 
     private void bounceMap() {
-        var mapSize = map.getSize();
-        var resX = getBounceResult(location.x, velocity.x, size.x, mapSize.x);
-        var resY = getBounceResult(location.y, velocity.y, size.y, mapSize.y);
+        var mapSize = ballMap.getSize();
+        var resX = getBounceResult(location.x, velocity.x, mapSize.x);
+        var resY = getBounceResult(location.y, velocity.y, mapSize.y);
         location.setLocation(resX.x, resY.x);
         velocity.setLocation(resX.y, resY.y);
     }
 
-    private Point getBounceResult(double inAx, double inVelocity, double inSize, double inMaxAx) {
+    private Point getBounceResult(double inAx, double inVelocity, double inMaxAx) {
         var res = new Point();
         if(inAx < 0) {
             res.x = 0;
-        } else if(inAx + inSize >= inMaxAx) {
-            res.x = (int)(inMaxAx - inSize);
+        } else if(inAx + radius >= inMaxAx) {
+            res.x = (int)(inMaxAx - radius);
         }
         res.y = (int)(-inVelocity);
         return res;

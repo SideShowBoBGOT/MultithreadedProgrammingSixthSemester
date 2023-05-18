@@ -3,11 +3,11 @@ package LabLogic;
 import java.util.ArrayList;
 import java.awt.Point;
 
-public class Map implements Cloneable {
+public class BallMap implements Cloneable {
     private Point size = new Point();
     private ArrayList<Ball> balls = new ArrayList<>();
 
-    public Map(Point inSize) {
+    public BallMap(Point inSize) {
         size = (Point) inSize.clone();
     }
     public Point getSize() { return (Point) size.clone(); }
@@ -15,9 +15,9 @@ public class Map implements Cloneable {
     public void addBall(Ball ball) { balls.add(ball); }
     public void removeBall(Ball ball) { balls.remove(ball); }
     @Override
-    public Map clone() {
+    public BallMap clone() {
         try {
-            return (Map) super.clone();
+            return (BallMap) super.clone();
         } catch(CloneNotSupportedException e) {
             throw new AssertionError();
         }
