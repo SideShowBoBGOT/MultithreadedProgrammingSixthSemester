@@ -6,15 +6,6 @@ import java.util.HashMap;
 
 public class BallThread extends Thread {
 
-    private static final String THREAD_ID_LOG = "ThreadID";
-    private static final String LOCATION_LOG = "Location";
-    private static final String VELOCITY_LOG = "Velocity";
-    private static final String COLOR_LOG = "Color";
-
-    private final HashMap<String, Object> logHash = new HashMap<>();
-    private String logString = "";
-    private final StringBuilder stringBuilder = new StringBuilder(4);
-    private final MapObject mapObject;
 
     public BallThread(MapObject inMapObject) {
         mapObject = inMapObject;
