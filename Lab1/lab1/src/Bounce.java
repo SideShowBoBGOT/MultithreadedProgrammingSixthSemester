@@ -1,4 +1,4 @@
-import LabForms.ApplicationForm;
+import Controllers.ApplicationForm;
 
 import javax.swing.*;
 

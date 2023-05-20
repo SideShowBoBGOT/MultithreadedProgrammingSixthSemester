@@ -1,18 +1,19 @@
-package LabLogic;
+package Models;
 
 import LabMath.Vector2D;
 
-public class Ball {
+public class MapObject {
     private static final double MinDistance = 1;
     private static final String AssertionErrorNotPositiveMessage = "Value is not positive";
 
     private final Vector2D location = new Vector2D();
     private final Vector2D velocity = new Vector2D();
     private int radius = 0;
-    private BallColor ballColor = BallColor.Blue;
+    private ObjectColor color = ObjectColor.Blue;
+    private ObjectType type = ObjectType.Ball;
 
-    public Ball() {
-        BallMap.getInstance().addBall(this);
+    public MapObject() {
+        MainMap.getInstance().addMapObject(this);
     }
 
     public void setLocation(Vector2D inLocation) {
@@ -42,9 +43,13 @@ public class Ball {
 
     public Vector2D getVelocity() { return (Vector2D) velocity.clone(); }
 
-    public BallColor getColor() { return ballColor; }
+    public ObjectColor getColor() { return color; }
 
-    public void setColor(BallColor inBallColor) { ballColor = inBallColor; }
+    public void setColor(ObjectColor inObjectColor) { color = inObjectColor; }
+
+    public ObjectType getType() { return type; }
+
+    public void setType(ObjectType inType) { type = inType; }
 
     public Vector2D getCenterLocation() {
         var center = new Vector2D();
@@ -54,13 +59,13 @@ public class Ball {
 
     public void tick() {
         location.add(velocity);
-        bounceMap();
-        bounceAnyBalls();
+       // bounceMap();
+        //bounceAnyBalls();
     }
 
     private void bounceAnyBalls() {
         var center = getCenterLocation();
-        for(Ball b : BallMap.getInstance().getBalls()) {
+        for(MapObject b : MainMap.getInstance().getBalls()) {
             if(b==this) continue;
             var otherCenter = b.getCenterLocation();
             var distance = center.getDistance(otherCenter);
@@ -75,7 +80,7 @@ public class Ball {
     }
 
     private void bounceMap() {
-        var mapSize = BallMap.getInstance().getSize();
+        var mapSize = MainMap.getInstance().getSize();
         var resX = getBounceResult(
                 location.getX(), velocity.getX(), mapSize.getX());
         var resY = getBounceResult(
