@@ -1,5 +1,7 @@
 package Models;
 
+import LabMath.Vector2D;
+
 import java.util.Random;
 
 public class MapObjectFactory {
@@ -34,6 +36,7 @@ public class MapObjectFactory {
         checkParams();
         var mapObject = new MapObject();
         mapObject.setType(ObjectType.Hole);
+        mapObject.setColor(ObjectColor.Black);
         updateRadius(mapObject);
         return mapObject;
     }
@@ -42,6 +45,7 @@ public class MapObjectFactory {
         checkParams();
         var mapObject = new MapObject();
         mapObject.setType(ObjectType.Ball);
+        mapObject.setColor(color);
         updateRadius(mapObject);
         updateLocation(mapObject, creationType);
         updateVelocity(mapObject, creationType);
@@ -64,6 +68,17 @@ public class MapObjectFactory {
     }
 
     private void updateLocation(MapObject mapObject, BallCreationType creationType) {
+        switch(creationType) {
+            case Straight -> updateLocationStraight(mapObject);
+            case Randomized -> updateLocationRandomized(mapObject);
+        }
+    }
+
+    private void updateLocationStraight(MapObject mapObject) {
+        mapObject.setLocation(0, 0);
+    }
+
+    private void updateLocationRandomized(MapObject mapObject) {
         var mapSize = MainMap.getInstance().getSize();
         var ballRadius = mapObject.getRadius();
 
@@ -73,15 +88,23 @@ public class MapObjectFactory {
         mapObject.setLocation(x, y);
     }
 
-    private void updateLocationStraight(MapObject mapObject) {
-
-    }
-
-    private void updateLocationRandom(MapObject mapObject) {
-
-    }
-
     private void updateVelocity(MapObject mapObject, BallCreationType creationType) {
+        switch(creationType) {
+            case Straight -> updateVelocityStraight(mapObject);
+            case Randomized -> updateVelocityRandomized(mapObject);
+        }
+    }
+
+    private void updateVelocityStraight(MapObject mapObject) {
+        var mapSize = MainMap.getInstance().getSize();
+
+        var minValX = mapSize.getX() * params.minVelocityPercentage;
+        var minValY = mapSize.getY() * params.minVelocityPercentage;
+
+        mapObject.setVelocity(minValX, minValY);
+    }
+
+    private void updateVelocityRandomized(MapObject mapObject) {
         var mapSize = MainMap.getInstance().getSize();
 
         var minValX = mapSize.getX() * params.minVelocityPercentage;

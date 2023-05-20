@@ -1,10 +1,8 @@
 package Controllers;
 
-import Models.MapObjectFactory;
-import Models.MainMap;
+import LabMath.Vector2D;
+import Models.*;
 import LabThreads.BallThread;
-import Models.MapObject;
-import Models.ObjectType;
 
 import javax.swing.*;
 import java.awt.*;
@@ -19,10 +17,9 @@ public class ApplicationForm extends JFrame {
     private static final String RANDOM_TEXT = "Random";
     private static final String ENDED_THREADS_TEXT = "Ended threads: ";
     private static final String ENDED_THREADS_COUNTER_TEXT = "0";
+    private static final String IN_FRAME_THREAD_NAME = "In Frame thread name = ";
 
     private static final int HOLES_COUNT = 4;
-
-    private static final String IN_FRAME_THREAD_NAME = "In Frame thread name = ";
 
     private static final double MIN_VELOCITY_PERCENTAGE = 0.01;
     private static final double MAX_VELOCITY_PERCENTAGE = 0.04;
