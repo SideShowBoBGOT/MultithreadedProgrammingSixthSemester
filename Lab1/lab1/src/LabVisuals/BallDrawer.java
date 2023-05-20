@@ -1,7 +1,7 @@
 package LabVisuals;
 
 import LabLogic.Ball;
-
+import LabLogic.BallFactory;
 import java.awt.*;
 import java.awt.geom.Ellipse2D;
 
@@ -10,8 +10,8 @@ public class BallDrawer {
     public static void draw(Graphics2D g, Ball ball) {
         g.setColor(determineColor(ball));
         var loc = ball.getLocation();
-        var size = ball.getSize();
-        g.fill(new Ellipse2D.Double(loc.x, loc.y, size.x, size.y));
+        var radius = ball.getRadius();
+        g.fill(new Ellipse2D.Double(loc.getX(), loc.getY(), radius, radius));
     }
     private static Color determineColor(Ball ball) {
         return switch(ball.getColor()) {

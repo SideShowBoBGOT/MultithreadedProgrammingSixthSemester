@@ -1,28 +1,29 @@
 package LabLogic;
 
-import java.awt.Point;
+import LabMath.Vector2D;
 
 public class Ball {
     private static final double MinDistance = 1;
     private static final String AssertionErrorNotPositiveMessage = "Value is not positive";
 
-    private Point location = new Point();
-    private Point velocity = new Point();
+    private final Vector2D location = new Vector2D();
+    private final Vector2D velocity = new Vector2D();
     private int radius = 0;
-    private Color color = Color.Blue;
-    public final BallMap ballMap;
+    private BallColor ballColor = BallColor.Blue;
 
-    public Ball(BallMap ballMap) {
-        this.ballMap = ballMap;
-        ballMap.addBall(this);
+    public Ball() {
+        BallMap.getInstance().addBall(this);
     }
 
-    public void setLocation(Point inLocation) {
-        assert inLocation.x >= 0 && inLocation.y >= 0 : AssertionErrorNotPositiveMessage;
-        location = (Point) inLocation.clone();
+    public void setLocation(Vector2D inLocation) {
+        location.set(inLocation);
     }
 
-    public Point getLocation() { return (Point) location.clone(); }
+    public void setLocation(double x, double y) {
+        location.set(x, y);
+    }
+
+    public Vector2D getLocation() { return location.clone(); }
 
     public void setRadius(int inRadius) {
         assert inRadius >= 0 : AssertionErrorNotPositiveMessage;
@@ -31,35 +32,38 @@ public class Ball {
 
     public int getRadius() { return radius; }
 
-    public void setVelocity(Point inVelocity) {
-        assert inVelocity.x >= 0 && inVelocity.y >= 0 : AssertionErrorNotPositiveMessage;
-        velocity = (Point) inVelocity.clone();
+    public void setVelocity(Vector2D inVelocity) {
+        velocity.set(inVelocity);
     }
 
-    public Point getVelocity() { return (Point) velocity.clone(); }
+    public void setVelocity(double x, double y) {
+        velocity.set(x, y);
+    }
 
-    public Color getColor() { return color; }
+    public Vector2D getVelocity() { return (Vector2D) velocity.clone(); }
 
-    public void setColor(Color inColor) { color = inColor; }
+    public BallColor getColor() { return ballColor; }
 
-    public Point getCenterLocation() {
-        var center = new Point();
-        center.setLocation(location.x + radius, location.y + radius);
+    public void setColor(BallColor inBallColor) { ballColor = inBallColor; }
+
+    public Vector2D getCenterLocation() {
+        var center = new Vector2D();
+        center.set(location.getX() + radius, location.getY() + radius);
         return center;
     }
 
     public void tick() {
-        location.move(velocity.x, velocity.y);
+        location.add(velocity);
         bounceMap();
         bounceAnyBalls();
     }
 
     private void bounceAnyBalls() {
         var center = getCenterLocation();
-        for(Ball b : ballMap.getBalls()) {
+        for(Ball b : BallMap.getInstance().getBalls()) {
             if(b==this) continue;
             var otherCenter = b.getCenterLocation();
-            var distance = center.distance(otherCenter);
+            var distance = center.getDistance(otherCenter);
             if(distance < MinDistance) {
                 bounceBall();
             }
@@ -67,25 +71,27 @@ public class Ball {
     }
 
     private void bounceBall() {
-        velocity.setLocation(-velocity.x, -velocity.y);
+        velocity.toOpposite();
     }
 
     private void bounceMap() {
-        var mapSize = ballMap.getSize();
-        var resX = getBounceResult(location.x, velocity.x, mapSize.x);
-        var resY = getBounceResult(location.y, velocity.y, mapSize.y);
-        location.setLocation(resX.x, resY.x);
-        velocity.setLocation(resX.y, resY.y);
+        var mapSize = BallMap.getInstance().getSize();
+        var resX = getBounceResult(
+                location.getX(), velocity.getX(), mapSize.getX());
+        var resY = getBounceResult(
+                location.getY(), velocity.getY(), mapSize.getY());
+        location.set(resX.getX(), resY.getX());
+        velocity.set(resX.getY(), resY.getY());
     }
 
-    private Point getBounceResult(double inAx, double inVelocity, double inMaxAx) {
-        var res = new Point();
+    private Vector2D getBounceResult(double inAx, double inVelocity, double inMaxAx) {
+        var res = new Vector2D();
         if(inAx < 0) {
-            res.x = 0;
+            res.setX(0);
         } else if(inAx + radius >= inMaxAx) {
-            res.x = (int)(inMaxAx - radius);
+            res.setX(inMaxAx - radius);
         }
-        res.y = (int)(-inVelocity);
+        res.setY(-inVelocity);
         return res;
     }
 }

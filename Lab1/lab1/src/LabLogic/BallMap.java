@@ -1,9 +1,10 @@
 package LabLogic;
 
 import java.util.ArrayList;
+
 import LabMath.Vector2D;
 
-public class BallMap implements Cloneable {
+public class BallMap {
     private final Vector2D size = new Vector2D();
     private final ArrayList<Ball> balls = new ArrayList<>();
     private static BallMap instance;
@@ -12,7 +13,7 @@ public class BallMap implements Cloneable {
 
     public static BallMap getInstance() {
         if(instance == null) {
-          instance = new BallMap();
+            instance = new BallMap();
         }
         return instance;
     }

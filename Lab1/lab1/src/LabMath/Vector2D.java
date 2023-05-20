@@ -1,12 +1,16 @@
-package LabMaths;
+package LabMath;
 
 public class Vector2D implements MathVector<Vector2D> {
-    private final ArgumentsVector vec = new ArgumentsVector();
-    private double x;
-    private double y;
+    private final ArgumentsVector vec = new ArgumentsVector(2);
+
+    public Vector2D() {}
 
     public Vector2D(double x, double y) {
-        vec.setArguments(new double[]{x, y});
+        set(x, y);
+    }
+
+    public Vector2D(Vector2D other) {
+        set(other);
     }
 
     public double getX() {
@@ -17,12 +21,31 @@ public class Vector2D implements MathVector<Vector2D> {
         return getAt(Coords.Y.ordinal());
     }
 
+    public void set(Vector2D other) {
+        vec.set(other.vec);
+    }
+
+    public void set(double x, double y) {
+        setX(x);
+        setY(y);
+    }
+
     public void setX(double value) {
         setAt(Coords.X.ordinal(), value);
     }
 
     public void setY(double value) {
         setAt(Coords.Y.ordinal(), value);
+    }
+
+    @Override
+    public Vector2D clone() {
+        return new Vector2D(getX(), getY());
+    }
+
+    @Override
+    public String toString() {
+        return vec.toString();
     }
 
     @Override
@@ -46,23 +69,23 @@ public class Vector2D implements MathVector<Vector2D> {
     }
 
     @Override
-    public double size() {
-        return vec.size();
+    public double getSize() {
+        return vec.getSize();
     }
 
     @Override
-    public double sizeSquared() {
-        return vec.sizeSquared();
+    public double getSizeSquared() {
+        return vec.getSizeSquared();
     }
 
     @Override
-    public double dotProduct(Vector2D other) {
-        return vec.dotProduct(other.vec);
+    public double getDotProduct(Vector2D other) {
+        return vec.getDotProduct(other.vec);
     }
 
     @Override
-    public double distance(Vector2D other) {
-        return vec.distance(other.vec);
+    public double getDistance(Vector2D other) {
+        return vec.getDistance(other.vec);
     }
 
     @Override
@@ -73,5 +96,17 @@ public class Vector2D implements MathVector<Vector2D> {
     @Override
     public void setAt(int index, double value) {
         vec.setAt(index, value);
+    }
+
+    @Override
+    public Vector2D getOpposite() {
+        var v = clone();
+        v.toOpposite();
+        return v;
+    }
+
+    @Override
+    public void toOpposite() {
+        vec.toOpposite();
     }
 }

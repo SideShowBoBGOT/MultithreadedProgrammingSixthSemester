@@ -1,6 +1,6 @@
 package LabLogic;
 
-public enum Color {
+public enum BallColor {
     Red,
     Blue,
     Green

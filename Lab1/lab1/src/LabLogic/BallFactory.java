@@ -1,6 +1,5 @@
 package LabLogic;
 
-import java.awt.*;
 import java.util.Random;
 
 public class BallFactory {
@@ -15,7 +14,6 @@ public class BallFactory {
         public double redColorPercentage = 0;
         public double blueColorPercentage = 0;
         public double greenColorPercentage = 0;
-        public BallMap ballMap;
 
         @Override
         public BallFactoryPrams clone() {
@@ -35,9 +33,9 @@ public class BallFactory {
         checkParams();
     }
 
-    public Ball createBall(BallMap ballMap) {
+    public Ball createBall() {
         checkParams();
-        var ball = new Ball(ballMap);
+        var ball = new Ball();
         updateBallRadius(ball);
         updateBallLocation(ball);
         updateBallVelocity(ball);
@@ -58,49 +56,49 @@ public class BallFactory {
     }
 
     private void updateBallRadius(Ball ball) {
-        var mapSize = ball.ballMap.getSize();
-        var magnitude = Math.sqrt(Math.pow(mapSize.x, 2) + Math.pow(mapSize.y, 2));
+        var mapSize = BallMap.getInstance().getSize();
+        var magnitude = Math.sqrt(Math.pow(mapSize.getX(), 2) + Math.pow(mapSize.getY(), 2));
         var radius = (int)(params.radiusPercentage * magnitude);
         ball.setRadius(radius);
     }
 
     private void updateBallLocation(Ball ball) {
-        var mapSize = ball.ballMap.getSize();
+        var mapSize = BallMap.getInstance().getSize();
         var ballRadius = ball.getRadius();
 
-        var x = random.nextInt(mapSize.x - ballRadius);
-        var y = random.nextInt(mapSize.y - ballRadius);
+        var x = random.nextDouble(mapSize.getX() - ballRadius);
+        var y = random.nextDouble(mapSize.getY() - ballRadius);
 
-        ball.setLocation(new Point(x, y));
+        ball.setLocation(x, y);
     }
 
     private void updateBallVelocity(Ball ball) {
-        var mapSize = ball.ballMap.getSize();
+        var mapSize = BallMap.getInstance().getSize();
 
-        var minValX = (int)(mapSize.x * params.minVelocityPercentage);
-        var maxValX = (int)(mapSize.x * params.maxVelocityPercentage);
-        var minValY = (int)(mapSize.y * params.minVelocityPercentage);
-        var maxValY = (int)(mapSize.y * params.maxVelocityPercentage);
+        var minValX = mapSize.getX() * params.minVelocityPercentage;
+        var maxValX = mapSize.getX() * params.maxVelocityPercentage;
+        var minValY = mapSize.getY() * params.minVelocityPercentage;
+        var maxValY = mapSize.getY() * params.maxVelocityPercentage;
 
-        var vX = minValX + random.nextInt(maxValX - minValX);
-        var vY = minValY + random.nextInt(maxValY - minValY);
+        var vX = minValX + random.nextDouble(maxValX - minValX);
+        var vY = minValY + random.nextDouble(maxValY - minValY);
 
-        ball.setVelocity(new Point(vX, vY));
+        ball.setVelocity(vX, vY);
     }
 
     private void updateBallColor(Ball ball) {
         var randomVal = random.nextDouble();
 
         if(randomVal < params.redColorPercentage) {
-            ball.setColor(Color.Red);
+            ball.setColor(BallColor.Red);
             return;
         }
 
         if(randomVal < (params.redColorPercentage + params.blueColorPercentage)) {
-            ball.setColor(Color.Blue);
+            ball.setColor(BallColor.Blue);
             return;
         }
 
-        ball.setColor(Color.Green);
+        ball.setColor(BallColor.Green);
     }
 }

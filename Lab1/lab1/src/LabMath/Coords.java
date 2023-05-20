@@ -1,4 +1,4 @@
-package LabMaths;
+package LabMath;
 
 public enum Coords {
     X,
