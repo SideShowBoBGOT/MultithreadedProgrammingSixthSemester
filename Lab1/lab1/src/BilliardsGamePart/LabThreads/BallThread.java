@@ -37,6 +37,7 @@ public class BallThread extends Thread {
     private void checkValid() throws InterruptedException {
         if(MainMap.getInstance().contains(mapObject)) return;
         support.firePropertyChange(STATE_PROPERTY, State.RUNNABLE, State.WAITING);
+        log.informEnded();
         join();
     }
 

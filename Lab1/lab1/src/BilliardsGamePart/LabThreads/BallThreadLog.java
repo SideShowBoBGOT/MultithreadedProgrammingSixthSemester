@@ -35,6 +35,10 @@ public class BallThreadLog {
         System.out.println(stringBuilder.toString());
     }
 
+    public void informEnded() {
+        System.out.println("[THREAD_ID_LOG: " + logHash.get(THREAD_ID_LOG) + "]\t[Status: ENDED]");
+    }
+
     private void update() {
         logHash.replace(LOCATION_LOG, mapObject.getLocation());
         logHash.replace(VELOCITY_LOG, mapObject.getVelocity());
