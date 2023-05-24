@@ -20,60 +20,60 @@ public class MapObject {
         MainMap.getInstance().addMapObject(this);
     }
 
-    public void setLocation(Vector2D inLocation) {
+    public synchronized void setLocation(Vector2D inLocation) {
         location.set(inLocation);
     }
 
-    public void setLocation(double x, double y) {
+    public synchronized void setLocation(double x, double y) {
         location.set(x, y);
     }
-    public void setLocationAt(Coords coords, double value) {
+    public synchronized void setLocationAt(Coords coords, double value) {
         location.setAt(coords.ordinal(), value);
     }
 
-    public Vector2D getLocation() { return location.clone(); }
-    public double getLocationAt(Coords coords) { return location.getAt(coords.ordinal()); }
+    public synchronized Vector2D getLocation() { return location.clone(); }
+    public synchronized double getLocationAt(Coords coords) { return location.getAt(coords.ordinal()); }
 
-    public void setDiam(int inRadius) {
+    public synchronized void setDiam(int inRadius) {
         assert inRadius >= 0 : AssertionErrorNotPositiveMessage;
         diam = inRadius;
     }
 
-    public double getDiam() { return diam; }
+    public synchronized double getDiam() { return diam; }
 
-    public void setVelocity(Vector2D inVelocity) {
+    public synchronized void setVelocity(Vector2D inVelocity) {
         velocity.set(inVelocity);
     }
 
-    public void setVelocity(double x, double y) {
+    public synchronized void setVelocity(double x, double y) {
         velocity.set(x, y);
     }
-    public void setVelocityAt(Coords coords, double value) {
+    public synchronized void setVelocityAt(Coords coords, double value) {
         velocity.setAt(coords.ordinal(), value);
     }
 
-    public Vector2D getVelocity() { return velocity.clone(); }
-    public double getVelocityAt(Coords coords) { return velocity.getAt(coords.ordinal()); }
+    public synchronized Vector2D getVelocity() { return velocity.clone(); }
+    public synchronized double getVelocityAt(Coords coords) { return velocity.getAt(coords.ordinal()); }
 
-    public ObjectColor getColor() { return color; }
+    public synchronized ObjectColor getColor() { return color; }
 
-    public void setColor(ObjectColor inObjectColor) { color = inObjectColor; }
+    public synchronized void setColor(ObjectColor inObjectColor) { color = inObjectColor; }
 
-    public ObjectType getType() { return type; }
+    public synchronized ObjectType getType() { return type; }
 
-    public void setType(ObjectType inType) { type = inType; }
+    public synchronized void setType(ObjectType inType) { type = inType; }
 
-    public ObjectBehaviour getBehaviour() { return behaviour; }
+    public synchronized ObjectBehaviour getBehaviour() { return behaviour; }
 
-    public void setBehaviour(ObjectBehaviour inBehaviour) { behaviour = inBehaviour; }
+    public synchronized void setBehaviour(ObjectBehaviour inBehaviour) { behaviour = inBehaviour; }
 
-    public Vector2D getCenterLocation() {
+    public synchronized Vector2D getCenterLocation() {
         var center = new Vector2D();
         center.set(location.getX() + diam, location.getY() + diam);
         return center;
     }
 
-    public void tick() {
+    public synchronized void tick() {
         location.add(velocity);
         if(isInsideHole()) {
             MainMap.getInstance().removeMapObject(this);
@@ -81,28 +81,28 @@ public class MapObject {
         bounceMap();
     }
 
-    private void bounceMap() {
+    private synchronized void bounceMap() {
         checkBounce(Coords.X);
         checkBounce(Coords.Y);
     }
 
-    private void rotateVelocityRandomly() {
+    private synchronized void rotateVelocityRandomly() {
         var forwardVec = velocity.getForwardVector();
         var deg = (new Random()).nextDouble(360);
         forwardVec.rotate(deg);
         forwardVec.multiply(velocity.getSize());
-        velocity.set(forwardVec);
+        setVelocity(forwardVec);
     }
 
-    private boolean isPointInside(Vector2D point) {
+    private synchronized boolean isPointInside(Vector2D point) {
         var dist = getCenterLocation().getDistance(point);
         var res = (dist - getDiam() / 2) < EPSILON;
         return res;
     }
 
-    private boolean isInsideHole() {
+    private synchronized boolean isInsideHole() {
         for(var obj : MainMap.getInstance().getBalls()) {
-            if(obj.getType().equals(ObjectType.Hole)) {
+            if(obj.type.equals(ObjectType.Hole)) {
                 var res = obj.isPointInside(getCenterLocation());
                 if(res) {
                     return true;
@@ -112,7 +112,7 @@ public class MapObject {
         return false;
     }
 
-    private void checkBounce(Coords coords) {
+    private synchronized void checkBounce(Coords coords) {
         var maxCoord = MainMap.getInstance().getSize().getAt(coords.ordinal());
         var curCoord = getLocationAt(coords);
         var isBounced = false;
