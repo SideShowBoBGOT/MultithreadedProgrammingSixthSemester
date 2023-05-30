@@ -84,19 +84,26 @@ public class GeneralMatrix implements MathMatrix<GeneralMatrix> {
     @Override
     public double getAt(int... indexes) {
         assert Arrays.stream(indexes).allMatch(e -> e >= 0) : ERROR_INDEXES;
-        var index = Arrays.stream(indexes).sum();
-        return this.mat.getAt(index);
+        return this.mat.getAt(this.calcIndex(indexes));
     }
 
     @Override
     public void setAt(double value, int... indexes) {
         assert Arrays.stream(indexes).allMatch(e -> e >= 0) : ERROR_INDEXES;
-        var index = Arrays.stream(indexes).sum();
-        this.mat.setAt(index, value);
+        this.mat.setAt(this.calcIndex(indexes), value);
     }
 
     @Override
     public void div(GeneralMatrix other) throws ExecutionControl.NotImplementedException {
         throw new ExecutionControl.NotImplementedException("");
+    }
+
+    @Override
+    public int calcIndex(int... indexes) {
+        var index = 0;
+        for(var i = 0; i < dimensions.length; ++i) {
+            index += indexes[i] * dimensions[i];
+        }
+        return index;
     }
 }

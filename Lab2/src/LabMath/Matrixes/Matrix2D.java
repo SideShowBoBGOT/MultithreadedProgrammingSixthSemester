@@ -43,12 +43,30 @@ public class Matrix2D implements MathMatrix<Matrix2D> {
 
     @Override
     public Matrix2D getMul(Matrix2D other) throws ExecutionControl.NotImplementedException {
-        var columns = this.mat.getDimensions()[Coords.X.ordinal()];
-        var rows = this.mat.getDimensions()[Coords.Y.ordinal()];
-        assert columns == rows : ERROR_MULTIPLICATION;
+        var dimensions = this.mat.getDimensions();
+        var otherDimensions = other.mat.getDimensions();
+
+        var cols = dimensions[Coords.X.ordinal()];
+        var otherRows = otherDimensions[Coords.Y.ordinal()];
+
+        assert cols == otherRows : ERROR_MULTIPLICATION;
+
+        var rows = dimensions[Coords.Y.ordinal()];
+        var otherCols = otherDimensions[Coords.X.ordinal()];
+
+        var result = new Matrix2D(rows, cols);
+
         for(var i = 0; i < rows; ++i) {
-            for(k)
+           for(var j = 0; j < otherCols; ++j) {
+               var value = 0;
+               for(var k = 0; k < cols; ++k) {
+                   value += this.mat.getAt(i, k) * other.mat.getAt(k, j);
+               }
+               result.setAt(value, i, j);
+           }
         }
+
+        return result;
     }
 
     @Override
@@ -63,7 +81,7 @@ public class Matrix2D implements MathMatrix<Matrix2D> {
 
     @Override
     public int[] getDimensions() {
-        return new int[0];
+        return this.mat.getDimensions();
     }
 
     @Override
@@ -74,5 +92,10 @@ public class Matrix2D implements MathMatrix<Matrix2D> {
     @Override
     public void setAt(double value, int... indexes) {
         this.mat.setAt(value, indexes);
+    }
+
+    @Override
+    public int calcIndex(int... indexes) {
+        return this.mat.calcIndex(indexes);
     }
 }

@@ -7,4 +7,5 @@ public interface MathMatrix<T> extends Cloneable, Addable<T>, Subtractable<T>, D
     int[] getDimensions();
     double getAt(int... indexes);
     void setAt(double value, int... indexes);
+    int calcIndex(int... indexes);
 }
