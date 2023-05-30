@@ -13,7 +13,7 @@ public class GeneralMatrix implements MathMatrix<GeneralMatrix> {
     private final int total;
     private final GeneralVector mat;
 
-    public GeneralMatrix(int[] dimensions) {
+    public GeneralMatrix(int... dimensions) {
         this.dimensions = dimensions.clone();
         this.total = Arrays.stream(dimensions).sum();
         this.mat = new GeneralVector(this.total);
