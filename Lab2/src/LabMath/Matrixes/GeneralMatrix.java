@@ -56,7 +56,7 @@ public class GeneralMatrix implements MathMatrix<GeneralMatrix> {
     }
 
     @Override
-    public void mul(GeneralMatrix other) throws ExecutionControl.NotImplementedException {
+    public GeneralMatrix getMul(GeneralMatrix other) throws ExecutionControl.NotImplementedException {
         throw new ExecutionControl.NotImplementedException("");
     }
 

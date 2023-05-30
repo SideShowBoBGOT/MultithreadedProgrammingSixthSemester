@@ -8,8 +8,8 @@ public class Vector2D implements MathVector<Vector2D> {
 
     public Vector2D() {}
 
-    public Vector2D(double x, double y) {
-        set(x, y);
+    public Vector2D(double y, double x) {
+        set(y, x);
     }
 
     public Vector2D(Vector2D other) {
@@ -28,7 +28,7 @@ public class Vector2D implements MathVector<Vector2D> {
         vec.set(other.vec);
     }
 
-    public void set(double x, double y) {
+    public void set(double y, double x) {
         setX(x);
         setY(y);
     }
@@ -43,7 +43,7 @@ public class Vector2D implements MathVector<Vector2D> {
 
     @Override
     public Vector2D clone() {
-        return new Vector2D(getX(), getY());
+        return new Vector2D(getY(), getX());
     }
 
     @Override
