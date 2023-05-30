@@ -2,10 +2,12 @@ package LabMath.Matrixes;
 
 import LabMath.Interfaces.MathMatrix;
 import LabMath.Vectors.GeneralVector;
+import jdk.jshell.spi.ExecutionControl;
 
 import java.util.Arrays;
 
 public class GeneralMatrix implements MathMatrix<GeneralMatrix> {
+    private static final String ERROR_DIMENSIONS = "Matrix dimensions not equal";
     private final int[] dimensions;
     private final int total;
     private final GeneralVector mat;
@@ -17,44 +19,44 @@ public class GeneralMatrix implements MathMatrix<GeneralMatrix> {
     }
 
     @Override
-    public double[] getMat() {
-        return this.mat;
-    }
-
-    @Override
     public void add(GeneralMatrix other) {
+        assert Arrays.equals(this.dimensions, other.dimensions) : ERROR_DIMENSIONS;
         for(var i = 0; i < total; ++i) {
-            this.mat[i] += other.mat[i];
+            this.mat.setAt(i, other.mat.getAt(i));
         }
     }
 
     @Override
     public void add(double value) {
         for(var i = 0; i < this.total; ++i) {
-            this.mat[i] += value;
+            this.mat.setAt(i, this.mat.getAt(i) + value);
         }
     }
 
     @Override
-    public void div(double other) {
+    public void div(double value) {
         for(var i = 0; i < this.total; ++i) {
-            this.mat[i] += other;
+            this.mat.setAt(i, this.mat.getAt(i) / value);
         }
     }
 
     @Override
-    public void mul(double other) {
-
+    public void mul(double value) {
+        for(var i = 0; i < this.total; ++i) {
+            this.mat.setAt(i, this.mat.getAt(i) * value);
+        }
     }
 
     @Override
-    public void sub(double other) {
-
+    public void sub(double value) {
+        for(var i = 0; i < this.total; ++i) {
+            this.mat.setAt(i, this.mat.getAt(i) - value);
+        }
     }
 
     @Override
-    public void mul(GeneralMatrix other) {
-
+    public void mul(GeneralMatrix other) throws ExecutionControl.NotImplementedException {
+        throw new ExecutionControl.NotImplementedException("");
     }
 
     @Override
@@ -64,21 +66,26 @@ public class GeneralMatrix implements MathMatrix<GeneralMatrix> {
 
     @Override
     public void sub(GeneralMatrix other) {
-
+        assert Arrays.equals(this.dimensions, other.dimensions) : ERROR_DIMENSIONS;
+        for(var i = 0; i < total; ++i) {
+            this.mat.setAt(i, other.mat.getAt(i) - other.mat.getAt(i));
+        }
     }
 
     @Override
     public int[] getDimensions() {
-        return new int[0];
+        return dimensions.clone();
     }
 
     @Override
-    public double getAt(int[] indexes) {
-        return 0;
+    public double getAt(int... indexes) {
+        var index = Arrays.stream(indexes).sum();
+        return this.mat.getAt(index);
     }
 
     @Override
-    public void setAt(int[] indexes, double value) {
-
+    public void setAt(double value, int... indexes) {
+        var index = Arrays.stream(indexes).sum();
+        this.mat.setAt(index, value);
     }
 }

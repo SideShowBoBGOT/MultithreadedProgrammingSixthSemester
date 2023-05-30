@@ -8,11 +8,11 @@ public class GeneralVector implements MathVector<GeneralVector> {
     private static final String ERROR_LENGTHS_NOT_EQUAL = "Lengths of points arguments are not equal";
     private double[] arguments;
 
-    GeneralVector(int length) {
+    public GeneralVector(int length) {
         setLength(length);
     }
 
-    GeneralVector(GeneralVector other) {
+    public GeneralVector(GeneralVector other) {
         setLength(other.getLength());
         set(other);
     }
