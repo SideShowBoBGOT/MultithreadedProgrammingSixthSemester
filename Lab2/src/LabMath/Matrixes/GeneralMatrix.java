@@ -7,6 +7,7 @@ import jdk.jshell.spi.ExecutionControl;
 import java.util.Arrays;
 
 public class GeneralMatrix implements MathMatrix<GeneralMatrix> {
+    private static final String ERROR_INDEXES = "Indexes are less than 0";
     private static final String ERROR_DIMENSIONS = "Matrix dimensions not equal";
     private final int[] dimensions;
     private final int total;
@@ -61,7 +62,10 @@ public class GeneralMatrix implements MathMatrix<GeneralMatrix> {
 
     @Override
     public void set(GeneralMatrix other) {
-
+        assert Arrays.equals(this.dimensions, other.dimensions) : ERROR_DIMENSIONS;
+        for(var i = 0; i < this.total; ++i) {
+            this.mat.setAt(i, this.mat.getAt(i));
+        }
     }
 
     @Override
@@ -79,13 +83,20 @@ public class GeneralMatrix implements MathMatrix<GeneralMatrix> {
 
     @Override
     public double getAt(int... indexes) {
+        assert Arrays.stream(indexes).allMatch(e -> e >= 0) : ERROR_INDEXES;
         var index = Arrays.stream(indexes).sum();
         return this.mat.getAt(index);
     }
 
     @Override
     public void setAt(double value, int... indexes) {
+        assert Arrays.stream(indexes).allMatch(e -> e >= 0) : ERROR_INDEXES;
         var index = Arrays.stream(indexes).sum();
         this.mat.setAt(index, value);
+    }
+
+    @Override
+    public void div(GeneralMatrix other) throws ExecutionControl.NotImplementedException {
+        throw new ExecutionControl.NotImplementedException("");
     }
 }
