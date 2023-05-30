@@ -4,9 +4,22 @@ import LabMath.Enums.Coords;
 import LabMath.Interfaces.MathMatrix;
 import jdk.jshell.spi.ExecutionControl;
 
+import java.util.Random;
+
 public class Matrix2D implements MathMatrix<Matrix2D> {
     private static final String ERROR_MULTIPLICATION = "Rows and columns are not equal";
     private final GeneralMatrix mat;
+
+    public static void main(String[] args) {
+        var one = new Matrix2D(3, 3);
+        var two = new Matrix2D(3, 3);
+        var random = new Random();
+        for(var i = 0; i < 3; ++i) {
+            for(var j = 0; j < 3; ++j) {
+                one.setAt(i, j, random.nextInt(10));
+            }
+        }
+    }
 
     public Matrix2D(int rows, int cols) {
         mat = new GeneralMatrix(rows, cols);
@@ -42,7 +55,7 @@ public class Matrix2D implements MathMatrix<Matrix2D> {
     }
 
     @Override
-    public Matrix2D getMul(Matrix2D other) throws ExecutionControl.NotImplementedException {
+    public Matrix2D getMul(Matrix2D other) {
         var dimensions = this.mat.getDimensions();
         var otherDimensions = other.mat.getDimensions();
 

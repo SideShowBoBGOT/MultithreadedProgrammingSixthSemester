@@ -20,6 +20,12 @@ public class GeneralMatrix implements MathMatrix<GeneralMatrix> {
     }
 
     @Override
+    public String toString() {
+        return "";
+    }
+
+
+    @Override
     public void add(GeneralMatrix other) {
         assert Arrays.equals(this.dimensions, other.dimensions) : ERROR_DIMENSIONS;
         for(var i = 0; i < total; ++i) {
