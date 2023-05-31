@@ -9,8 +9,4 @@ public class FoxAlgorithm {
         this.first = first;
         this.second = second;
     }
-
-    public GeneralMatrix solve() {
-
-    }
 }

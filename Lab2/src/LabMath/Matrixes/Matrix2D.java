@@ -8,22 +8,41 @@ import java.util.Random;
 
 public class Matrix2D implements MathMatrix<Matrix2D> {
     private static final String ERROR_MULTIPLICATION = "Rows and columns are not equal";
+    private final int rows;
+    private final int cols;
     private final GeneralMatrix mat;
 
-    public static void main(String[] args) {
-        var one = new Matrix2D(3, 3);
-        var two = new Matrix2D(3, 3);
-        var random = new Random();
-        for(var i = 0; i < 3; ++i) {
-            for(var j = 0; j < 3; ++j) {
-                one.setAt(i, j, random.nextInt(10));
+    public static void main(String[] args) {}
+
+    @Override
+    public String toString() {
+        var res = new StringBuilder();
+        var dimensions = getDimensions();
+        for(var i = 0; i < dimensions[0]; ++i) {
+            res.append("[");
+            for(var j = 0; j < dimensions[1] - 1; ++j) {
+                res.append(getAt(i, j)).append(", ");
             }
+            res.append(getAt(i, dimensions[1] - 1));
+            res.append("]\n");
         }
+        return res.toString();
     }
 
     public Matrix2D(int rows, int cols) {
         mat = new GeneralMatrix(rows, cols);
+        this.rows = rows;
+        this.cols = cols;
     }
+
+    public int getRows() {
+        return this.rows;
+    }
+
+    public int getCols() {
+        return this.cols;
+    }
+
     @Override
     public void add(Matrix2D other) {
         this.mat.add(other.mat);
@@ -56,21 +75,14 @@ public class Matrix2D implements MathMatrix<Matrix2D> {
 
     @Override
     public Matrix2D getMul(Matrix2D other) {
-        var dimensions = this.mat.getDimensions();
-        var otherDimensions = other.mat.getDimensions();
+        var cols = getCols();
 
-        var cols = dimensions[Coords.X.ordinal()];
-        var otherRows = otherDimensions[Coords.Y.ordinal()];
-
-        assert cols == otherRows : ERROR_MULTIPLICATION;
-
-        var rows = dimensions[Coords.Y.ordinal()];
-        var otherCols = otherDimensions[Coords.X.ordinal()];
+        assert cols == other.getRows() : ERROR_MULTIPLICATION;
 
         var result = new Matrix2D(rows, cols);
 
-        for(var i = 0; i < rows; ++i) {
-           for(var j = 0; j < otherCols; ++j) {
+        for(var i = 0; i < getRows(); ++i) {
+           for(var j = 0; j < other.getCols(); ++j) {
                var value = 0;
                for(var k = 0; k < cols; ++k) {
                    value += this.mat.getAt(i, k) * other.mat.getAt(k, j);

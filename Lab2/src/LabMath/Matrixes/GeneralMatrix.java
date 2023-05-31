@@ -9,21 +9,18 @@ import java.util.Arrays;
 public class GeneralMatrix implements MathMatrix<GeneralMatrix> {
     private static final String ERROR_INDEXES = "Indexes are less than 0";
     private static final String ERROR_DIMENSIONS = "Matrix dimensions not equal";
+    private static final String ERROR_DIMENSION_INDEXES = "Indexes length is not equal to amount of dimension";
     private final int[] dimensions;
     private final int total;
     private final GeneralVector mat;
 
     public GeneralMatrix(int... dimensions) {
         this.dimensions = dimensions.clone();
-        this.total = Arrays.stream(dimensions).sum();
+        var t = 1;
+        for(var d : dimensions) t *= d;
+        this.total = t;
         this.mat = new GeneralVector(this.total);
     }
-
-    @Override
-    public String toString() {
-        return "";
-    }
-
 
     @Override
     public void add(GeneralMatrix other) {
@@ -96,7 +93,8 @@ public class GeneralMatrix implements MathMatrix<GeneralMatrix> {
     @Override
     public void setAt(double value, int... indexes) {
         assert Arrays.stream(indexes).allMatch(e -> e >= 0) : ERROR_INDEXES;
-        this.mat.setAt(this.calcIndex(indexes), value);
+        var index = this.calcIndex(indexes);
+        this.mat.setAt(index, value);
     }
 
     @Override
@@ -106,9 +104,13 @@ public class GeneralMatrix implements MathMatrix<GeneralMatrix> {
 
     @Override
     public int calcIndex(int... indexes) {
+        assert indexes.length == dimensions.length : ERROR_DIMENSION_INDEXES;
         var index = 0;
-        for(var i = 0; i < dimensions.length; ++i) {
-            index += indexes[i] * dimensions[i];
+        var mult = 1;
+        for(var i : dimensions) mult *= i;
+        for(var i = 0; i < indexes.length; ++i) {
+            mult /= dimensions[i];
+            index += indexes[i] * mult;
         }
         return index;
     }
