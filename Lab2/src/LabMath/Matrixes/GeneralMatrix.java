@@ -22,6 +22,28 @@ public class GeneralMatrix implements MathMatrix<GeneralMatrix> {
         this.mat = new GeneralVector(this.total);
     }
 
+    private String doDraw(int[] indexes, int dimension) {
+        var res = new StringBuilder();
+        res.append("{");
+        for(var i = 0; i < this.dimensions[dimension]; ++i) {
+            indexes[dimension] = i;
+            if(dimension == this.dimensions.length - 1) {
+                res.append(this.mat.getAt(calcIndex(indexes)));
+            } else {
+                res.append(doDraw(indexes, dimension + 1));
+            }
+            res.append(this.dimensions[dimension] - 1 == i ? "" : ", ");
+        }
+        res.append("}");
+        return res.toString();
+    }
+
+    @Override
+    public String toString() {
+        var indexes = new int[this.dimensions.length];
+        return doDraw(indexes, 0);
+    }
+
     @Override
     public void add(GeneralMatrix other) {
         assert Arrays.equals(this.dimensions, other.dimensions) : ERROR_DIMENSIONS;

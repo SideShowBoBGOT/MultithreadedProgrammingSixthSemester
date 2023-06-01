@@ -16,17 +16,7 @@ public class Matrix2D implements MathMatrix<Matrix2D> {
 
     @Override
     public String toString() {
-        var res = new StringBuilder();
-        var dimensions = getDimensions();
-        for(var i = 0; i < dimensions[0]; ++i) {
-            res.append("[");
-            for(var j = 0; j < dimensions[1] - 1; ++j) {
-                res.append(getAt(i, j)).append(", ");
-            }
-            res.append(getAt(i, dimensions[1] - 1));
-            res.append("]\n");
-        }
-        return res.toString();
+        return mat.toString();
     }
 
     public Matrix2D(int rows, int cols) {

@@ -25,7 +25,7 @@ public class BlockStripedThread extends Thread {
         var curRow = firstRow;
         while(curRow < firstRows) {
             for(var j = 0; j < secondCols; ++j) {
-                var value = 0;
+                var value = 0.0;
                 for(var k = 0; k < firstCols; ++k) {
                     value += first.getAt(curRow, k) * second.getAt(k, j);
                 }
