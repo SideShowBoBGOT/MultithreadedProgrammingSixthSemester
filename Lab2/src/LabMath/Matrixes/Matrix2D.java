@@ -113,4 +113,8 @@ public class Matrix2D implements MathMatrix<Matrix2D> {
     public int calcIndex(int... indexes) {
         return this.mat.calcIndex(indexes);
     }
+
+    public boolean isSquare() {
+        return this.rows == this.cols;
+    }
 }

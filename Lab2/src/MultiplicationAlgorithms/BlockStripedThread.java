@@ -1,20 +1,15 @@
-package BlockStripedAlgorithm;
+package MultiplicationAlgorithms;
 
 import LabMath.Matrixes.Matrix2D;
 
-public class BlockStripedThread extends Thread {
-    private final int firstRow;
+public class BlockStripedThread extends GeneralAlgorithmThread {
     private final int step;
-    private final Matrix2D first;
-    private final Matrix2D second;
-    private final Matrix2D result;
+    private final int firstRow;
 
     public BlockStripedThread(int firstRow, int step, Matrix2D first, Matrix2D second, Matrix2D result) {
-        this.first = first;
-        this.step = step;
-        this.second = second;
+        super(first, second, result);
         this.firstRow = firstRow;
-        this.result = result;
+        this.step = step;
     }
 
     @Override
@@ -33,7 +28,5 @@ public class BlockStripedThread extends Thread {
             }
             curRow += step;
         }
-
     }
-
 }
