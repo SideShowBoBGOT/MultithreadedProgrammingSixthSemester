@@ -22,7 +22,7 @@ public class Matrix2DFactory {
         var res = new Matrix2D(rows, cols);
         for(var i = 0; i < rows; ++i) {
             for(var j = 0; j < cols; ++j) {
-                res.setAt(Math.random() * (maxVal - minVal) + minVal, i, j);
+                res.setAt((int)(Math.random() * (maxVal - minVal)) + minVal, i, j);
             }
         }
         return res;

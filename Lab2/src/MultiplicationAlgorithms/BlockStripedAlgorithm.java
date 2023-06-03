@@ -31,7 +31,9 @@ public class BlockStripedAlgorithm extends GeneralAlgorithm {
         var secondRows = second.getRows();
         var secondCols = second.getCols();
 
-        assert firstCols == secondRows : ERROR_MULTIPLICATION;
+        if(firstCols != secondRows) {
+            throw new IllegalArgumentException(ERROR_MULTIPLICATION);
+        }
 
         var result = new Matrix2D(firstRows, secondCols);
         var isRowsLess = firstRows < threads.length;

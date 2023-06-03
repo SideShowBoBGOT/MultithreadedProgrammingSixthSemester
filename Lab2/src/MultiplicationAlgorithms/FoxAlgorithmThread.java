@@ -3,31 +3,41 @@ package MultiplicationAlgorithms;
 import LabMath.Matrixes.Matrix2D;
 
 public class FoxAlgorithmThread extends GeneralAlgorithmThread {
-    private final int startRow;
-    private final int startCol;
+    private final int start;
     private final int blockSize;
 
-    public FoxAlgorithmThread(int startRow, int startCol, int blockSize, Matrix2D first, Matrix2D second, Matrix2D result) {
+    public FoxAlgorithmThread(int index, int blockSize, Matrix2D first, Matrix2D second, Matrix2D result) {
         super(first, second, result);
-        this.startRow = startRow;
-        this.startCol = startCol;
+        this.start = index * blockSize;
         this.blockSize = blockSize;
     }
 
     @Override
     public void run() {
-        var curRow = this.startRow;
-        var curCol = this.startCol;
+        var curRow = start;
+        var curCol = start;
         var rows = first.getRows();
         var steps = rows / blockSize;
         for(var i = 0; i < steps; ++i) {
-
-
-
-            curCol -= blockSize;
-            if(curCol == -blockSize) curCol += rows;
+            for(var j = 0; j < steps; ++j) {
+                mulMatrices(curCol, curRow, j * blockSize);
+            }
+            curRow += blockSize;
+            curRow %= rows;
             curCol += blockSize;
             curCol %= rows;
+        }
+    }
+
+    public void mulMatrices(int firstCol, int secondRow, int secondCol) {
+        for(var i = start; i < start + blockSize; ++i) {
+            for(var j = secondCol; j < secondCol + blockSize; ++j) {
+                var value = 0.0;
+                for(var k = 0; k < blockSize; ++k) {
+                    value += first.getAt(i, firstCol + k) * second.getAt(secondRow + k, j);
+                }
+                result.setAt(result.getAt(i, j) + value, i, j);
+            }
         }
     }
 }

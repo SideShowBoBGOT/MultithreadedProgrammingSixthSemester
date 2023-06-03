@@ -8,6 +8,7 @@ import java.util.Random;
 
 public class Matrix2D implements MathMatrix<Matrix2D> {
     private static final String ERROR_MULTIPLICATION = "Rows and columns are not equal";
+    private static final String ERROR_INDEXES = "Indexes are less than 0";
     private final int rows;
     private final int cols;
     private final GeneralMatrix mat;
@@ -101,11 +102,17 @@ public class Matrix2D implements MathMatrix<Matrix2D> {
 
     @Override
     public double getAt(int... indexes) {
+        if(indexes.length != 2) {
+            throw new IllegalArgumentException(ERROR_INDEXES);
+        }
         return this.mat.getAt(indexes);
     }
 
     @Override
     public void setAt(double value, int... indexes) {
+        if(indexes.length != 2) {
+            throw new IllegalArgumentException(ERROR_INDEXES);
+        }
         this.mat.setAt(value, indexes);
     }
 

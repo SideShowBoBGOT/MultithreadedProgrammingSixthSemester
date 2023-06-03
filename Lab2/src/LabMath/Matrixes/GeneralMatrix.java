@@ -6,7 +6,7 @@ import jdk.jshell.spi.ExecutionControl;
 
 import java.util.Arrays;
 
-public class GeneralMatrix implements MathMatrix<GeneralMatrix> {
+public final class GeneralMatrix implements MathMatrix<GeneralMatrix> {
     private static final String ERROR_INDEXES = "Indexes are less than 0";
     private static final String ERROR_DIMENSIONS = "Matrix dimensions not equal";
     private static final String ERROR_DIMENSION_INDEXES = "Indexes length is not equal to amount of dimension";
@@ -44,11 +44,23 @@ public class GeneralMatrix implements MathMatrix<GeneralMatrix> {
         return doDraw(indexes, 0);
     }
 
+    private void checkDimensions(int[] dimensions) {
+        if(!Arrays.equals(this.dimensions, dimensions)) {
+            throw new IllegalArgumentException(ERROR_DIMENSIONS);
+        }
+    }
+
+    private void checkIndexes(int[] indexes) {
+        if(!Arrays.stream(indexes).allMatch(e -> e >= 0)) {
+            throw new IllegalArgumentException(ERROR_INDEXES);
+        }
+    }
+    
     @Override
     public void add(GeneralMatrix other) {
-        assert Arrays.equals(this.dimensions, other.dimensions) : ERROR_DIMENSIONS;
+        checkDimensions(other.dimensions);
         for(var i = 0; i < total; ++i) {
-            this.mat.setAt(i, other.mat.getAt(i));
+            this.mat.setAt(i, this.mat.getAt(i) + other.mat.getAt(i));
         }
     }
 
@@ -87,7 +99,7 @@ public class GeneralMatrix implements MathMatrix<GeneralMatrix> {
 
     @Override
     public void set(GeneralMatrix other) {
-        assert Arrays.equals(this.dimensions, other.dimensions) : ERROR_DIMENSIONS;
+        checkDimensions(other.dimensions);
         for(var i = 0; i < this.total; ++i) {
             this.mat.setAt(i, this.mat.getAt(i));
         }
@@ -95,7 +107,7 @@ public class GeneralMatrix implements MathMatrix<GeneralMatrix> {
 
     @Override
     public void sub(GeneralMatrix other) {
-        assert Arrays.equals(this.dimensions, other.dimensions) : ERROR_DIMENSIONS;
+        checkDimensions(other.dimensions);
         for(var i = 0; i < total; ++i) {
             this.mat.setAt(i, other.mat.getAt(i) - other.mat.getAt(i));
         }
@@ -108,13 +120,13 @@ public class GeneralMatrix implements MathMatrix<GeneralMatrix> {
 
     @Override
     public double getAt(int... indexes) {
-        assert Arrays.stream(indexes).allMatch(e -> e >= 0) : ERROR_INDEXES;
+        checkIndexes(indexes);
         return this.mat.getAt(this.calcIndex(indexes));
     }
 
     @Override
     public void setAt(double value, int... indexes) {
-        assert Arrays.stream(indexes).allMatch(e -> e >= 0) : ERROR_INDEXES;
+        checkIndexes(indexes);
         var index = this.calcIndex(indexes);
         this.mat.setAt(index, value);
     }
@@ -126,7 +138,9 @@ public class GeneralMatrix implements MathMatrix<GeneralMatrix> {
 
     @Override
     public int calcIndex(int... indexes) {
-        assert indexes.length == dimensions.length : ERROR_DIMENSION_INDEXES;
+        if(indexes.length != dimensions.length) {
+            throw new IllegalArgumentException(ERROR_DIMENSION_INDEXES);
+        }
         var index = 0;
         var mult = 1;
         for(var i : dimensions) mult *= i;

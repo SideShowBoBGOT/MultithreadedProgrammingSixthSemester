@@ -4,6 +4,8 @@ import LabMath.Matrixes.Matrix2D;
 
 public abstract class GeneralAlgorithm {
     protected static final String ERROR_MULTIPLICATION = "Rows and columns are not equal";
+    protected static final String ERROR_NUM_OF_THREADS = "Number of threads must be positive";
+
     protected Thread[] threads;
     protected Matrix2D first;
     protected Matrix2D second;
@@ -15,7 +17,9 @@ public abstract class GeneralAlgorithm {
     }
 
     public void setThreadsNum(int threadsNum) {
-        assert threadsNum > 0;
+        if(threadsNum <= 0) {
+            throw new IllegalArgumentException(ERROR_NUM_OF_THREADS);
+        }
         if(this.threads != null && this.threads.length == threadsNum) return;
         this.threads = new Thread[threadsNum];
     }
