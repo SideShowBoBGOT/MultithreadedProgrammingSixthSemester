@@ -1,12 +1,125 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
-  <component name="RunManager">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="fe65f168-1ae9-41d7-aacc-4bb917f65ae2" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/.idea/uiDesigner.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Lab2/src/test/java/test/MatrixTester.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Lab2/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/Lab2/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Lab2/src/main/java/org/example/LabMath/ArgumentsMatrix.java" beforeDir="false" afterPath="$PROJECT_DIR$/Lab2/src/main/java/org/LabMath/ArgumentsMatrix.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Lab2/src/main/java/org/example/LabMath/Enums/Coords.java" beforeDir="false" afterPath="$PROJECT_DIR$/Lab2/src/main/java/org/LabMath/Enums/Coords.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Lab2/src/main/java/org/example/LabMath/Interfaces/General/Addable.java" beforeDir="false" afterPath="$PROJECT_DIR$/Lab2/src/main/java/org/LabMath/Interfaces/General/Addable.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Lab2/src/main/java/org/example/LabMath/Interfaces/General/Divisible.java" beforeDir="false" afterPath="$PROJECT_DIR$/Lab2/src/main/java/org/LabMath/Interfaces/General/Divisible.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Lab2/src/main/java/org/example/LabMath/Interfaces/General/DoubleAddable.java" beforeDir="false" afterPath="$PROJECT_DIR$/Lab2/src/main/java/org/LabMath/Interfaces/General/DoubleAddable.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Lab2/src/main/java/org/example/LabMath/Interfaces/General/DoubleDivisible.java" beforeDir="false" afterPath="$PROJECT_DIR$/Lab2/src/main/java/org/LabMath/Interfaces/General/DoubleDivisible.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Lab2/src/main/java/org/example/LabMath/Interfaces/General/DoubleMultipliable.java" beforeDir="false" afterPath="$PROJECT_DIR$/Lab2/src/main/java/org/LabMath/Interfaces/General/DoubleMultipliable.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Lab2/src/main/java/org/example/LabMath/Interfaces/General/DoubleSubtractable.java" beforeDir="false" afterPath="$PROJECT_DIR$/Lab2/src/main/java/org/LabMath/Interfaces/General/DoubleSubtractable.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Lab2/src/main/java/org/example/LabMath/Interfaces/General/GetMultipliable.java" beforeDir="false" afterPath="$PROJECT_DIR$/Lab2/src/main/java/org/LabMath/Interfaces/General/GetMultipliable.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Lab2/src/main/java/org/example/LabMath/Interfaces/General/Multipliable.java" beforeDir="false" afterPath="$PROJECT_DIR$/Lab2/src/main/java/org/LabMath/Interfaces/General/Multipliable.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Lab2/src/main/java/org/example/LabMath/Interfaces/General/Settable.java" beforeDir="false" afterPath="$PROJECT_DIR$/Lab2/src/main/java/org/LabMath/Interfaces/General/Settable.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Lab2/src/main/java/org/example/LabMath/Interfaces/General/Subtractable.java" beforeDir="false" afterPath="$PROJECT_DIR$/Lab2/src/main/java/org/LabMath/Interfaces/General/Subtractable.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Lab2/src/main/java/org/example/LabMath/Interfaces/MathMatrix.java" beforeDir="false" afterPath="$PROJECT_DIR$/Lab2/src/main/java/org/LabMath/Interfaces/MathMatrix.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Lab2/src/main/java/org/example/LabMath/Interfaces/MathVector.java" beforeDir="false" afterPath="$PROJECT_DIR$/Lab2/src/main/java/org/LabMath/Interfaces/MathVector.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Lab2/src/main/java/org/example/LabMath/Matrixes/GeneralMatrix.java" beforeDir="false" afterPath="$PROJECT_DIR$/Lab2/src/main/java/org/LabMath/Matrixes/GeneralMatrix.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Lab2/src/main/java/org/example/LabMath/Matrixes/Matrix2D.java" beforeDir="false" afterPath="$PROJECT_DIR$/Lab2/src/main/java/org/LabMath/Matrixes/Matrix2D.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Lab2/src/main/java/org/example/LabMath/Matrixes/Matrix2DFactory.java" beforeDir="false" afterPath="$PROJECT_DIR$/Lab2/src/main/java/org/LabMath/Matrixes/Matrix2DFactory.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Lab2/src/main/java/org/example/LabMath/Vectors/GeneralVector.java" beforeDir="false" afterPath="$PROJECT_DIR$/Lab2/src/main/java/org/LabMath/Vectors/GeneralVector.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Lab2/src/main/java/org/example/LabMath/Vectors/Vector2D.java" beforeDir="false" afterPath="$PROJECT_DIR$/Lab2/src/main/java/org/LabMath/Vectors/Vector2D.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Lab2/src/main/java/org/example/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/Lab2/src/main/java/org/Main.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Lab2/src/main/java/org/example/MultiplicationAlgorithms/BlockStripedAlgorithm.java" beforeDir="false" afterPath="$PROJECT_DIR$/Lab2/src/main/java/org/MultiplicationAlgorithms/BlockStripedAlgorithm.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Lab2/src/main/java/org/example/MultiplicationAlgorithms/BlockStripedThread.java" beforeDir="false" afterPath="$PROJECT_DIR$/Lab2/src/main/java/org/MultiplicationAlgorithms/BlockStripedThread.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Lab2/src/main/java/org/example/MultiplicationAlgorithms/FoxAlgorithm.java" beforeDir="false" afterPath="$PROJECT_DIR$/Lab2/src/main/java/org/MultiplicationAlgorithms/FoxAlgorithm.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Lab2/src/main/java/org/example/MultiplicationAlgorithms/FoxAlgorithmThread.java" beforeDir="false" afterPath="$PROJECT_DIR$/Lab2/src/main/java/org/MultiplicationAlgorithms/FoxAlgorithmThread.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Lab2/src/main/java/org/example/MultiplicationAlgorithms/GeneralAlgorithm.java" beforeDir="false" afterPath="$PROJECT_DIR$/Lab2/src/main/java/org/MultiplicationAlgorithms/GeneralAlgorithm.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Lab2/src/main/java/org/example/MultiplicationAlgorithms/GeneralAlgorithmThread.java" beforeDir="false" afterPath="$PROJECT_DIR$/Lab2/src/main/java/org/MultiplicationAlgorithms/GeneralAlgorithmThread.java" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Class" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
+  </component>
+  <component name="MavenImportPreferences">
+    <option name="generalSettings">
+      <MavenGeneralSettings>
+        <option name="useMavenConfig" value="true" />
+      </MavenGeneralSettings>
+    </option>
+  </component>
+  <component name="ProjectId" id="2QjGeIzJoZqbKJjz8C5hU1QkVLc" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "WebServerToolWindowFactoryState": "false",
+    "git-widget-placeholder": "main",
+    "last_opened_file_path": "/home/choleraplague/university/MethodsParallelProgramming/labs/Lab2",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "project.structure.last.edited": "Modules",
+    "project.structure.proportion": "0.0",
+    "project.structure.side.proportion": "0.0",
+    "vue.rearranger.settings.migration": "true"
+  }
+}]]></component>
+  <component name="RecentsManager">
+    <key name="MoveClassesOrPackagesDialog.RECENTS_KEY">
+      <recent name="org.MultiplicationAlgorithms" />
+    </key>
+  </component>
+  <component name="RunManager" selected="Application.MatrixTester">
     <configuration name="BlockStripedAlgorithm" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="org.example.MultiplicationAlgorithms.BlockStripedAlgorithm" />
+      <option name="MAIN_CLASS_NAME" value="org.MultiplicationAlgorithms.BlockStripedAlgorithm" />
       <module name="Lab2" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="org.example.MultiplicationAlgorithms.*" />
+          <option name="PATTERN" value="org.MultiplicationAlgorithms.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="FoxAlgorithm" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="org.MultiplicationAlgorithms.FoxAlgorithm" />
+      <module name="Lab2" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="org.MultiplicationAlgorithms.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="MatrixTester" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="test.MatrixTester" />
+      <module name="Lab2" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="test.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
@@ -16,8 +129,25 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Application.MatrixTester" />
+        <item itemvalue="Application.FoxAlgorithm" />
         <item itemvalue="Application.BlockStripedAlgorithm" />
       </list>
     </recent_temporary>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="fe65f168-1ae9-41d7-aacc-4bb917f65ae2" name="Changes" comment="" />
+      <created>1685859671329</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1685859671329</updated>
+      <workItem from="1685859672294" duration="12136000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
   </component>
 </project>
