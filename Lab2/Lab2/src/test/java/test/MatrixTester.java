@@ -20,7 +20,9 @@ public class MatrixTester {
     private static final String LEGEND_POSITION = "upper left";
     private static final String X_LABEL = "Matrix size";
     private static final String Y_LABEL = "Milliseconds";
+    private static final String SPEEDUP_Y_LABEL = "Speedup";
     private static final String PLOT_FILE = "plot.png";
+    private static final String SPEEDUP_PLOT_FILE = "speedup_plot.png";
 
 
     private static class AlgorithmResult {
@@ -46,12 +48,13 @@ public class MatrixTester {
 
     public static void main(String[] args) throws PythonExecutionException, IOException {
             var tester = new MatrixTester();
-            var threadsNums = new int[] {1, 4, 10};
-            var matrixSizes = new int[] {100, 200, 300, 400, 500, 600, 700};
-            var algorithms = new GeneralAlgorithm[] {new FoxAlgorithm(), new BlockStripedAlgorithm()};
-            tester.testAlgorithm(threadsNums, matrixSizes, algorithms);
+//            var threadsNums = new int[] {1, 4, 10};
+//            var matrixSizes = new int[] {100, 200, 300, 400, 500, 600, 700};
+//            var algorithms = new GeneralAlgorithm[] {new FoxAlgorithm(), new BlockStripedAlgorithm()};
+//            tester.testAlgorithm(threadsNums, matrixSizes, algorithms);
 
             tester.plotStatistic();
+            tester.plotSpeedup();
     }
 
     public void plotStatistic() throws PythonExecutionException, IOException {
@@ -74,6 +77,29 @@ public class MatrixTester {
         plt.savefig(PLOT_FILE);
         plt.show();
     }
+
+    private void plotSpeedup() throws IOException, PythonExecutionException {
+        Plot plt = Plot.create();
+        var results = readStatistic();
+        var algorithms = results.stream().map(r -> r.name).distinct().toList();
+        var threadNums = results.stream().map(r -> r.threadsNum).distinct().toList();
+        for(var a : algorithms) {
+            var filtered = results.stream().filter(r -> r.name.equals(a)).toList();
+            for(var threadNum : threadNums) {
+                var filteredByThreadNum = filtered.stream().filter(r -> r.threadsNum == threadNum).toList();
+                var x = filteredByThreadNum.stream().map(r -> r.size).toList();
+                var y = filteredByThreadNum.stream().map(r -> r.speedup).toList();
+                plt.plot().add(x, y).label(a + " " + threadNum);
+            }
+        }
+        plt.legend().loc(LEGEND_POSITION);
+        plt.xlabel(X_LABEL);
+        plt.ylabel(SPEEDUP_Y_LABEL);
+        plt.savefig(SPEEDUP_PLOT_FILE);
+        plt.show();
+    }
+
+
 
     private ArrayList<AlgorithmResult> readStatistic() throws IOException {
         var line = "";
