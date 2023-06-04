@@ -16,11 +16,11 @@ public class FoxAlgorithm extends GeneralAlgorithm {
 
     public static void main(String[] args) {
         var matrixFactory = new Matrix2DFactory();
-        var rows = 18;
-        var cols = 18;
+        var rows = 3;
+        var cols = 3;
         var minVal = 0;
         var maxVal = 10;
-        var threadsNum = 18;
+        var threadsNum = 3;
 
         var first = matrixFactory.getRandom(rows, cols, minVal, maxVal);
         var second = matrixFactory.getRandom(rows, cols, minVal, maxVal);
@@ -31,7 +31,7 @@ public class FoxAlgorithm extends GeneralAlgorithm {
         var stripedResult = striped.solve();
         System.out.println("First:\t" + first);
         System.out.println("Second:\t" + second);
-        System.out.println("Result:\t" + result);
+        System.out.println("Fox:\t" + result);
         System.out.println("Striped:\t" + stripedResult);
     }
 

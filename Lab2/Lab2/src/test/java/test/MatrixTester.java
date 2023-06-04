@@ -20,6 +20,7 @@ public class MatrixTester {
     private static final String LEGEND_POSITION = "upper left";
     private static final String X_LABEL = "Matrix size";
     private static final String Y_LABEL = "Milliseconds";
+    private static final String PLOT_FILE = "plot.png";
 
 
     private static class AlgorithmResult {
@@ -68,6 +69,7 @@ public class MatrixTester {
         plt.legend().loc(LEGEND_POSITION);
         plt.xlabel(X_LABEL);
         plt.ylabel(Y_LABEL);
+        plt.savefig(PLOT_FILE);
         plt.show();
     }
 
