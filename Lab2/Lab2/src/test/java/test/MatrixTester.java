@@ -17,6 +17,10 @@ public class MatrixTester {
     private static final int maxVal = 10;
     private static final String FILE_NAME = "results.csv";
     private static final String DELIMETER = "\t";
+    private static final String LEGEND_POSITION = "upper left";
+    private static final String X_LABEL = "Matrix size";
+    private static final String Y_LABEL = "Milliseconds";
+
 
     private static class AlgorithmResult {
         public final long milliseconds;
@@ -50,15 +54,20 @@ public class MatrixTester {
     public void plotStatistic() throws PythonExecutionException, IOException {
         Plot plt = Plot.create();
         var results = readStatistic();
-        var algorithms = results.stream().map(r -> r.name).distinct().toArray(String[]::new);
+        var algorithms = results.stream().map(r -> r.name).distinct().toList();
+        var threadNums = results.stream().map(r -> r.threadsNum).distinct().toList();
         for(var a : algorithms) {
             var filtered = results.stream().filter(r -> r.name.equals(a)).toList();
-
-            var x = filtered.stream().map(r -> r.size).toList();
-            var y = filtered.stream().map(r -> r.milliseconds).toList();
-            plt.plot().add(x, y).label(a);
+            for(var threadNum : threadNums) {
+                var filteredByThreadNum = filtered.stream().filter(r -> r.threadsNum == threadNum).toList();
+                var x = filteredByThreadNum.stream().map(r -> r.size).toList();
+                var y = filteredByThreadNum.stream().map(r -> r.milliseconds).toList();
+                plt.plot().add(x, y).label(a + " " + threadNum);
+            }
         }
-        plt.legend().loc("upper left");
+        plt.legend().loc(LEGEND_POSITION);
+        plt.xlabel(X_LABEL);
+        plt.ylabel(Y_LABEL);
         plt.show();
     }
 
