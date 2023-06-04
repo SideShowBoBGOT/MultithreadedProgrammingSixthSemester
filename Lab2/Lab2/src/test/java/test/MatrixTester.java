@@ -9,13 +9,13 @@ import org.MultiplicationAlgorithms.GeneralAlgorithm;
 import java.awt.*;
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 
 public class MatrixTester {
     private static final int minVal = -10;
     private static final int maxVal = 10;
     private static final String FILE_NAME = "results.csv";
-    private static final String CSV_HEADER = "Algorithm\tThreads\tSize\tMilliseconds";
     private static final String DELIMETER = "\t";
 
     private static class AlgorithmResult {
@@ -38,16 +38,6 @@ public class MatrixTester {
     }
 
     public static void main(String[] args) throws PythonExecutionException, IOException {
-
-//        List<Double> x = NumpyUtils.linspace(-3, 3, 100);
-//        List<Double> y = x.stream().map(xi -> Math.sin(xi) + Math.random()).collect(Collectors.toList());
-//
-//        Plot plt = Plot.create();
-//        plt.plot().add(x, y, "o").label("sin");
-//        plt.legend().loc("upper right");
-//        plt.title("scatter");
-//        plt.show();
-
             var tester = new MatrixTester();
 //            var threadsNums = new int[] {1, 4, 10};
 //            var matrixSizes = new int[] {100, 200, 300, 400, 500, 600, 700};
@@ -59,6 +49,20 @@ public class MatrixTester {
 
     public void plotStatistic() throws PythonExecutionException, IOException {
         Plot plt = Plot.create();
+        var results = readStatistic();
+        var algorithms = results.stream().map(r -> r.name).distinct().toArray(String[]::new);
+        for(var a : algorithms) {
+            var filtered = results.stream().filter(r -> r.name.equals(a)).toList();
+
+            var x = filtered.stream().map(r -> r.size).toList();
+            var y = filtered.stream().map(r -> r.milliseconds).toList();
+            plt.plot().add(x, y).label(a);
+        }
+        plt.legend().loc("upper left");
+        plt.show();
+    }
+
+    private ArrayList<AlgorithmResult> readStatistic() throws IOException {
         var line = "";
         BufferedReader br = new BufferedReader(new FileReader(FILE_NAME));
         var results = new ArrayList<AlgorithmResult>();
@@ -73,15 +77,12 @@ public class MatrixTester {
                 )
             );
         }
-        results.
-        plt.show();
+        return results;
     }
 
     public void testAlgorithm(int[] threadNums, int[] matrixSizes, GeneralAlgorithm[] algorithms) throws IOException {
         var file = new File( FILE_NAME);
         var results = new FileOutputStream(file);
-        results.write((CSV_HEADER + "\n").getBytes());
-        System.out.println(CSV_HEADER);
         var matrixFactory = new Matrix2DFactory();
         for(var algorithm : algorithms) {
             var algName = algorithm.getClass().getSimpleName();
@@ -109,6 +110,4 @@ public class MatrixTester {
             }
         }
     }
-
-
 }

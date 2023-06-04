@@ -5,36 +5,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="fe65f168-1ae9-41d7-aacc-4bb917f65ae2" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/uiDesigner.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Lab2/src/test/java/test/MatrixTester.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Lab2/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/Lab2/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Lab2/src/main/java/org/example/LabMath/ArgumentsMatrix.java" beforeDir="false" afterPath="$PROJECT_DIR$/Lab2/src/main/java/org/LabMath/ArgumentsMatrix.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Lab2/src/main/java/org/example/LabMath/Enums/Coords.java" beforeDir="false" afterPath="$PROJECT_DIR$/Lab2/src/main/java/org/LabMath/Enums/Coords.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Lab2/src/main/java/org/example/LabMath/Interfaces/General/Addable.java" beforeDir="false" afterPath="$PROJECT_DIR$/Lab2/src/main/java/org/LabMath/Interfaces/General/Addable.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Lab2/src/main/java/org/example/LabMath/Interfaces/General/Divisible.java" beforeDir="false" afterPath="$PROJECT_DIR$/Lab2/src/main/java/org/LabMath/Interfaces/General/Divisible.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Lab2/src/main/java/org/example/LabMath/Interfaces/General/DoubleAddable.java" beforeDir="false" afterPath="$PROJECT_DIR$/Lab2/src/main/java/org/LabMath/Interfaces/General/DoubleAddable.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Lab2/src/main/java/org/example/LabMath/Interfaces/General/DoubleDivisible.java" beforeDir="false" afterPath="$PROJECT_DIR$/Lab2/src/main/java/org/LabMath/Interfaces/General/DoubleDivisible.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Lab2/src/main/java/org/example/LabMath/Interfaces/General/DoubleMultipliable.java" beforeDir="false" afterPath="$PROJECT_DIR$/Lab2/src/main/java/org/LabMath/Interfaces/General/DoubleMultipliable.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Lab2/src/main/java/org/example/LabMath/Interfaces/General/DoubleSubtractable.java" beforeDir="false" afterPath="$PROJECT_DIR$/Lab2/src/main/java/org/LabMath/Interfaces/General/DoubleSubtractable.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Lab2/src/main/java/org/example/LabMath/Interfaces/General/GetMultipliable.java" beforeDir="false" afterPath="$PROJECT_DIR$/Lab2/src/main/java/org/LabMath/Interfaces/General/GetMultipliable.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Lab2/src/main/java/org/example/LabMath/Interfaces/General/Multipliable.java" beforeDir="false" afterPath="$PROJECT_DIR$/Lab2/src/main/java/org/LabMath/Interfaces/General/Multipliable.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Lab2/src/main/java/org/example/LabMath/Interfaces/General/Settable.java" beforeDir="false" afterPath="$PROJECT_DIR$/Lab2/src/main/java/org/LabMath/Interfaces/General/Settable.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Lab2/src/main/java/org/example/LabMath/Interfaces/General/Subtractable.java" beforeDir="false" afterPath="$PROJECT_DIR$/Lab2/src/main/java/org/LabMath/Interfaces/General/Subtractable.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Lab2/src/main/java/org/example/LabMath/Interfaces/MathMatrix.java" beforeDir="false" afterPath="$PROJECT_DIR$/Lab2/src/main/java/org/LabMath/Interfaces/MathMatrix.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Lab2/src/main/java/org/example/LabMath/Interfaces/MathVector.java" beforeDir="false" afterPath="$PROJECT_DIR$/Lab2/src/main/java/org/LabMath/Interfaces/MathVector.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Lab2/src/main/java/org/example/LabMath/Matrixes/GeneralMatrix.java" beforeDir="false" afterPath="$PROJECT_DIR$/Lab2/src/main/java/org/LabMath/Matrixes/GeneralMatrix.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Lab2/src/main/java/org/example/LabMath/Matrixes/Matrix2D.java" beforeDir="false" afterPath="$PROJECT_DIR$/Lab2/src/main/java/org/LabMath/Matrixes/Matrix2D.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Lab2/src/main/java/org/example/LabMath/Matrixes/Matrix2DFactory.java" beforeDir="false" afterPath="$PROJECT_DIR$/Lab2/src/main/java/org/LabMath/Matrixes/Matrix2DFactory.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Lab2/src/main/java/org/example/LabMath/Vectors/GeneralVector.java" beforeDir="false" afterPath="$PROJECT_DIR$/Lab2/src/main/java/org/LabMath/Vectors/GeneralVector.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Lab2/src/main/java/org/example/LabMath/Vectors/Vector2D.java" beforeDir="false" afterPath="$PROJECT_DIR$/Lab2/src/main/java/org/LabMath/Vectors/Vector2D.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Lab2/src/main/java/org/example/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/Lab2/src/main/java/org/Main.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Lab2/src/main/java/org/example/MultiplicationAlgorithms/BlockStripedAlgorithm.java" beforeDir="false" afterPath="$PROJECT_DIR$/Lab2/src/main/java/org/MultiplicationAlgorithms/BlockStripedAlgorithm.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Lab2/src/main/java/org/example/MultiplicationAlgorithms/BlockStripedThread.java" beforeDir="false" afterPath="$PROJECT_DIR$/Lab2/src/main/java/org/MultiplicationAlgorithms/BlockStripedThread.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Lab2/src/main/java/org/example/MultiplicationAlgorithms/FoxAlgorithm.java" beforeDir="false" afterPath="$PROJECT_DIR$/Lab2/src/main/java/org/MultiplicationAlgorithms/FoxAlgorithm.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Lab2/src/main/java/org/example/MultiplicationAlgorithms/FoxAlgorithmThread.java" beforeDir="false" afterPath="$PROJECT_DIR$/Lab2/src/main/java/org/MultiplicationAlgorithms/FoxAlgorithmThread.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Lab2/src/main/java/org/example/MultiplicationAlgorithms/GeneralAlgorithm.java" beforeDir="false" afterPath="$PROJECT_DIR$/Lab2/src/main/java/org/MultiplicationAlgorithms/GeneralAlgorithm.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Lab2/src/main/java/org/example/MultiplicationAlgorithms/GeneralAlgorithmThread.java" beforeDir="false" afterPath="$PROJECT_DIR$/Lab2/src/main/java/org/MultiplicationAlgorithms/GeneralAlgorithmThread.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Lab2/src/test/java/test/MatrixTester.java" beforeDir="false" afterPath="$PROJECT_DIR$/Lab2/src/test/java/test/MatrixTester.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/results.csv" beforeDir="false" afterPath="$PROJECT_DIR$/results.csv" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -143,7 +116,7 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1685859671329</updated>
-      <workItem from="1685859672294" duration="12136000" />
+      <workItem from="1685859672294" duration="14234000" />
     </task>
     <servers />
   </component>
