@@ -1,42 +1,42 @@
-FoxAlgorithm	1	100	157
-FoxAlgorithm	1	200	890
-FoxAlgorithm	1	300	2400
-FoxAlgorithm	1	400	6657
-FoxAlgorithm	1	500	11994
-FoxAlgorithm	1	600	20733
-FoxAlgorithm	1	700	33265
-FoxAlgorithm	4	100	92
-FoxAlgorithm	4	200	714
-FoxAlgorithm	4	300	2387
-FoxAlgorithm	4	400	4549
-FoxAlgorithm	4	500	9399
-FoxAlgorithm	4	600	16162
-FoxAlgorithm	4	700	25448
-FoxAlgorithm	10	100	84
-FoxAlgorithm	10	200	661
-FoxAlgorithm	10	300	2235
-FoxAlgorithm	10	400	5324
-FoxAlgorithm	10	500	10079
-FoxAlgorithm	10	600	17452
-FoxAlgorithm	10	700	27352
-BlockStripedAlgorithm	1	100	125
-BlockStripedAlgorithm	1	200	843
-BlockStripedAlgorithm	1	300	2813
-BlockStripedAlgorithm	1	400	5825
-BlockStripedAlgorithm	1	500	18627
-BlockStripedAlgorithm	1	600	26583
-BlockStripedAlgorithm	1	700	33249
-BlockStripedAlgorithm	4	100	62
-BlockStripedAlgorithm	4	200	523
-BlockStripedAlgorithm	4	300	1855
-BlockStripedAlgorithm	4	400	5395
-BlockStripedAlgorithm	4	500	9211
-BlockStripedAlgorithm	4	600	15334
-BlockStripedAlgorithm	4	700	25288
-BlockStripedAlgorithm	10	100	70
-BlockStripedAlgorithm	10	200	559
-BlockStripedAlgorithm	10	300	1870
-BlockStripedAlgorithm	10	400	4432
-BlockStripedAlgorithm	10	500	8671
-BlockStripedAlgorithm	10	600	14971
-BlockStripedAlgorithm	10	700	23889
+FoxAlgorithm	1	100	144	1.000000
+FoxAlgorithm	4	100	168	0.857143
+FoxAlgorithm	10	100	91	1.582418
+FoxAlgorithm	1	200	736	1.000000
+FoxAlgorithm	4	200	468	1.572650
+FoxAlgorithm	10	200	578	1.273356
+FoxAlgorithm	1	300	2121	1.000000
+FoxAlgorithm	4	300	1462	1.450752
+FoxAlgorithm	10	300	1851	1.145867
+FoxAlgorithm	1	400	5005	1.000000
+FoxAlgorithm	4	400	3434	1.457484
+FoxAlgorithm	10	400	4403	1.136725
+FoxAlgorithm	1	500	10872	1.000000
+FoxAlgorithm	4	500	9069	1.198809
+FoxAlgorithm	10	500	10568	1.028766
+FoxAlgorithm	1	600	20532	1.000000
+FoxAlgorithm	4	600	16539	1.241429
+FoxAlgorithm	10	600	18764	1.094223
+FoxAlgorithm	1	700	32676	1.000000
+FoxAlgorithm	4	700	25528	1.280006
+FoxAlgorithm	10	700	29226	1.118046
+BlockStripedAlgorithm	1	100	110	1.000000
+BlockStripedAlgorithm	4	100	85	1.294118
+BlockStripedAlgorithm	10	100	88	1.250000
+BlockStripedAlgorithm	1	200	765	1.000000
+BlockStripedAlgorithm	4	200	632	1.210443
+BlockStripedAlgorithm	10	200	686	1.115160
+BlockStripedAlgorithm	1	300	2540	1.000000
+BlockStripedAlgorithm	4	300	1992	1.275100
+BlockStripedAlgorithm	10	300	2266	1.120918
+BlockStripedAlgorithm	1	400	8994	1.000000
+BlockStripedAlgorithm	4	400	4957	1.814404
+BlockStripedAlgorithm	10	400	5221	1.722658
+BlockStripedAlgorithm	1	500	17630	1.000000
+BlockStripedAlgorithm	4	500	9086	1.940348
+BlockStripedAlgorithm	10	500	10191	1.729958
+BlockStripedAlgorithm	1	600	20351	1.000000
+BlockStripedAlgorithm	4	600	16227	1.254144
+BlockStripedAlgorithm	10	600	17623	1.154798
+BlockStripedAlgorithm	1	700	45335	1.000000
+BlockStripedAlgorithm	4	700	25921	1.748968
+BlockStripedAlgorithm	10	700	28244	1.605120

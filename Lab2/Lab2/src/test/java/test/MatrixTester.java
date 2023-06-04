@@ -28,26 +28,28 @@ public class MatrixTester {
         public final int threadsNum;
         public final int size;
         public final String name;
+        public final double speedup;
 
-        public AlgorithmResult(long time, int threadsNum, int size, String name) {
+        public AlgorithmResult(long time, int threadsNum, int size, double speedup, String name) {
             this.milliseconds = time;
             this.threadsNum = threadsNum;
             this.size = size;
             this.name = name;
+            this.speedup = speedup;
         }
 
         @Override
         public String toString() {
-            return String.format("%s\t%d\t%d\t%d", name, threadsNum, size, milliseconds);
+            return String.format("%s\t%d\t%d\t%d\t%f", name, threadsNum, size, milliseconds, speedup);
         }
     }
 
     public static void main(String[] args) throws PythonExecutionException, IOException {
             var tester = new MatrixTester();
-//            var threadsNums = new int[] {1, 4, 10};
-//            var matrixSizes = new int[] {100, 200, 300, 400, 500, 600, 700};
-//            var algorithms = new GeneralAlgorithm[] {new FoxAlgorithm(), new BlockStripedAlgorithm()};
-//            tester.testAlgorithm(threadsNums, matrixSizes, algorithms);
+            var threadsNums = new int[] {1, 4, 10};
+            var matrixSizes = new int[] {100, 200, 300, 400, 500, 600, 700};
+            var algorithms = new GeneralAlgorithm[] {new FoxAlgorithm(), new BlockStripedAlgorithm()};
+            tester.testAlgorithm(threadsNums, matrixSizes, algorithms);
 
             tester.plotStatistic();
     }
@@ -84,6 +86,7 @@ public class MatrixTester {
                     Long.parseLong(row[3]),
                     Integer.parseInt(row[1]),
                     Integer.parseInt(row[2]),
+                    Double.parseDouble(row[4]),
                     row[0]
                 )
             );
@@ -97,8 +100,10 @@ public class MatrixTester {
         var matrixFactory = new Matrix2DFactory();
         for(var algorithm : algorithms) {
             var algName = algorithm.getClass().getSimpleName();
-            for(var threadsNum : threadNums) {
-                for(var size : matrixSizes) {
+            for(var size : matrixSizes) {
+                long threadTimeOne = 0;
+                for(var threadsNum : threadNums) {
+
                     var startTime = System.currentTimeMillis();
 
                     var first = matrixFactory.getRandom(size, size, minVal, maxVal);
@@ -113,8 +118,12 @@ public class MatrixTester {
                     var endTime = System.currentTimeMillis();
 
                     var duration = endTime - startTime;
+                    if(threadsNum==1) threadTimeOne = duration;
 
-                    var result = new AlgorithmResult(duration, threadsNum, size, algName).toString();
+                    var result = new AlgorithmResult(
+                            duration, threadsNum, size,
+                            threadTimeOne / (double) duration , algName).toString();
+
                     System.out.println(result);
                     results.write((result + "\n").getBytes());
                 }
