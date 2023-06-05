@@ -3,29 +3,25 @@ package org.example.SecondExercise;
 import java.util.Random;
 
 public class Producer implements Runnable {
-    private Drop drop;
+    private final Drop drop;
 
     public Producer(Drop drop) {
         this.drop = drop;
     }
 
     public void run() {
-        String importantInfo[] = {
-                "Mares eat oats",
-                "Does eat oats",
-                "Little lambs eat ivy",
-                "A kid will eat ivy too"
-        };
+        int[] importantInfo = new int[1000];
+        for (int i = 0; i < importantInfo.length; i++) importantInfo[i] = i + 1;
+
         Random random = new Random();
 
-        for (int i = 0;
-             i < importantInfo.length;
-             i++) {
-            drop.put(importantInfo[i]);
+        for(var s : importantInfo) {
+            drop.put(s);
             try {
                 Thread.sleep(random.nextInt(5000));
-            } catch (InterruptedException e) {}
+            } catch(InterruptedException ignored) {
+            }
         }
-        drop.put("DONE");
+        drop.put(0);
     }
 }
