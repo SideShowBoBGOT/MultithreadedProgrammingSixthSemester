@@ -1,9 +1,9 @@
-package org.example.FirstExercise;
+package org.example.FirstExercise.SynchronizedVersion;
 
 import java.util.Arrays;
 
 class Bank {
-    public static final int NTEST = 10000;
+    public static final int NUMBER_TEST = 10000;
     private final int[] accounts;
     private long totalTransacts = 0;
 
@@ -12,11 +12,11 @@ class Bank {
         Arrays.fill(accounts, initialBalance);
     }
 
-    public void transfer(int from, int to, int amount) {
+    public synchronized void transfer(int from, int to, int amount) {
         accounts[from] -= amount;
         accounts[to] += amount;
         totalTransacts++;
-        if(totalTransacts % NTEST == 0) {
+        if(totalTransacts % NUMBER_TEST == 0) {
             test();
         }
     }
