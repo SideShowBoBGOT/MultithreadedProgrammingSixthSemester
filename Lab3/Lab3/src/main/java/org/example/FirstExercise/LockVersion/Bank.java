@@ -15,7 +15,7 @@ class Bank {
         Arrays.fill(accounts, initialBalance);
     }
 
-    public synchronized void transfer(int from, int to, int amount) {
+    public void transfer(int from, int to, int amount) {
         bankLock.lock();
         accounts[from] -= amount;
         accounts[to] += amount;
