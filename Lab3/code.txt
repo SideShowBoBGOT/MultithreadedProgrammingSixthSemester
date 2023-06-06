@@ -1,0 +1,497 @@
+// ./Lab3/Lab3/src/main/java/org/example/FirstExercise/LockVersion/Bank.java
+
+package org.example.FirstExercise.LockVersion;
+
+import java.util.Arrays;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
+
+class Bank {
+    public static final int NUMBER_TEST = 10000;
+    private final int[] accounts;
+    private long totalTransacts = 0;
+    private final ReentrantLock bankLock = new ReentrantLock();
+
+    public Bank(int n, int initialBalance){
+        accounts = new int[n];
+        Arrays.fill(accounts, initialBalance);
+    }
+
+    public synchronized void transfer(int from, int to, int amount) {
+        bankLock.lock();
+        accounts[from] -= amount;
+        accounts[to] += amount;
+        totalTransacts++;
+        if(totalTransacts % NUMBER_TEST == 0) {
+            test();
+        }
+        bankLock.unlock();
+    }
+
+    public void test() {
+        var sum = Arrays.stream(accounts).sum();
+        System.out.println("Transactions:" + totalTransacts + " Sum: " + sum);
+    }
+
+    public int size() {
+        return accounts.length;
+    }
+}
+
+
+// ./Lab3/Lab3/src/main/java/org/example/FirstExercise/LockVersion/AsyncBankTest.java
+
+package org.example.FirstExercise.LockVersion;
+
+public class AsyncBankTest {
+
+    public static void main(String[] args) {
+        var totalAccounts = 10;
+        var initialBalance = 10000;
+        var b = new Bank(totalAccounts, initialBalance);
+        for(var i = 0; i < totalAccounts; i++){
+            var t = new TransferThread(b, i, initialBalance);
+            t.setPriority(Thread.NORM_PRIORITY + i % 2);
+            t.start();
+        }
+    }
+}
+
+
+// ./Lab3/Lab3/src/main/java/org/example/FirstExercise/LockVersion/TransferThread.java
+
+package org.example.FirstExercise.LockVersion;
+
+class TransferThread extends Thread {
+    private final Bank bank;
+    private final int fromAccount;
+    private final int maxAmount;
+    private static final int REPS = 1000;
+
+    public TransferThread(Bank bank, int fromAccount, int maxAmount){
+        this.bank = bank;
+        this.fromAccount = fromAccount;
+        this.maxAmount = maxAmount;
+    }
+
+    @Override
+    public void run() {
+        while(true) {
+            for(var i = 0; i < REPS; i++) {
+                var toAccount = (int) (bank.size() * Math.random());
+                var amount = (int) (maxAmount * Math.random()/REPS);
+                bank.transfer(fromAccount, toAccount, amount);
+            }
+        }
+    }
+}
+
+
+// ./Lab3/Lab3/src/main/java/org/example/FirstExercise/AtomicVersion/Bank.java
+
+package org.example.FirstExercise.AtomicVersion;
+
+import java.util.Arrays;
+import java.util.concurrent.atomic.AtomicIntegerArray;
+import java.util.concurrent.atomic.AtomicLong;
+import java.util.concurrent.atomic.AtomicReference;
+import java.util.concurrent.atomic.AtomicReferenceFieldUpdater;
+
+class Bank {
+    private static final int NUMBER_TEST = 10000;
+    private static final String TRANSACTIONS_SUM = "Transactions: %d Sum: %d\n";
+    private final AtomicIntegerArray accounts;
+    private final AtomicLong totalTransacts = new AtomicLong(0);
+
+    public Bank(int n, int initialBalance){
+        accounts = new AtomicIntegerArray(n);
+        for(var i = 0; i < n; i++) accounts.set(i, initialBalance);
+    }
+
+    public static void main(String[] args) {
+        var b = new AtomicReference<Bank>(new Bank(10, 10000));
+    }
+
+    public void transfer(int from, int to, int amount) {
+        accounts.addAndGet(from, -amount);
+        accounts.addAndGet(to, amount);
+        if(totalTransacts.incrementAndGet() % NUMBER_TEST == 0) test();
+    }
+
+    public void test() {
+        var strArray = accounts.toString();
+        var sum = Arrays.stream(strArray.substring(1, strArray.length() - 1).split(", "))
+                .map(Integer::parseInt).mapToInt(Integer::intValue).sum();
+        System.out.printf(TRANSACTIONS_SUM, totalTransacts.get(), sum);
+    }
+
+    public int size() {
+        return accounts.length();
+    }
+}
+
+
+// ./Lab3/Lab3/src/main/java/org/example/FirstExercise/AtomicVersion/AsyncBankTest.java
+
+package org.example.FirstExercise.AtomicVersion;
+
+public class AsyncBankTest {
+
+    public static void main(String[] args) {
+        var totalAccounts = 10;
+        var initialBalance = 10000;
+        var b = new Bank(totalAccounts, initialBalance);
+        for(var i = 0; i < totalAccounts; i++){
+            var t = new TransferThread(b, i, initialBalance);
+            t.setPriority(Thread.NORM_PRIORITY + i % 2);
+            t.start();
+        }
+    }
+}
+
+
+// ./Lab3/Lab3/src/main/java/org/example/FirstExercise/AtomicVersion/TransferThread.java
+
+package org.example.FirstExercise.AtomicVersion;
+
+class TransferThread extends Thread {
+    private final Bank bank;
+    private final int fromAccount;
+    private final int maxAmount;
+    private static final int REPS = 1000;
+
+    public TransferThread(Bank bank, int fromAccount, int maxAmount){
+        this.bank = bank;
+        this.fromAccount = fromAccount;
+        this.maxAmount = maxAmount;
+    }
+
+    @Override
+    public void run() {
+        while(true) {
+            for(var i = 0; i < REPS; i++) {
+                var toAccount = (int) (bank.size() * Math.random());
+                var amount = (int) (maxAmount * Math.random()/REPS);
+                bank.transfer(fromAccount, toAccount, amount);
+            }
+        }
+    }
+}
+
+
+// ./Lab3/Lab3/src/main/java/org/example/FirstExercise/SynchronizedVersion/Bank.java
+
+package org.example.FirstExercise.SynchronizedVersion;
+
+import java.util.Arrays;
+
+class Bank {
+    public static final int NUMBER_TEST = 10000;
+    private final int[] accounts;
+    private long totalTransacts = 0;
+
+    public Bank(int n, int initialBalance){
+        accounts = new int[n];
+        Arrays.fill(accounts, initialBalance);
+    }
+
+    public synchronized void transfer(int from, int to, int amount) {
+        accounts[from] -= amount;
+        accounts[to] += amount;
+        totalTransacts++;
+        if(totalTransacts % NUMBER_TEST == 0) {
+            test();
+        }
+    }
+
+    public void test() {
+        var sum = Arrays.stream(accounts).sum();
+        System.out.println("Transactions:" + totalTransacts + " Sum: " + sum);
+    }
+
+    public int size() {
+        return accounts.length;
+    }
+}
+
+
+// ./Lab3/Lab3/src/main/java/org/example/FirstExercise/SynchronizedVersion/AsyncBankTest.java
+
+package org.example.FirstExercise.SynchronizedVersion;
+
+public class AsyncBankTest {
+
+    public static void main(String[] args) {
+        var totalAccounts = 10;
+        var initialBalance = 10000;
+        var b = new Bank(totalAccounts, initialBalance);
+        for(var i = 0; i < totalAccounts; i++){
+            var t = new TransferThread(b, i, initialBalance);
+            t.setPriority(Thread.NORM_PRIORITY + i % 2);
+            t.start();
+        }
+    }
+}
+
+
+// ./Lab3/Lab3/src/main/java/org/example/FirstExercise/SynchronizedVersion/TransferThread.java
+
+package org.example.FirstExercise.SynchronizedVersion;
+
+class TransferThread extends Thread {
+    private final Bank bank;
+    private final int fromAccount;
+    private final int maxAmount;
+    private static final int REPS = 1000;
+
+    public TransferThread(Bank bank, int fromAccount, int maxAmount){
+        this.bank = bank;
+        this.fromAccount = fromAccount;
+        this.maxAmount = maxAmount;
+    }
+
+    @Override
+    public void run() {
+        while(true) {
+            for(var i = 0; i < REPS; i++) {
+                var toAccount = (int) (bank.size() * Math.random());
+                var amount = (int) (maxAmount * Math.random()/REPS);
+                bank.transfer(fromAccount, toAccount, amount);
+            }
+        }
+    }
+}
+
+
+// ./Lab3/Lab3/src/main/java/org/example/SecondExercise/Producer.java
+
+package org.example.SecondExercise;
+
+import java.util.Random;
+
+public class Producer implements Runnable {
+    private final Drop drop;
+
+    public Producer(Drop drop) {
+        this.drop = drop;
+    }
+
+    public void run() {
+        int[] importantInfo = new int[1000];
+        for (int i = 0; i < importantInfo.length; i++) importantInfo[i] = i + 1;
+
+        Random random = new Random();
+
+        for(var s : importantInfo) {
+            drop.put(s);
+            try {
+                Thread.sleep(random.nextInt(5000));
+            } catch(InterruptedException ignored) {
+            }
+        }
+        drop.put(0);
+    }
+}
+
+// ./Lab3/Lab3/src/main/java/org/example/SecondExercise/ProducerConsumerExample.java
+
+package org.example.SecondExercise;
+
+public class ProducerConsumerExample {
+    public static void main(String[] args) {
+        Drop drop = new Drop();
+        (new Thread(new Producer(drop))).start();
+        (new Thread(new Consumer(drop))).start();
+    }
+}
+
+
+// ./Lab3/Lab3/src/main/java/org/example/SecondExercise/Drop.java
+
+package org.example.SecondExercise;
+
+public class Drop {
+    private int message;
+    private boolean empty = true;
+
+    public synchronized int take() {
+        while(empty) {
+            try {
+                wait();
+            } catch (InterruptedException e) {}
+        }
+        empty = true;
+        notifyAll();
+        return message;
+    }
+
+    public synchronized void put(int message) {
+        while(!empty) {
+            try {
+                wait();
+            } catch (InterruptedException e) {}
+        }
+        empty = false;
+        this.message = message;
+        notifyAll();
+    }
+}
+
+
+
+
+
+// ./Lab3/Lab3/src/main/java/org/example/SecondExercise/Consumer.java
+
+package org.example.SecondExercise;
+
+import java.util.Random;
+
+public class Consumer implements Runnable {
+    private final Drop drop;
+
+    public Consumer(Drop drop) {
+        this.drop = drop;
+    }
+
+    public void run() {
+        Random random = new Random();
+        for(var message = drop.take(); message != 0; message = drop.take()) {
+            System.out.format("MESSAGE RECEIVED: %d%n", message);
+            try {
+                Thread.sleep(random.nextInt(5000));
+            } catch (InterruptedException ignored) {}
+        }
+    }
+}
+
+
+// ./Lab3/Lab3/src/main/java/org/example/ThirdExercise/StudentsTeacherExample.java
+
+package org.example.ThirdExercise;
+
+public class StudentsTeacherExample {
+    private static final int TOTAL_TEACHERS = 4;
+    private static final int TOTAL_GROUPS = 3;
+    private static final int TOTAL_STUDENTS_IN_GROUP = 5;
+
+    public static void main(String[] args) {
+        var groups = new Group[TOTAL_GROUPS];
+        for(var i = 0; i < TOTAL_GROUPS; i++) {
+            groups[i] = new Group("Group " + i, TOTAL_STUDENTS_IN_GROUP);
+        }
+
+        var teachers = new TeacherThread[TOTAL_TEACHERS];
+        for(var i = 0; i < TOTAL_TEACHERS; i++) {
+            teachers[i] = new TeacherThread(groups);
+            teachers[i].start();
+        }
+
+        for(var i = 0; i < TOTAL_TEACHERS; i++) {
+            try {
+                teachers[i].join();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+}
+
+
+// ./Lab3/Lab3/src/main/java/org/example/ThirdExercise/Student.java
+
+package org.example.ThirdExercise;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+
+public class Student {
+    private final ArrayList<Integer> grades = new ArrayList<>();
+    private final String name;
+    private final Group group;
+
+    public Student(String name, Group group) {
+        this.group = group;
+        this.name = name;
+    }
+
+    public synchronized void addGrade(int grade) {
+        grades.add(grade);
+    }
+
+    public synchronized void printGrades() {
+        System.out.println(group.getName() + " " + name + ": ");
+        grades.stream().limit(grades.size() - 1).toList().forEach(g -> System.out.print(g + ","));
+        System.out.print(grades.get(grades.size() - 1) + "\n");
+    }
+}
+
+
+// ./Lab3/Lab3/src/main/java/org/example/ThirdExercise/Group.java
+
+package org.example.ThirdExercise;
+
+import java.util.ArrayList;
+import java.util.Iterator;
+
+public class Group implements Iterable<Student> {
+    private final ArrayList<Student> students;
+    private final String name;
+
+    public Group(String name, int totalStudents) {
+        this.name = name;
+        this.students = new ArrayList<>(totalStudents);
+        for(var i = 0; i < totalStudents; i++) {
+            students.add(new Student("Student " + i, this));
+        }
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public static synchronized void printGrades(Group g) {
+        for(var s : g) {
+            s.printGrades();
+        }
+    }
+
+    @Override
+    public Iterator<Student> iterator() {
+        return students.iterator();
+    }
+}
+
+
+// ./Lab3/Lab3/src/main/java/org/example/ThirdExercise/TeacherThread.java
+
+package org.example.ThirdExercise;
+
+import java.util.Arrays;
+
+public class TeacherThread extends Thread {
+    private final Group[] groups;
+    public TeacherThread(Group[] groups) {
+        this.groups = groups;
+    }
+
+    @Override
+    public void run() {
+        while(true) {
+            for(var g : groups) {
+                for(var s : g) {
+                    s.addGrade((int) (100 * Math.random()));
+                }
+                Group.printGrades(g);
+            }
+            try {
+                Thread.sleep(4000);
+            } catch(InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
+}
+
+
+
