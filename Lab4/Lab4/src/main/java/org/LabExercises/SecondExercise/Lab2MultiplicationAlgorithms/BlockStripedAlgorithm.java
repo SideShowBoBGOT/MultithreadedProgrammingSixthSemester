@@ -1,11 +1,9 @@
-package org.MultiplicationAlgorithms;
+package org.LabExercises.SecondExercise.Lab2MultiplicationAlgorithms;
 
 import org.LabMath.Matrixes.Matrix2D;
 import org.LabMath.Matrixes.Matrix2DFactory;
 
 public class BlockStripedAlgorithm extends GeneralAlgorithm {
-
-    public BlockStripedAlgorithm() {}
 
     public BlockStripedAlgorithm(int threadsNum, Matrix2D first, Matrix2D second) {
         super(threadsNum, first, second);

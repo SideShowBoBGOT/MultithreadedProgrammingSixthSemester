@@ -1,4 +1,4 @@
-package org.MultiplicationAlgorithms;
+package org.LabExercises.SecondExercise.Lab2MultiplicationAlgorithms;
 
 import org.LabMath.Matrixes.Matrix2D;
 import org.LabMath.Matrixes.Matrix2DFactory;

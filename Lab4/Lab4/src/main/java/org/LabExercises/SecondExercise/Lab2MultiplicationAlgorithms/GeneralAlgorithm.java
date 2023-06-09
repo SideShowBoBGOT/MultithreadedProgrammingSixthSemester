@@ -1,4 +1,4 @@
-package org.MultiplicationAlgorithms;
+package org.LabExercises.SecondExercise.Lab2MultiplicationAlgorithms;
 
 import org.LabMath.Matrixes.Matrix2D;
 
@@ -12,7 +12,7 @@ public abstract class GeneralAlgorithm {
 
     public GeneralAlgorithm() {}
 
-    GeneralAlgorithm(int threadsNum, Matrix2D first, Matrix2D second) {
+    protected GeneralAlgorithm(int threadsNum, Matrix2D first, Matrix2D second) {
         setThreadsNum(threadsNum);
         setFirst(first);
         setSecond(second);
