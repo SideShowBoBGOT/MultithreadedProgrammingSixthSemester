@@ -10,7 +10,7 @@ import java.util.stream.IntStream;
 
 public class AlgorithmTester {
 	private static final Matrix2DFactory MATRIX_2_D_FACTORY = new Matrix2DFactory();
-	private static final Logger LOGGER = LogManager.getLogger("exercise2");
+	private static final Logger LOGGER = LogManager.getLogger("Exercise2");
 	private static final int MIN_VAL = 0;
 	private static final int MAX_VAL = 10;
 

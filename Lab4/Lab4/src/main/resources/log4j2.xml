@@ -4,12 +4,12 @@
         <Console name="Console" target="SYSTEM_OUT">
             <PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"/>
         </Console>
-        <File name="LogFile" fileName="exercise2.log">
+        <File name="LogFile" fileName="Exercise2.log">
             <PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"/>
         </File>
     </Appenders>
     <Loggers>
-        <Logger name="exercise2" level="info" additivity="false">
+        <Logger name="Exercise2" level="info" additivity="false">
             <AppenderRef ref="LogFile"/>
             <AppenderRef ref="Console"/>
         </Logger>
