@@ -1,0 +1,14 @@
+Size: 100
+	Single duration: 156
+	Executor threads: 2
+		Executor duration: 80
+		Executor efficiency: 1.95
+	Executor threads: 3
+		Executor duration: 60
+		Executor efficiency: 2.6
+	Executor threads: 4
+		Executor duration: 52
+		Executor efficiency: 3.0
+	Executor threads: 5
+		Executor duration: 52
+		Executor efficiency: 3.0

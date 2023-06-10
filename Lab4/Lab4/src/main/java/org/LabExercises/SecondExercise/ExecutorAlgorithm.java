@@ -1,46 +1,55 @@
 package org.LabExercises.SecondExercise;
 
-import org.LabExercises.SecondExercise.Lab2MultiplicationAlgorithms.BlockStripedAlgorithm;
 import org.LabMath.Matrixes.Matrix2D;
 import org.LabMath.Matrixes.Matrix2DFactory;
 
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadPoolExecutor;
 
-public class ExecutorAlgorithm {
+public class ExecutorAlgorithm implements MatrixAlgorithmInterface {
 	private static final String ERROR_MULTIPLICATION = "Rows and columns are not equal";
-	private static final String ERROR_NUM_OF_THREADS = "Number of threads must be positive";
-	private Matrix2D first;
-	private Matrix2D second;
+	private final Matrix2D first;
+	private final Matrix2D second;
 	private final ThreadPoolExecutor executor;
 
 	public ExecutorAlgorithm(int threadsNum, Matrix2D first, Matrix2D second) {
+		this.first = first;
+		this.second = second;
 		executor = (ThreadPoolExecutor) Executors.newFixedThreadPool(threadsNum);
 	}
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws IOException {
+		var file = new FileWriter("MatrixMultiplicationExecutor.txt");
 		var matrixFactory = new Matrix2DFactory();
-		var rows = 10;
-		var cols = 10;
+		var sizes = new int[]{100, 200, 300, 400};
+		var threadsNum = new int[]{2, 3, 4, 5};
 		var minVal = 0;
 		var maxVal = 10;
-		var threadsNum = 5;
-		var first = matrixFactory.getRandom(rows, cols, minVal, maxVal);
-		var second = matrixFactory.getRandom(rows, cols, minVal, maxVal);
-		var algorithm = new BlockStripedAlgorithm(threadsNum, first, second);
-		var executorAlg = new ExecutorAlgorithm(threadsNum, first, second);
-		var result = algorithm.solve();
-		var resExecutor = executorAlg.solve();
-		System.out.println("First:\t" + first);
-		System.out.println("Second:\t" + second);
-		System.out.println("Block:\t" + result);
-		System.out.println("Executor:\t" + result);
+		for(var s : sizes) {
+			file.write("Size: " + s + "\n");
+			var mat = matrixFactory.getRandom(s, s, minVal, maxVal);
+			var startTime = System.currentTimeMillis();
+			mat.getMul(mat);
+			var singleDuration = System.currentTimeMillis() - startTime;
+			file.write("\tSingle duration: " + singleDuration + "\n");
+			for(var n : threadsNum) {
+				file.write("\tExecutor threads: " + n + "\n");
+				var start = System.currentTimeMillis();
+				var executorAlg = new ExecutorAlgorithm(n, mat, mat);
+				executorAlg.solve();
+				var d = System.currentTimeMillis() - start;
+				file.write("\t\tExecutor duration: " + d + "\n");
+				file.write("\t\tExecutor efficiency: " + (double) singleDuration / d + "\n");
+			}
+		}
+		file.close();
 	}
 
+	@Override
 	public Matrix2D solve() {
-		var poolSize = executor.getMaximumPoolSize();
-		var endController = new CountDownLatch(poolSize);
 
 		var firstRows = first.getRows();
 		var firstCols = first.getCols();
@@ -51,10 +60,12 @@ public class ExecutorAlgorithm {
 			throw new IllegalArgumentException(ERROR_MULTIPLICATION);
 		}
 
+		var poolSize = executor.getMaximumPoolSize();
 		var result = new Matrix2D(firstRows, secondCols);
 		var isRowsLess = firstRows < poolSize;
 		var totalThreads = isRowsLess ? firstRows : poolSize;
 		var step = isRowsLess ? 1 : poolSize;
+		var endController = new CountDownLatch(totalThreads);
 
 		for(var i = 0; i < totalThreads; ++i) {
 			var task = new ExecutorAlgorithmTask(step, i, first,
