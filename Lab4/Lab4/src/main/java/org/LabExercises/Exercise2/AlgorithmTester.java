@@ -12,7 +12,6 @@ import java.util.stream.IntStream;
 public class AlgorithmTester {
 	private static final Matrix2DFactory MATRIX_2_D_FACTORY = new Matrix2DFactory();
 	private static final Logger LOGGER = LogManager.getLogger("exercise2");
-	private static final String FILE_PATH = "MatrixMultiplicationExecutor.txt";
 	private static final int MIN_VAL = 0;
 	private static final int MAX_VAL = 10;
 
@@ -20,7 +19,7 @@ public class AlgorithmTester {
 		return MATRIX_2_D_FACTORY.getRandom(size, size, MIN_VAL, MAX_VAL);
 	}
 
-	public static void main(String[] args) throws IOException {
+	public static void main(String[] args) {
 		testExecutor();
 		testForkJoin();
 	}
@@ -37,10 +36,12 @@ public class AlgorithmTester {
 			forkJoinAlg.solve();
 			var d = System.currentTimeMillis() - start;
 
-			LOGGER.info("[SIZE: " + s + "]");
-			LOGGER.info("[SINGLE DURATION: " + singleDuration + "]");
-			LOGGER.info("[FORK JOIN DURATION: " + d + "]");
-			LOGGER.info("[FORK JOIN EFFICIENCY: " + (double) singleDuration / d + "]");
+			var builder = new StringBuilder();
+			builder.append("[SIZE: ").append(s).append("]");
+			builder.append("[SINGLE DURATION: ").append(singleDuration).append("]");
+			builder.append("[FORK JOIN DURATION: ").append(d).append("]");
+			builder.append("[FORK JOIN EFFICIENCY: ").append((double) singleDuration / d).append("]");
+			LOGGER.info(builder.toString());
 		});
 	}
 

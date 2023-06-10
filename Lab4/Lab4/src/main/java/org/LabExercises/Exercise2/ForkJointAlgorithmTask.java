@@ -30,12 +30,14 @@ public class ForkJointAlgorithmTask extends RecursiveAction {
 		rhsTask.fork();
 
 		var firstCols = first.getCols();
-		IntStream.range(0, second.getCols()).forEach(j -> {
-			var val = IntStream.range(0, firstCols).mapToDouble(k ->
-				first.getAt(row, k) * second.getAt(k, j)
-			).sum();
+
+		for(var j = 0; j < second.getCols(); ++j) {
+			var val = 0.0;
+			for(var k = 0; k < firstCols; ++k) {
+				val += first.getAt(row, k) * second.getAt(k, j);
+			}
 			result.setAt(val, row, j);
-		});
+		}
 
 		rhsTask.join();
 	}

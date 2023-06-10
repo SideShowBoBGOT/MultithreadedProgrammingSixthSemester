@@ -48,6 +48,8 @@ public class ExecutorAlgorithm implements MatrixAlgorithmInterface {
 			ex.printStackTrace();
 		}
 
+		executor.shutdown();
+
 		return result;
 	}
 

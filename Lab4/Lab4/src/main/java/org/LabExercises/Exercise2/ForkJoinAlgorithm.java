@@ -27,7 +27,7 @@ public class ForkJoinAlgorithm implements MatrixAlgorithmInterface {
 
 		var result = new Matrix2D(first.getRows(), second.getCols());
 		var task = new ForkJointAlgorithmTask(0, first, second, result);
-		task.join();
+		pool.invoke(task);
 
 		return result;
 
