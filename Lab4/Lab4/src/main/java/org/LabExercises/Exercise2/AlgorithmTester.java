@@ -6,7 +6,6 @@ import org.LabMath.Matrixes.Matrix2DFactory;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.io.IOException;
 import java.util.stream.IntStream;
 
 public class AlgorithmTester {
