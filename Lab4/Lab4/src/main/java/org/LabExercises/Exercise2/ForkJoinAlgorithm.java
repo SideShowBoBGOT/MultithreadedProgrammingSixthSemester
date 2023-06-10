@@ -1,7 +1,11 @@
-package org.LabExercises.SecondExercise;
+package org.LabExercises.Exercise2;
 
 import org.LabMath.Matrixes.Matrix2D;
+import org.LabMath.Matrixes.Matrix2DFactory;
 
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ForkJoinPool;
 
 public class ForkJoinAlgorithm implements MatrixAlgorithmInterface {
@@ -17,14 +21,15 @@ public class ForkJoinAlgorithm implements MatrixAlgorithmInterface {
 
 	@Override
 	public Matrix2D solve() {
-		var firstRows = first.getRows();
-		var firstCols = first.getCols();
-		var secondRows = second.getRows();
-		var secondCols = second.getCols();
-
-		if(firstCols != secondRows) {
+		if(first.getCols() != second.getRows()) {
 			throw new IllegalArgumentException(ERROR_MULTIPLICATION);
 		}
+
+		var result = new Matrix2D(first.getRows(), second.getCols());
+		var task = new ForkJointAlgorithmTask(0, first, second, result);
+		task.join();
+
+		return result;
 
 	}
 }

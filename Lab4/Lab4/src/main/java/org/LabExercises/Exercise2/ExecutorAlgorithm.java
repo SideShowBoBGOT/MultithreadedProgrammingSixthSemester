@@ -1,4 +1,4 @@
-package org.LabExercises.SecondExercise;
+package org.LabExercises.Exercise2;
 
 import org.LabMath.Matrixes.Matrix2D;
 import org.LabMath.Matrixes.Matrix2DFactory;
@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadPoolExecutor;
+import java.util.function.IntSupplier;
 
 public class ExecutorAlgorithm implements MatrixAlgorithmInterface {
 	private static final String ERROR_MULTIPLICATION = "Rows and columns are not equal";
@@ -21,47 +22,15 @@ public class ExecutorAlgorithm implements MatrixAlgorithmInterface {
 		executor = (ThreadPoolExecutor) Executors.newFixedThreadPool(threadsNum);
 	}
 
-	public static void main(String[] args) throws IOException {
-		var file = new FileWriter("MatrixMultiplicationExecutor.txt");
-		var matrixFactory = new Matrix2DFactory();
-		var sizes = new int[]{100, 200, 300, 400};
-		var threadsNum = new int[]{2, 3, 4, 5};
-		var minVal = 0;
-		var maxVal = 10;
-		for(var s : sizes) {
-			file.write("Size: " + s + "\n");
-			var mat = matrixFactory.getRandom(s, s, minVal, maxVal);
-			var startTime = System.currentTimeMillis();
-			mat.getMul(mat);
-			var singleDuration = System.currentTimeMillis() - startTime;
-			file.write("\tSingle duration: " + singleDuration + "\n");
-			for(var n : threadsNum) {
-				file.write("\tExecutor threads: " + n + "\n");
-				var start = System.currentTimeMillis();
-				var executorAlg = new ExecutorAlgorithm(n, mat, mat);
-				executorAlg.solve();
-				var d = System.currentTimeMillis() - start;
-				file.write("\t\tExecutor duration: " + d + "\n");
-				file.write("\t\tExecutor efficiency: " + (double) singleDuration / d + "\n");
-			}
-		}
-		file.close();
-	}
-
 	@Override
 	public Matrix2D solve() {
-
-		var firstRows = first.getRows();
-		var firstCols = first.getCols();
-		var secondRows = second.getRows();
-		var secondCols = second.getCols();
-
-		if(firstCols != secondRows) {
+		if(first.getCols() != second.getRows()) {
 			throw new IllegalArgumentException(ERROR_MULTIPLICATION);
 		}
 
+		var firstRows = first.getRows();
 		var poolSize = executor.getMaximumPoolSize();
-		var result = new Matrix2D(firstRows, secondCols);
+		var result = new Matrix2D(firstRows, second.getCols());
 		var isRowsLess = firstRows < poolSize;
 		var totalThreads = isRowsLess ? firstRows : poolSize;
 		var step = isRowsLess ? 1 : poolSize;

@@ -1,4 +1,4 @@
-package org.LabExercises.SecondExercise;
+package org.LabExercises.Exercise2;
 
 import org.LabMath.Matrixes.Matrix2D;
 
