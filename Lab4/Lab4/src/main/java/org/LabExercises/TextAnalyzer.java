@@ -10,8 +10,7 @@ import opennlp.tools.sentdetect.SentenceDetectorME;
 import opennlp.tools.sentdetect.SentenceModel;
 import opennlp.tools.tokenize.TokenizerME;
 import opennlp.tools.tokenize.TokenizerModel;
-import opennlp.tools.util.ObjectStream;
-import org.springframework.util.StreamUtils;
+import org.springframework.data.util.StreamUtils;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -67,10 +66,15 @@ public class TextAnalyzer {
 
 	public String[] getCommonWords(String fileNameOne, String fileNameTwo) {
 		var tokens = Stream.of(fileNameOne, fileNameTwo)
-			.map(s -> getTokenStream(s).toArray(String[]::new))
-			.toArray(String[][]::new);
-		var tags = Arrays.stream(tokens).map(posTagger::tag)
-			.toArray(String[][]::new);
+			.map(s -> getTokenStream(s).toList()).toList();
+		var tagsStream = tokens.stream().map(
+			s -> s.stream().map(t -> posTagger.tag(t)).toList());
+		var lemmas = StreamUtils.zip(tokens.stream(), tagsStream, (tokMat, tagMat) ->
+			StreamUtils.zip(tokMat.stream(), tagMat.stream(), lemmatizer::lemmatize)
+				.flatMap(Arrays::stream).toList()).toList();
+		var common = lemmas.get(0).stream().filter(lemmas.get(1)::contains)
+			.toArray(String[]::new);
+		return common;
 	}
 
 	public Stream<String[]> getTokenStream(String fileName) {

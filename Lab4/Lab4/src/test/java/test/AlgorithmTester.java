@@ -1,8 +1,9 @@
-package org.LabExercises.Exercise2;
+package test;
 
+import org.LabExercises.Exercise2.ExecutorAlgorithm;
+import org.LabExercises.Exercise2.ForkJoinAlgorithm;
 import org.LabMath.Matrixes.Matrix2D;
 import org.LabMath.Matrixes.Matrix2DFactory;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
