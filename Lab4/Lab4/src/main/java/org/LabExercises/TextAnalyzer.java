@@ -13,11 +13,9 @@ import java.util.Arrays;
 import java.util.Scanner;
 import java.util.concurrent.ForkJoinPool;
 
-public class FileStringReader {
+public class TextAnalyzer {
 	private static final String SENTENCE_MODEL_PATH = "opennlp-en-ud-ewt-sentence-1.0-1.9.3.bin";
 	private static final String TOKEN_MODEL_PATH = "opennlp-en-ud-ewt-tokens-1.0-1.9.3.bin";
-	private static final String FILE_ONE = "Exercise1_1.txt";
-	private static final String FILE_TWO = "Exercise1_2.txt";
 	private static final String NOT_VALID_SYMBOLS = "[^a-zA-Z\s\n]";
 	private static final String WHITE_SPACE = " ";
 	private static final String LINE_FEED = "\n";
@@ -25,20 +23,16 @@ public class FileStringReader {
 	private final ForkJoinPool pool = ForkJoinPool.commonPool();
 	private SentenceDetectorME sentenceDetector;
 	private TokenizerME tokenizer;
-	private static FileStringReader fileStringReader;
+	private static TextAnalyzer fileStringReader;
 
-	public static void main(String[] args) throws FileNotFoundException {
-		System.out.println(FileStringReader.getInstance().getAverageLength(FILE_ONE));
-	}
-
-	public static FileStringReader getInstance() {
+	public static TextAnalyzer getInstance() {
 		if (fileStringReader == null) {
-			return new FileStringReader();
+			return new TextAnalyzer();
 		}
 		return fileStringReader;
 	}
 
-	private FileStringReader() {
+	private TextAnalyzer() {
 		try {
 			var sentModelIn = new FileInputStream(SENTENCE_MODEL_PATH);
 			var sentModel = new SentenceModel(sentModelIn);
@@ -60,13 +54,14 @@ public class FileStringReader {
 		return average.isPresent() ? average.getAsDouble() : 0;
 	}
 
-	public double getAverageLengthForkJoin(String filePath) throws FileNotFoundException {
+	public double getAverageLengthForkJoin(String filePath) throws IOException {
 		var text = readFile(filePath);
-		var sents = Arrays.stream(sentenceDetector.sentDetect(text))
-			.toArray(String[]::new);
-		var res = new AverageLengthForkJoin(0, sents, tokenizer);
-		pool.invoke(res);
-		return (double) res.join().getFirst() / res.join().getSecond();
+		var tokens = Arrays.stream(sentenceDetector.sentDetect(text))
+			.map(s -> s.replaceAll(NOT_VALID_SYMBOLS, EMPTY_SPACE))
+			.map(String::toLowerCase).map(s -> tokenizer.tokenize(s))
+			.toArray(String[][]::new);
+		var res = pool.invoke(new AverageLengthForkJoin(0, tokens));
+		return (double) res.getFirst() / res.getSecond();
 	}
 
 	public String readFile(String filePath) throws FileNotFoundException {
