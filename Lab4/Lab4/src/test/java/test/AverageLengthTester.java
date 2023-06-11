@@ -4,7 +4,6 @@ import org.LabExercises.TextAnalyzer;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
 
 public class AverageLengthTester {
@@ -13,11 +12,11 @@ public class AverageLengthTester {
 	private static final String FILE_TWO = "Exercise1_2.txt";
 
 	public static void main(String[] args) throws IOException {
-		testAnalyzer(FILE_ONE);
-		testAnalyzer(FILE_TWO);
+		testProfile(FILE_ONE);
+		testProfile(FILE_TWO);
 	}
 
-	private static void testAnalyzer(String fileName) throws IOException {
+	private static void testProfile(String fileName) throws IOException {
 		var textAnalyzer = TextAnalyzer.getInstance();
 
 		var builder = new StringBuilder();

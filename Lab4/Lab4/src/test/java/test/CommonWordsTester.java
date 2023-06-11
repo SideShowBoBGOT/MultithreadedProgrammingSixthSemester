@@ -4,8 +4,6 @@ import org.LabExercises.TextAnalyzer;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.util.Arrays;
 
 public class CommonWordsTester {
@@ -13,11 +11,33 @@ public class CommonWordsTester {
 	private static final String FILE_ONE = "Exercise3_1.txt";
 	private static final String FILE_TWO = "Exercise3_2.txt";
 
-	public static void main(String[] args) throws FileNotFoundException {
+	public static void main(String[] args) {
+		testProfile();
 		testCorrectness();
 	}
 
-	private static void testCorrectness() throws FileNotFoundException {
+	private static void testProfile() {
+		var textAnalyzer = TextAnalyzer.getInstance();
+
+		var builder = new StringBuilder();
+
+		var singleStartTime = System.currentTimeMillis();
+		textAnalyzer.getCommonWords(FILE_ONE, FILE_TWO);
+		var singleDuration = System.currentTimeMillis() - singleStartTime;
+
+		builder.append("[SINGLE DURATION: ").append(singleDuration).append("]");
+
+		var startTime = System.currentTimeMillis();
+		textAnalyzer.getCommonWordsForkJoin(FILE_ONE, FILE_TWO);
+		var duration = System.currentTimeMillis() - startTime;
+
+		builder.append("[FORK JOIN DURATION: ").append(duration).append("]");
+		builder.append("[FORK JOIN EFFICIENCY: ").append((double) singleDuration / duration).append("]");
+
+		LOGGER.info(builder.toString());
+	}
+
+	private static void testCorrectness() {
 		var textAnalyzer = TextAnalyzer.getInstance();
 		var res = textAnalyzer.getCommonWords(FILE_ONE, FILE_TWO);
 		var builder = new StringBuilder();
@@ -26,6 +46,4 @@ public class CommonWordsTester {
 		builder.append("]");
 		LOGGER.info(builder.toString());
 	}
-
-
 }

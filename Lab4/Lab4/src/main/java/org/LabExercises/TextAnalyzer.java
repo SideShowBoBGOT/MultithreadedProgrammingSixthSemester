@@ -16,8 +16,11 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Scanner;
+import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ForkJoinPool;
 import java.util.stream.Stream;
 
@@ -31,10 +34,10 @@ public class TextAnalyzer {
 	private static final String LINE_FEED = "\n";
 	private static final String EMPTY_SPACE = "";
 	private final ForkJoinPool pool = ForkJoinPool.commonPool();
-	private SentenceDetectorME sentenceDetector;
-	private TokenizerME tokenizer;
-	private LemmatizerME lemmatizer;
-	private POSTaggerME posTagger;
+	private final SentenceDetectorME sentenceDetector;
+	private final TokenizerME tokenizer;
+	private final LemmatizerME lemmatizer;
+	private final POSTaggerME posTagger;
 
 	private static TextAnalyzer fileStringReader;
 
@@ -67,14 +70,33 @@ public class TextAnalyzer {
 	public String[] getCommonWords(String fileNameOne, String fileNameTwo) {
 		var tokens = Stream.of(fileNameOne, fileNameTwo)
 			.map(s -> getTokenStream(s).toList()).toList();
+
 		var tagsStream = tokens.stream().map(
-			s -> s.stream().map(t -> posTagger.tag(t)).toList());
+			s -> s.stream().map(posTagger::tag).toList());
+
 		var lemmas = StreamUtils.zip(tokens.stream(), tagsStream, (tokMat, tagMat) ->
 			StreamUtils.zip(tokMat.stream(), tagMat.stream(), lemmatizer::lemmatize)
-				.flatMap(Arrays::stream).toList()).toList();
-		var common = lemmas.get(0).stream().filter(lemmas.get(1)::contains)
+				.flatMap(Arrays::stream).distinct().toList()).toList();
+
+		return lemmas.get(0).stream().filter(lemmas.get(1)::contains)
 			.toArray(String[]::new);
-		return common;
+	}
+
+	public String[] getCommonWordsForkJoin(String fileNameOne, String fileNameTwo) {
+		var tokens = Stream.of(fileNameOne, fileNameTwo)
+			.map(s -> getTokenStream(s).toList()).toList();
+
+		var tagsStream = tokens.stream().map(
+			s -> s.stream().map(posTagger::tag).toList());
+
+		var lemmas = StreamUtils.zip(tokens.stream(), tagsStream, (tokMat, tagMat) ->
+			StreamUtils.zip(tokMat.stream(), tagMat.stream(), lemmatizer::lemmatize)
+				.flatMap(Arrays::stream).distinct().toList()).toList();
+
+		var commonWords = new ArrayList<String>();
+		pool.invoke(new CommonWordsForkJoin(0, lemmas.get(0), lemmas.get(1), commonWords));
+
+		return commonWords.toArray(String[]::new);
 	}
 
 	public Stream<String[]> getTokenStream(String fileName) {
@@ -82,7 +104,7 @@ public class TextAnalyzer {
 			String text = readFile(fileName);
 			return Arrays.stream(sentenceDetector.sentDetect(text))
 				.map(s -> s.replaceAll(NOT_VALID_SYMBOLS, EMPTY_SPACE))
-				.map(s -> tokenizer.tokenize(s));
+				.map(tokenizer::tokenize);
 		} catch(FileNotFoundException e) {
 			throw new RuntimeException(e);
 		}
