@@ -1,0 +1,1 @@
+ It is primarily used for developing platform-independent applications, including web and enterprise solutions.

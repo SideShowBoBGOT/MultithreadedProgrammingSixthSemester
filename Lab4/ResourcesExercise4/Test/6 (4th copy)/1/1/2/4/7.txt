@@ -1,0 +1,1 @@
+Java's "write once, run anywhere" principle allows developers to write code that can be executed on different platforms without any modifications.

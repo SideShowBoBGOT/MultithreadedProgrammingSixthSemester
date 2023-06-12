@@ -1,0 +1,1 @@
+Java's object-oriented nature promotes modularity, reusability, and code organization, making it a preferred choice for large-scale projects.

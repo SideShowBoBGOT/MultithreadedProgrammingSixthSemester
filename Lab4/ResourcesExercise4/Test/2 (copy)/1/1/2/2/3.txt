@@ -1,0 +1,1 @@
+C++ supports both procedural and object-oriented programming paradigms, allowing developers to write highly optimized code. With its extensive libraries and frameworks, 

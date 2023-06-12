@@ -1,0 +1,1 @@
+C++ is a powerful and versatile language known for its efficiency and low-level control. It is often used for system programming, game development, and other performance-critical applications.
