@@ -1,4 +1,4 @@
-package org.LabExercises;
+package org.LabExercises.Exercise1;
 
 import org.glassfish.grizzly.utils.Pair;
 

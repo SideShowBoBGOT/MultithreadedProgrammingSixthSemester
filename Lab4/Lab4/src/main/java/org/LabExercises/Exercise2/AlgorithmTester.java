@@ -1,4 +1,4 @@
-package test;
+package org.LabExercises.Exercise2;
 
 import org.LabExercises.Exercise2.ExecutorAlgorithm;
 import org.LabExercises.Exercise2.ForkJoinAlgorithm;

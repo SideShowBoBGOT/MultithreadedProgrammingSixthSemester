@@ -1,7 +1,5 @@
-package org.LabExercises;
+package org.LabExercises.Exercise3;
 
-import java.util.ArrayList;
-import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.RecursiveAction;
 import java.util.List;
 

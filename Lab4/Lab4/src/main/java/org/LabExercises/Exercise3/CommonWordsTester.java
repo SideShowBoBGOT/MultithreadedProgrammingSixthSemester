@@ -1,6 +1,5 @@
-package test;
+package org.LabExercises.Exercise3;
 
-import org.LabExercises.TextAnalyzer;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
