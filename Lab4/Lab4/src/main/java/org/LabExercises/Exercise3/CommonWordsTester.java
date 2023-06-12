@@ -7,8 +7,8 @@ import java.util.Arrays;
 
 public class CommonWordsTester {
 	private static final Logger LOGGER = LogManager.getLogger("Exercise3");
-	private static final String FILE_ONE = "Exercise3_1.txt";
-	private static final String FILE_TWO = "Exercise3_2.txt";
+	private static final String FILE_ONE = "ResourcesExercise3/1.txt";
+	private static final String FILE_TWO = "ResourcesExercise3/2.txt";
 
 	public static void main(String[] args) {
 		testProfile();
