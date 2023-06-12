@@ -4,13 +4,34 @@
         <Console name="Console" target="SYSTEM_OUT">
             <PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"/>
         </Console>
-        <File name="LogFile" fileName="Exercise2.log">
+        <File name="Exercise1" fileName="ResourcesExercise1/log.log">
+            <PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"/>
+        </File>
+        <File name="Exercise2" fileName="ResourcesExercise2/log.log">
+            <PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"/>
+        </File>
+        <File name="Exercise3" fileName="ResourcesExercise3/log.log">
+            <PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"/>
+        </File>
+        <File name="Exercise4" fileName="ResourcesExercise4/log.log">
             <PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"/>
         </File>
     </Appenders>
     <Loggers>
+        <Logger name="Exercise1" level="info" additivity="false">
+            <AppenderRef ref="Exercise1"/>
+            <AppenderRef ref="Console"/>
+        </Logger>
         <Logger name="Exercise2" level="info" additivity="false">
-            <AppenderRef ref="LogFile"/>
+            <AppenderRef ref="Exercise2"/>
+            <AppenderRef ref="Console"/>
+        </Logger>
+        <Logger name="Exercise3" level="info" additivity="false">
+            <AppenderRef ref="Exercise3"/>
+            <AppenderRef ref="Console"/>
+        </Logger>
+        <Logger name="Exercise4" level="info" additivity="false">
+            <AppenderRef ref="Exercise4"/>
             <AppenderRef ref="Console"/>
         </Logger>
         <Root level="error">

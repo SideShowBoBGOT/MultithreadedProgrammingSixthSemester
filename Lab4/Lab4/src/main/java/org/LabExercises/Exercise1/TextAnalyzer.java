@@ -1,21 +1,14 @@
 package org.LabExercises.Exercise1;
 
-import opennlp.tools.lemmatizer.LemmatizerME;
-import opennlp.tools.lemmatizer.LemmatizerModel;
-import opennlp.tools.postag.POSModel;
-import opennlp.tools.postag.POSTaggerME;
 import opennlp.tools.sentdetect.SentenceDetectorME;
 import opennlp.tools.sentdetect.SentenceModel;
 import opennlp.tools.tokenize.TokenizerME;
 import opennlp.tools.tokenize.TokenizerModel;
-import org.LabExercises.Exercise3.CommonWordsForkJoin;
-import org.springframework.data.util.StreamUtils;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Scanner;
 import java.util.concurrent.ForkJoinPool;
@@ -24,8 +17,6 @@ import java.util.stream.Stream;
 public class TextAnalyzer {
 	private static final String SENTENCE_MODEL_PATH = "LanguageModels/en-sent.bin";
 	private static final String TOKEN_MODEL_PATH = "LanguageModels/en-token.bin";
-	private static final String LEMMATIZER_MODEL_PATH = "LanguageModels/en-lemmatizer.bin";
-	private static final String POSTAGGER_MODEL_PATH = "LanguageModels/en-pos-maxent.bin";
 	private static final String NOT_VALID_SYMBOLS = "[^a-zA-Z\s\n]";
 	private static final String LINE_FEED = "\n";
 	private static final String EMPTY_SPACE = "";
