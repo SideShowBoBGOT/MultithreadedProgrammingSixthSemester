@@ -1,6 +1,6 @@
 import os
-with open('./Lab3/code.txt', 'w') as output:
-    for root, dirs, files in os.walk("./Lab3"):
+with open('./Lab4/code.txt', 'w') as output:
+    for root, dirs, files in os.walk("./Lab4"):
         for file in files:
             if file.endswith('.java'):
                 path = root + os.sep + file
