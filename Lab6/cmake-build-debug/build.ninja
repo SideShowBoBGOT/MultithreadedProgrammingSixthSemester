@@ -56,12 +56,19 @@ build CMakeFiles/Lab6.dir/main.cpp.o: CXX_COMPILER__Lab6_Debug /home/choleraplag
   OBJECT_DIR = CMakeFiles/Lab6.dir
   OBJECT_FILE_DIR = CMakeFiles/Lab6.dir
 
-build CMakeFiles/Lab6.dir/TBlockingMPI.cpp.o: CXX_COMPILER__Lab6_Debug /home/choleraplague/university/MultithreadedProgramming/labs/Lab6/TBlockingMPI.cpp || cmake_object_order_depends_target_Lab6
-  DEP_FILE = CMakeFiles/Lab6.dir/TBlockingMPI.cpp.o.d
+build CMakeFiles/Lab6.dir/LabStuff/MatrixFactory.cpp.o: CXX_COMPILER__Lab6_Debug /home/choleraplague/university/MultithreadedProgramming/labs/Lab6/LabStuff/MatrixFactory.cpp || cmake_object_order_depends_target_Lab6
+  DEP_FILE = CMakeFiles/Lab6.dir/LabStuff/MatrixFactory.cpp.o.d
   FLAGS = -g -fdiagnostics-color=always -std=gnu++20
   INCLUDES = -isystem /usr/lib/x86_64-linux-gnu/openmpi/include -isystem /usr/lib/x86_64-linux-gnu/openmpi/include/openmpi
   OBJECT_DIR = CMakeFiles/Lab6.dir
-  OBJECT_FILE_DIR = CMakeFiles/Lab6.dir
+  OBJECT_FILE_DIR = CMakeFiles/Lab6.dir/LabStuff
+
+build CMakeFiles/Lab6.dir/LabStuff/Matrix.cpp.o: CXX_COMPILER__Lab6_Debug /home/choleraplague/university/MultithreadedProgramming/labs/Lab6/LabStuff/Matrix.cpp || cmake_object_order_depends_target_Lab6
+  DEP_FILE = CMakeFiles/Lab6.dir/LabStuff/Matrix.cpp.o.d
+  FLAGS = -g -fdiagnostics-color=always -std=gnu++20
+  INCLUDES = -isystem /usr/lib/x86_64-linux-gnu/openmpi/include -isystem /usr/lib/x86_64-linux-gnu/openmpi/include/openmpi
+  OBJECT_DIR = CMakeFiles/Lab6.dir
+  OBJECT_FILE_DIR = CMakeFiles/Lab6.dir/LabStuff
 
 
 # =============================================================================
@@ -71,7 +78,7 @@ build CMakeFiles/Lab6.dir/TBlockingMPI.cpp.o: CXX_COMPILER__Lab6_Debug /home/cho
 #############################################
 # Link the executable Lab6
 
-build Lab6: CXX_EXECUTABLE_LINKER__Lab6_Debug CMakeFiles/Lab6.dir/main.cpp.o CMakeFiles/Lab6.dir/TBlockingMPI.cpp.o | /usr/lib/x86_64-linux-gnu/openmpi/lib/libmpi_cxx.so /usr/lib/x86_64-linux-gnu/openmpi/lib/libmpi.so
+build Lab6: CXX_EXECUTABLE_LINKER__Lab6_Debug CMakeFiles/Lab6.dir/main.cpp.o CMakeFiles/Lab6.dir/LabStuff/MatrixFactory.cpp.o CMakeFiles/Lab6.dir/LabStuff/Matrix.cpp.o | /usr/lib/x86_64-linux-gnu/openmpi/lib/libmpi_cxx.so /usr/lib/x86_64-linux-gnu/openmpi/lib/libmpi.so
   FLAGS = -g
   LINK_LIBRARIES = -Wl,-rpath,/usr/lib/x86_64-linux-gnu/openmpi/lib  /usr/lib/x86_64-linux-gnu/openmpi/lib/libmpi_cxx.so  /usr/lib/x86_64-linux-gnu/openmpi/lib/libmpi.so
   OBJECT_DIR = CMakeFiles/Lab6.dir
