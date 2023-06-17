@@ -10,9 +10,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 public class MassServiceSystem {
-	private static final String TASK_FINISHED = "[TASK EXECUTED][RUNNING TIME: %d]";
-	private static final String TASK_TRANSFERRED_TO_QUEUE = "[TASK TRANSFERRED TO QUEUE]";
-	private static final String TASK_TAKEN_FROM_QUEUE = "[TASK TAKEN FROM QUEUE][WAITING TIME: %d]";
+	private static final String SERVICE_ALREADY_STOPPED = "Service already stopped";
 	private static final String MEAN_QUEUE_LENGTH = "[MEAN QUEUE LENGTH: %f]";
 	private static final String CANCELLATION_PROBABILITY = "[CANCELLATION PROBABILITY: %f]";
 
@@ -54,8 +52,8 @@ public class MassServiceSystem {
 		this.maxWaitedTasks = maxWaitedTasks;
 		this.maxRunningTasks = maxRunningTasks;
 		this.logger = logger;
-		var workerThread = new Thread(this::work);
-		workerThread.start();
+		var logThread = new Thread(this::log);
+		logThread.start();
 	}
 
 	public void addTask(MSSTask task) {
@@ -71,7 +69,7 @@ public class MassServiceSystem {
 		}
 		task.cancel();
 	}
-	private void work() {
+	private void log() {
 		while(isRunning.get()) {
 			currentTime = System.currentTimeMillis();
 
@@ -113,6 +111,9 @@ public class MassServiceSystem {
 	}
 
 	public void shutdown() {
+		if(!isRunning.get()) {
+			throw new IllegalStateException(SERVICE_ALREADY_STOPPED);
+		}
 		isRunning.set(false);
 	}
 }
