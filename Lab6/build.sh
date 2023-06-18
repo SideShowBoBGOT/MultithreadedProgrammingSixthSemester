@@ -1,1 +1,0 @@
-mpiCC -std=c++20 main.cpp -lboost_mpi -lboost_serialization -o main.o

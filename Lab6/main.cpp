@@ -1,63 +1,91 @@
 #include <iostream>
-#include <vector>
-#include <random>
 #include <chrono>
 #include <boost/mpi.hpp>
 
-#include "LabStuff/MatrixFactory.h"
-#include "LabStuff/Matrix.h"
+#include "MatrixFactory.h"
+#include "Matrix.h"
 
 namespace mpi = boost::mpi;
+
+static constexpr auto FROM_MAIN_THREAD_TAG = 1;
+static constexpr auto FROM_TASK_THREAD_TAG = 2;
+static constexpr auto ROWS = 3;
+static constexpr auto COLS = 3;
+static constexpr auto MIN_VAL = 0;
+static constexpr auto MAX_VAL = 1;
+
+static const std::string NUMBER_OF_TASK_LE_ZERO = "Number of tasks is less or equal zero";
+static const std::string MAIN_THREAD_TIME = "Main thread time: ";
+static const std::string MILLIS = "ms";
+
+static constexpr char LINE_FEED = '\n';
 
 int main() {
 	auto env = mpi::environment();
 	auto world = mpi::communicator();
-
-	auto rows = 5;
-	auto cols = 5;
-	auto minVal = 0;
-	auto maxVal = 1;
 	
-	auto isRowsLess = rows < world.size();
-	auto totalThreads = isRowsLess ? rows : world.size();
-	auto step = isRowsLess ? 1 : world.size();
+	auto tasksNum = world.size() - 1;
+	if(tasksNum <= 0) {
+		throw std::invalid_argument(NUMBER_OF_TASK_LE_ZERO);
+	}
 
-	if(world.rank() == 0) {
-		
+	auto isRowsLess = ROWS < tasksNum;
+	auto workingTasksNum = isRowsLess ? ROWS : tasksNum;
+	auto step = isRowsLess ? 1 : tasksNum;
+	auto rank = world.rank();
+
+	if(rank == 0) {		
 		auto factory = MatrixFactory();
-		auto first = factory.GenerateMatrix(rows, cols, minVal, maxVal);
-		auto second = factory.GenerateMatrix(rows, cols, minVal, maxVal);
-		auto result = Matrix(rows, cols);
+		auto first = factory.GenerateMatrix(ROWS, COLS, MIN_VAL, MAX_VAL);
+		auto second = factory.GenerateMatrix(ROWS, COLS, MIN_VAL, MAX_VAL);
+		auto result = Matrix(ROWS, COLS);
 	
 		auto start = std::chrono::high_resolution_clock::now();
-		for(auto i = 0; i < totalThreads; ++i) {
-			world.send(i + 1, 1, first);
-			world.send(i + 1, 1, second);
+
+		for(auto i = 0; i < workingTasksNum; ++i) {
+			world.send(i + 1, FROM_MAIN_THREAD_TAG, first);
+			world.send(i + 1, FROM_MAIN_THREAD_TAG, second);
 		}
+
+		for(auto i = 0; i < workingTasksNum; ++i) {
+			auto tempResult = Matrix(ROWS, COLS);
+			world.recv(i + 1, FROM_TASK_THREAD_TAG, tempResult);
+			result.sum(tempResult);
+		}
+
+		std::cout << first << LINE_FEED;
+		std::cout << second << LINE_FEED;
+		std::cout << result << LINE_FEED;
 		
 		auto end = std::chrono::high_resolution_clock::now();
-		std::cout << "Main thread time: " << std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count() << "ms" << std::endl;
+		auto millis = std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count();
+		std::cout << MAIN_THREAD_TIME;
+		std::cout << millis << MILLIS << std::endl;
 		
-	} else {
+	} else if(rank <= workingTasksNum) {
 		auto first = Matrix();
 		auto second = Matrix();
+		auto result = Matrix(ROWS, COLS);
 		
-		world.recv(0, 1, first);
-		world.recv(0, 1, second);
+		world.recv(0, FROM_MAIN_THREAD_TAG, first);
+		world.recv(0, FROM_MAIN_THREAD_TAG, second);
 		
-		auto curRow = world.rank();
+		auto curRow = rank - 1;
 		
-        while(curRow < rows) {
-            for(auto j = 0; j < cols; ++j) {
+        while(curRow < ROWS) {
+            for(auto j = 0; j < COLS; ++j) {
                 auto value = 0.0;
-                for(auto k = 0; k < cols; ++k) {
+                for(auto k = 0; k < COLS; ++k) {
                     value += first[curRow][k] * second[k][j];
                 }
-                result.setAt(value, curRow, j);
+                result[curRow][j] = value;
+
             }
             curRow += step;
         }
+		
+		world.send(0, FROM_TASK_THREAD_TAG, result);
 	}
-	
+
 	return 0;
 }
