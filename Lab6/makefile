@@ -1,6 +1,6 @@
 CC=mpiCC
 CCRUN=mpirun
-RUNFLAGS=-np 2
+RUNFLAGS=-np 4
 FLAGS=-std=c++20
 BOOST_LIBS=-lboost_mpi -lboost_serialization
 

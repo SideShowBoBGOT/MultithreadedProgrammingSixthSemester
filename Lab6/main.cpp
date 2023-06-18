@@ -9,8 +9,8 @@ namespace mpi = boost::mpi;
 
 static constexpr auto FROM_MAIN_THREAD_TAG = 1;
 static constexpr auto FROM_TASK_THREAD_TAG = 2;
-static constexpr auto ROWS = 3;
-static constexpr auto COLS = 3;
+static constexpr auto ROWS = 200;
+static constexpr auto COLS = 200;
 static constexpr auto MIN_VAL = 0;
 static constexpr auto MAX_VAL = 1;
 
@@ -53,9 +53,9 @@ int main() {
 			result.sum(tempResult);
 		}
 
-		std::cout << first << LINE_FEED;
-		std::cout << second << LINE_FEED;
-		std::cout << result << LINE_FEED;
+		// std::cout << first << LINE_FEED;
+		// std::cout << second << LINE_FEED;
+		// std::cout << result << LINE_FEED;
 		
 		auto end = std::chrono::high_resolution_clock::now();
 		auto millis = std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count();
