@@ -1,6 +1,6 @@
 import os
 
-sizes = [100, 200, 300, 400, 500, 600, 700]
+sizes = [i for i in range(50, 750, 50)]
 threads = [2, 3, 4]
 typesBlock = ['blocking', 'nonblocking']
 for s in sizes:

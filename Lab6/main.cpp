@@ -67,18 +67,18 @@ int main(int argc, char* argv[]) {
 	
 		auto start = std::chrono::high_resolution_clock::now();
 
-		for(auto i = 0; i < workingTasksNum; ++i) {
-			if(isBlocking) {
+		if(isBlocking) {
+			for(auto i = 0; i < workingTasksNum; ++i) {
 				world.send(i + 1, FROM_MAIN_THREAD_TAG, first);
 				world.send(i + 1, FROM_MAIN_THREAD_TAG, second);
-			} else {
-				auto sent = std::vector<mpi::request> {
-					world.isend(i + 1, FROM_MAIN_THREAD_TAG, first),
-					world.isend(i + 1, FROM_MAIN_THREAD_TAG, second)
-				};
-				mpi::wait_all(sent.begin(), sent.end());
 			}
-			
+		} else {
+			std::vector<mpi::request> sent;
+			for(auto i = 0; i < workingTasksNum; ++i) {
+				sent.push_back(world.isend(i + 1, FROM_MAIN_THREAD_TAG, first));
+				sent.push_back(world.isend(i + 1, FROM_MAIN_THREAD_TAG, second));
+			}
+			mpi::wait_all(sent.begin(), sent.end());
 		}
 
 		for(auto i = 0; i < workingTasksNum; ++i) {
@@ -88,14 +88,9 @@ int main(int argc, char* argv[]) {
 			} else {
 				world.irecv(i + 1, FROM_TASK_THREAD_TAG, tempResult).wait();
 			}
-			
 			result.sum(tempResult);
 		}
 
-		// BOOST_LOG_TRIVIAL(info) << first;
-		// BOOST_LOG_TRIVIAL(info) << second << LINE_FEED;
-		// BOOST_LOG_TRIVIAL(info) << result << LINE_FEED;
-		
 		auto end = std::chrono::high_resolution_clock::now();
 		auto millis = std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count();
 		
