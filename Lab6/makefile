@@ -1,8 +1,8 @@
 CC=mpiCC
 CCRUN=mpirun
 RUNFLAGS=-np 4
-FLAGS=-std=c++20
-BOOST_LIBS=-lboost_mpi -lboost_serialization
+FLAGS=-std=c++20 -B /usr/include/boost/
+BOOST_LIBS=-lboost_system -lboost_thread -lboost_mpi -lboost_serialization -lboost_log -lboost_log_setup -lpthread
 
 BINARY=bin
 CODEDIRS=.

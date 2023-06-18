@@ -1,9 +1,5 @@
-//
-// Created by choleraplague on 17.06.23.
-//
-
-#ifndef LAB6_MATRIX_H
-#define LAB6_MATRIX_H
+#ifndef _MATRIX_H
+#define _MATRIX_H
 
 #include <vector>
 #include <type_traits>

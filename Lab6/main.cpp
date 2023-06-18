@@ -1,16 +1,27 @@
+#define BOOST_LOG_DYN_LINK 1
+
 #include <iostream>
 #include <chrono>
+
 #include <boost/mpi.hpp>
+
+#include <boost/log/core.hpp>
+#include <boost/log/trivial.hpp>
+#include <boost/log/expressions.hpp>
+#include <boost/log/sinks/text_file_backend.hpp>
+#include <boost/log/utility/setup/file.hpp>
+#include <boost/log/utility/setup/common_attributes.hpp>
+#include <boost/log/sources/severity_logger.hpp>
+#include <boost/log/sources/record_ostream.hpp>
 
 #include "MatrixFactory.h"
 #include "Matrix.h"
 
 namespace mpi = boost::mpi;
+namespace logging = boost::log;
 
 static constexpr auto FROM_MAIN_THREAD_TAG = 1;
 static constexpr auto FROM_TASK_THREAD_TAG = 2;
-static constexpr auto ROWS = 200;
-static constexpr auto COLS = 200;
 static constexpr auto MIN_VAL = 0;
 static constexpr auto MAX_VAL = 1;
 
@@ -18,9 +29,20 @@ static const std::string NUMBER_OF_TASK_LE_ZERO = "Number of tasks is less or eq
 static const std::string MAIN_THREAD_TIME = "Main thread time: ";
 static const std::string MILLIS = "ms";
 
-static constexpr char LINE_FEED = '\n';
+static const std::string LOG_FILE = "log.log";
+static const std::string LOG_FORMAT = "%Message%";
+static constexpr auto LOG_OPEN_MODE = std::ios_base::app;
 
-int main() {
+static const std::string BLOCKING = "blocking";
+
+void init();
+
+int main(int argc, char* argv[]) {
+	init();
+
+	auto size = static_cast<unsigned>(std::stoi(argv[1]));
+	auto isBlocking = std::string(argv[2]) == BLOCKING;
+
 	auto env = mpi::environment();
 	auto world = mpi::communicator();
 	
@@ -29,31 +51,42 @@ int main() {
 		throw std::invalid_argument(NUMBER_OF_TASK_LE_ZERO);
 	}
 
-	auto isRowsLess = ROWS < tasksNum;
-	auto workingTasksNum = isRowsLess ? ROWS : tasksNum;
+	auto isRowsLess = size < tasksNum;
+	auto workingTasksNum = isRowsLess ? size : tasksNum;
 	auto step = isRowsLess ? 1 : tasksNum;
 	auto rank = world.rank();
 
 	if(rank == 0) {		
 		auto factory = MatrixFactory();
-		auto first = factory.GenerateMatrix(ROWS, COLS, MIN_VAL, MAX_VAL);
-		auto second = factory.GenerateMatrix(ROWS, COLS, MIN_VAL, MAX_VAL);
-		auto result = Matrix(ROWS, COLS);
+		auto first = factory.GenerateMatrix(size, size, MIN_VAL, MAX_VAL);
+		auto second = factory.GenerateMatrix(size, size, MIN_VAL, MAX_VAL);
+		auto result = Matrix(size, size);
 	
 		auto start = std::chrono::high_resolution_clock::now();
 
 		for(auto i = 0; i < workingTasksNum; ++i) {
-			world.send(i + 1, FROM_MAIN_THREAD_TAG, first);
-			world.send(i + 1, FROM_MAIN_THREAD_TAG, second);
+			if(isBlocking) {
+				world.send(i + 1, FROM_MAIN_THREAD_TAG, first);
+				world.send(i + 1, FROM_MAIN_THREAD_TAG, second);
+			} else {
+				world.isend(i + 1, FROM_MAIN_THREAD_TAG, first);
+				world.isend(i + 1, FROM_MAIN_THREAD_TAG, second);
+			}
+			
 		}
 
 		for(auto i = 0; i < workingTasksNum; ++i) {
-			auto tempResult = Matrix(ROWS, COLS);
-			world.recv(i + 1, FROM_TASK_THREAD_TAG, tempResult);
+			auto tempResult = Matrix(size, size);
+			if(isBlocking) {
+				world.recv(i + 1, FROM_TASK_THREAD_TAG, tempResult);
+			} else {
+				world.irecv(i + 1, FROM_TASK_THREAD_TAG, tempResult);
+			}
+			
 			result.sum(tempResult);
 		}
 
-		// std::cout << first << LINE_FEED;
+		BOOST_LOG_TRIVIAL(info) << first;
 		// std::cout << second << LINE_FEED;
 		// std::cout << result << LINE_FEED;
 		
@@ -65,17 +98,22 @@ int main() {
 	} else if(rank <= workingTasksNum) {
 		auto first = Matrix();
 		auto second = Matrix();
-		auto result = Matrix(ROWS, COLS);
+		auto result = Matrix(size, size);
 		
-		world.recv(0, FROM_MAIN_THREAD_TAG, first);
-		world.recv(0, FROM_MAIN_THREAD_TAG, second);
+		if(isBlocking) {
+			world.recv(0, FROM_MAIN_THREAD_TAG, first);
+			world.recv(0, FROM_MAIN_THREAD_TAG, second);
+		} else {
+			world.irecv(0, FROM_MAIN_THREAD_TAG, first);
+			world.irecv(0, FROM_MAIN_THREAD_TAG, second);
+		}
 		
 		auto curRow = rank - 1;
 		
-        while(curRow < ROWS) {
-            for(auto j = 0; j < COLS; ++j) {
+        while(curRow < size) {
+            for(auto j = 0; j < size; ++j) {
                 auto value = 0.0;
-                for(auto k = 0; k < COLS; ++k) {
+                for(auto k = 0; k < size; ++k) {
                     value += first[curRow][k] * second[k][j];
                 }
                 result[curRow][j] = value;
@@ -84,8 +122,23 @@ int main() {
             curRow += step;
         }
 		
-		world.send(0, FROM_TASK_THREAD_TAG, result);
+		if(isBlocking) {
+			world.send(0, FROM_TASK_THREAD_TAG, result);
+		} else {
+			world.isend(0, FROM_TASK_THREAD_TAG, result);
+		}
 	}
 
 	return 0;
+}
+
+void init() {
+	logging::add_file_log(
+		LOG_FILE,
+		logging::keywords::open_mode = LOG_OPEN_MODE,
+		logging::keywords::format = LOG_FORMAT
+	);
+    logging::core::get()->set_filter(
+        logging::trivial::severity >= logging::trivial::info
+    );
 }
