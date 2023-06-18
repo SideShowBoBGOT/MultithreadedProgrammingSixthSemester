@@ -35,13 +35,16 @@ static constexpr auto LOG_OPEN_MODE = std::ios_base::app;
 
 static const std::string BLOCKING = "blocking";
 
+static constexpr char TAB = '\t';
+
 void init();
 
 int main(int argc, char* argv[]) {
 	init();
 
 	auto size = static_cast<unsigned>(std::stoi(argv[1]));
-	auto isBlocking = std::string(argv[2]) == BLOCKING;
+	auto blockType = std::string(argv[2]);
+	auto isBlocking = blockType == BLOCKING;
 
 	auto env = mpi::environment();
 	auto world = mpi::communicator();
@@ -69,8 +72,11 @@ int main(int argc, char* argv[]) {
 				world.send(i + 1, FROM_MAIN_THREAD_TAG, first);
 				world.send(i + 1, FROM_MAIN_THREAD_TAG, second);
 			} else {
-				world.isend(i + 1, FROM_MAIN_THREAD_TAG, first);
-				world.isend(i + 1, FROM_MAIN_THREAD_TAG, second);
+				auto sent = std::vector<mpi::request> {
+					world.isend(i + 1, FROM_MAIN_THREAD_TAG, first),
+					world.isend(i + 1, FROM_MAIN_THREAD_TAG, second)
+				};
+				mpi::wait_all(sent.begin(), sent.end());
 			}
 			
 		}
@@ -80,20 +86,21 @@ int main(int argc, char* argv[]) {
 			if(isBlocking) {
 				world.recv(i + 1, FROM_TASK_THREAD_TAG, tempResult);
 			} else {
-				world.irecv(i + 1, FROM_TASK_THREAD_TAG, tempResult);
+				world.irecv(i + 1, FROM_TASK_THREAD_TAG, tempResult).wait();
 			}
 			
 			result.sum(tempResult);
 		}
 
-		BOOST_LOG_TRIVIAL(info) << first;
-		// std::cout << second << LINE_FEED;
-		// std::cout << result << LINE_FEED;
+		// BOOST_LOG_TRIVIAL(info) << first;
+		// BOOST_LOG_TRIVIAL(info) << second << LINE_FEED;
+		// BOOST_LOG_TRIVIAL(info) << result << LINE_FEED;
 		
 		auto end = std::chrono::high_resolution_clock::now();
 		auto millis = std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count();
-		std::cout << MAIN_THREAD_TIME;
-		std::cout << millis << MILLIS << std::endl;
+		
+		BOOST_LOG_TRIVIAL(info) << blockType << TAB << size
+			<< TAB << world.size() << TAB << millis;
 		
 	} else if(rank <= workingTasksNum) {
 		auto first = Matrix();
@@ -104,8 +111,11 @@ int main(int argc, char* argv[]) {
 			world.recv(0, FROM_MAIN_THREAD_TAG, first);
 			world.recv(0, FROM_MAIN_THREAD_TAG, second);
 		} else {
-			world.irecv(0, FROM_MAIN_THREAD_TAG, first);
-			world.irecv(0, FROM_MAIN_THREAD_TAG, second);
+			auto received = std::vector<mpi::request> {
+				world.irecv(0, FROM_MAIN_THREAD_TAG, first),
+				world.irecv(0, FROM_MAIN_THREAD_TAG, second)
+			};
+			mpi::wait_all(received.begin(), received.end());
 		}
 		
 		auto curRow = rank - 1;
@@ -125,7 +135,7 @@ int main(int argc, char* argv[]) {
 		if(isBlocking) {
 			world.send(0, FROM_TASK_THREAD_TAG, result);
 		} else {
-			world.isend(0, FROM_TASK_THREAD_TAG, result);
+			world.isend(0, FROM_TASK_THREAD_TAG, result).wait();
 		}
 	}
 
