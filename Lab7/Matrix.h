@@ -1,32 +1,30 @@
 #ifndef _MATRIX_H
 #define _MATRIX_H
 
-#include <vector>
-#include <type_traits>
-#include <boost/serialization/serialization.hpp>
-#include <boost/serialization/vector.hpp>
+#include "IMatrix.h"
 
-class Matrix {
+class Matrix : public IMatrix {
 	public:
 	Matrix()=default;
 	Matrix(unsigned rows, unsigned cols);
-	virtual ~Matrix()=default;
-
-	public:
-	using InnerMat = std::vector<std::vector<double>>;
+	virtual ~Matrix() override=default;
 
 	public:
 	virtual const InnerMat& innerMat() const;
-	virtual unsigned rows() const;
-	virtual unsigned cols() const;
+	virtual InnerMat& innerMat();
+
+	public:
+	virtual unsigned rows() const override;
+	virtual unsigned cols() const override;
 	
 	public:
-	virtual void sum(const Matrix& other);
+	virtual void sum(const Matrix& other) override;
 
 	public:
 	friend std::ostream& operator<<(std::ostream& out, const Matrix& matrix);
-	virtual std::vector<double>& operator[](unsigned index);
-	virtual const std::vector<double>& operator[](unsigned index) const;
+	
+	virtual InnerRow& operator[](unsigned index) override;
+	virtual const InnerRow& operator[](unsigned index) const override;
 
 	private:
 	friend class boost::serialization::access;
@@ -37,9 +35,6 @@ class Matrix {
 		
 	protected:
 	InnerMat mat;
-	
-	protected:
-	static const std::string MATRICES_NOT_THE_SAME_SIZE;
 };
 
 

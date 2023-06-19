@@ -6,8 +6,6 @@ static constexpr char OPEN_BRACKETS_SYMBOL = '{';
 static constexpr char CLOSING_BRACKETS_SYMBOL = '}';
 static constexpr char SPACE_SYMBOL = ' ';
 
-const std::string Matrix::MATRICES_NOT_THE_SAME_SIZE = "Matrices are not the same size";
-
 Matrix::Matrix(unsigned int rows, unsigned int cols) {
 	mat.resize(rows);
 	for(auto& row : mat) {
@@ -15,12 +13,16 @@ Matrix::Matrix(unsigned int rows, unsigned int cols) {
 	}
 }
 
-std::vector<double>& Matrix::operator[](unsigned index) {
+Matrix::InnerRow& Matrix::operator[](unsigned index) {
 	return mat[index];
 }
 
-const std::vector<double>& Matrix::operator[](unsigned index) const {
+const Matrix::InnerRow& Matrix::operator[](unsigned index) const {
 	return mat[index];
+}
+
+Matrix::InnerMat& Matrix::innerMat() {
+	return mat;
 }
 
 const Matrix::InnerMat& Matrix::innerMat() const {

@@ -20,124 +20,88 @@
 namespace mpi = boost::mpi;
 namespace logging = boost::log;
 
-static constexpr auto FROM_MAIN_THREAD_TAG = 1;
-static constexpr auto FROM_TASK_THREAD_TAG = 2;
 static constexpr auto MIN_VAL = 0;
 static constexpr auto MAX_VAL = 1;
 
-static const std::string NUMBER_OF_TASK_LE_ZERO = "Number of tasks is less or equal zero";
-static const std::string MAIN_THREAD_TIME = "Main thread time: ";
+static const std::string NUMBER_OF_TASKS_LESS_EQUAL_ZERO = "Number of tasks is less or equal zero";
+static const std::string INVALID_ALG_TYPE = "incorrect algorithm type";
+static const std::string MAT_SIZE_NEGATIVE = "Matrix size can not be negative";
+
 static const std::string MILLIS = "ms";
 
 static const std::string LOG_FILE = "log.log";
 static const std::string LOG_FORMAT = "%Message%";
 static constexpr auto LOG_OPEN_MODE = std::ios_base::app;
 
-static const std::string BLOCKING = "blocking";
+static const std::string ONE_TO_MANY = "oneToMany";
+static const std::string MANY_TO_MANY = "manyToMany";
 
 static constexpr char TAB = '\t';
 
-void init();
+void initLog();
+void oneToMany(const mpi::communicator& world, unsigned matSize);
+void manyToMany(const mpi::communicator& world, unsigned matSize);
 
 int main(int argc, char* argv[]) {
-	init();
-
-	auto size = static_cast<unsigned>(std::stoi(argv[1]));
-	auto blockType = std::string(argv[2]);
-	auto isBlocking = blockType == BLOCKING;
 
 	auto env = mpi::environment();
 	auto world = mpi::communicator();
-	
-	auto tasksNum = world.size() - 1;
-	if(tasksNum <= 0) {
-		throw std::invalid_argument(NUMBER_OF_TASK_LE_ZERO);
+
+	if( world.size() - 1 <= 0) {
+		throw std::invalid_argument(NUMBER_OF_TASKS_LESS_EQUAL_ZERO);
 	}
 
-	auto isRowsLess = size < tasksNum;
-	auto workingTasksNum = isRowsLess ? size : tasksNum;
-	auto step = isRowsLess ? 1 : tasksNum;
-	auto rank = world.rank();
+	initLog();
 
-	if(rank == 0) {		
-		auto factory = MatrixFactory();
-		auto first = factory.GenerateMatrix(size, size, MIN_VAL, MAX_VAL);
-		auto second = factory.GenerateMatrix(size, size, MIN_VAL, MAX_VAL);
-		auto result = Matrix(size, size);
-	
-		auto start = std::chrono::high_resolution_clock::now();
+	auto matSize = static_cast<unsigned>(std::stoi(argv[1]));
+	if(matSize < 0) {
+		throw std::invalid_argument(MAT_SIZE_NEGATIVE);
+	}
+	auto algType = std::string(argv[2]);
 
-		if(isBlocking) {
-			for(auto i = 0; i < workingTasksNum; ++i) {
-				world.send(i + 1, FROM_MAIN_THREAD_TAG, first);
-				world.send(i + 1, FROM_MAIN_THREAD_TAG, second);
-			}
-		} else {
-			std::vector<mpi::request> sent;
-			for(auto i = 0; i < workingTasksNum; ++i) {
-				sent.push_back(world.isend(i + 1, FROM_MAIN_THREAD_TAG, first));
-				sent.push_back(world.isend(i + 1, FROM_MAIN_THREAD_TAG, second));
-			}
-			mpi::wait_all(sent.begin(), sent.end());
-		}
-
-		for(auto i = 0; i < workingTasksNum; ++i) {
-			auto tempResult = Matrix(size, size);
-			if(isBlocking) {
-				world.recv(i + 1, FROM_TASK_THREAD_TAG, tempResult);
-			} else {
-				world.irecv(i + 1, FROM_TASK_THREAD_TAG, tempResult).wait();
-			}
-			result.sum(tempResult);
-		}
-
-		auto end = std::chrono::high_resolution_clock::now();
-		auto millis = std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count();
-		
-		BOOST_LOG_TRIVIAL(info) << blockType << TAB << size
-			<< TAB << world.size() << TAB << millis;
-		
-	} else if(rank <= workingTasksNum) {
-		auto first = Matrix();
-		auto second = Matrix();
-		auto result = Matrix(size, size);
-		
-		if(isBlocking) {
-			world.recv(0, FROM_MAIN_THREAD_TAG, first);
-			world.recv(0, FROM_MAIN_THREAD_TAG, second);
-		} else {
-			auto received = std::vector<mpi::request> {
-				world.irecv(0, FROM_MAIN_THREAD_TAG, first),
-				world.irecv(0, FROM_MAIN_THREAD_TAG, second)
-			};
-			mpi::wait_all(received.begin(), received.end());
-		}
-		
-		auto curRow = rank - 1;
-		
-        while(curRow < size) {
-            for(auto j = 0; j < size; ++j) {
-                auto value = 0.0;
-                for(auto k = 0; k < size; ++k) {
-                    value += first[curRow][k] * second[k][j];
-                }
-                result[curRow][j] = value;
-
-            }
-            curRow += step;
-        }
-		
-		if(isBlocking) {
-			world.send(0, FROM_TASK_THREAD_TAG, result);
-		} else {
-			world.isend(0, FROM_TASK_THREAD_TAG, result).wait();
-		}
+	if(algType == ONE_TO_MANY) {
+		oneToMany(world, matSize);
+	} else if(algType == MANY_TO_MANY) {
+		manyToMany(world, matSize);
+	} else {
+		throw std::invalid_argument(INVALID_ALG_TYPE);
 	}
 
 	return 0;
 }
 
-void init() {
+void oneToMany(const mpi::communicator& world, unsigned matSize) {
+	Matrix first, second, result;
+
+	if(rank == 0) {		
+		auto factory = MatrixFactory();
+		auto first = factory.GenerateMatrix(matSize, matSize, MIN_VAL, MAX_VAL);
+		auto second = factory.GenerateMatrix(matSize, matSize, MIN_VAL, MAX_VAL);
+	} else {
+		first = Matrix(matSize)
+	}
+
+	auto start = std::chrono::high_resolution_clock::now();
+
+	auto nodesNum = static_case<unsigned>(world.size());
+	auto steps = matSize / nodesNum;
+	auto extraSteps = matSize % nodesNum;
+
+	mpi::broadcast(world, second, 0);
+	mpi::scatter()
+
+	auto end = std::chrono::high_resolution_clock::now();
+	auto millis = std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count();
+	
+	BOOST_LOG_TRIVIAL(info) << blockType << TAB << size
+		<< TAB << world.size() << TAB << millis;
+}
+
+void manyToMany(const mpi::communicator& world, unsigned matSize) {
+
+}
+
+void initLog() {
 	logging::add_file_log(
 		LOG_FILE,
 		logging::keywords::open_mode = LOG_OPEN_MODE,
