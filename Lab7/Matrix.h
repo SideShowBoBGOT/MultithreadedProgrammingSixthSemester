@@ -18,7 +18,7 @@ class Matrix : public IMatrix {
 	virtual unsigned cols() const override;
 	
 	public:
-	virtual void sum(const Matrix& other) override;
+	virtual void sum(const IMatrix& other) override;
 
 	public:
 	friend std::ostream& operator<<(std::ostream& out, const Matrix& matrix);

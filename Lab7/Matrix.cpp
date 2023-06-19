@@ -50,7 +50,7 @@ std::ostream& operator<<(std::ostream& out, const Matrix& matrix) {
 	return out;
 }
 
-void Matrix::sum(const Matrix& other) {
+void Matrix::sum(const IMatrix& other) {
 	if(rows() != other.rows() || cols() != other.cols()) {
 		throw std::invalid_argument(MATRICES_NOT_THE_SAME_SIZE);
 	}

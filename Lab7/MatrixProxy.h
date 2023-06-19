@@ -1,5 +1,5 @@
-#ifndef MATRIX_PROXY_H_
-#define MATRIX_PROXY_H_
+#ifndef _MATRIX_PROXY_H_
+#define _MATRIX_PROXY_H_
 
 #include "IMatrix.h"
 
@@ -42,4 +42,4 @@ class MatrixProxy : public IMatrix {
     Matrix* matrix = nullptr;
 }
 
-#endif
+#endif // _MATRIX_PROXY_H_
