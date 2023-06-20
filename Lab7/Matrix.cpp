@@ -40,13 +40,20 @@ unsigned Matrix::cols() const {
 
 std::ostream& operator<<(std::ostream& out, const Matrix& matrix) {
 	out << OPEN_BRACKETS_SYMBOL << SPACE_SYMBOL;
-	for(auto i = 0u; i < matrix.rows(); ++i) {
+	for(auto i = 0u; i < matrix.rows() - 1; ++i) {
 		out << OPEN_BRACKETS_SYMBOL << SPACE_SYMBOL;
-		for(auto j = 0u; j < matrix.cols(); ++j) {
-			out << matrix[i][j] << SPACE_SYMBOL;
+		for(auto j = 0u; j < matrix.cols() - 1; ++j) {
+			out << matrix[i][j] << COMMA_SYMBOL << SPACE_SYMBOL;
 		}
-		out << CLOSING_BRACKETS_SYMBOL << SPACE_SYMBOL;
+		out << matrix[i][matrix.cols() - 1] << SPACE_SYMBOL;
+		out << CLOSING_BRACKETS_SYMBOL << COMMA_SYMBOL << SPACE_SYMBOL;
 	}
+	out << OPEN_BRACKETS_SYMBOL << SPACE_SYMBOL;
+	for(auto j = 0u; j < matrix.cols() - 1; ++j) {
+		out << matrix[ matrix.rows() - 1][j] << COMMA_SYMBOL << SPACE_SYMBOL;
+	}
+	out << matrix[ matrix.rows() - 1][matrix.cols() - 1] << SPACE_SYMBOL;
+	out << CLOSING_BRACKETS_SYMBOL << SPACE_SYMBOL;
 	out << CLOSING_BRACKETS_SYMBOL << SPACE_SYMBOL;
 	return out;
 }

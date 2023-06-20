@@ -72,7 +72,7 @@ int main(int argc, char* argv[]) {
 }
 
 void oneToMany(const mpi::communicator& world, unsigned matSize) {
-	auto rank = world.rank();
+	auto rank = static_cast<unsigned>(world.rank());
 
 	Matrix first, second;
 	auto result = Matrix(matSize, matSize);
@@ -106,10 +106,11 @@ void oneToMany(const mpi::communicator& world, unsigned matSize) {
 		mpi::scatter(world, outProxy, 0);
 	}
 
-	for(auto i = 0u; i < outProxy.rows(); ++i) {
+	auto fromRow = rank * step;
+	for(unsigned i = fromRow, r = 0; (i < fromRow + step) && (r < step); ++i) {
 		for(auto j = 0; j < matSize; ++j) {
 			for(auto k = 0; k < matSize; ++k) {
-				result[i][j] += outProxy[i][k] * second[k][j];
+				result[i][j] += outProxy[r][k] * second[k][j];
 			}
 		}
 	}
@@ -122,6 +123,19 @@ void oneToMany(const mpi::communicator& world, unsigned matSize) {
 		for(auto i = 1u; i < subResults.size(); ++i) {
 			sub.sum(subResults[i]);
 		}
+
+		for(auto i = sub.rows() - extraSteps; i < sub.rows(); ++i) {
+			for(auto j = 0; j < matSize; ++j) {
+				for(auto k = 0; k < matSize; ++k) {
+					sub[i][j] += first[i][k] * second[k][j];
+				}
+			}
+		}
+
+		// std::cout<<first<<std::endl;
+		// std::cout<<second<<std::endl;
+		// std::cout<<sub<<std::endl;
+
 		auto end = std::chrono::high_resolution_clock::now();
 		auto millis = std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count();
 	
@@ -134,7 +148,41 @@ void oneToMany(const mpi::communicator& world, unsigned matSize) {
 }
 
 void manyToMany(const mpi::communicator& world, unsigned matSize) {
+	// auto rank = world.rank();
 
+	// Matrix first, second;
+	// auto result = Matrix(matSize, matSize);
+
+	// if(rank == 0) {		
+	// 	auto factory = MatrixFactory();
+	// 	first = factory.GenerateMatrix(matSize, matSize, MIN_VAL, MAX_VAL);
+	// 	second = factory.GenerateMatrix(matSize, matSize, MIN_VAL, MAX_VAL);
+	// }		
+
+	// mpi::broadcast(world, second, 0);
+
+	// auto start = std::chrono::high_resolution_clock::now();
+
+	// if(rank == 0) {
+	// 	auto firstInnerMat = first.innerMat();
+	// 	auto proxis = std::vector<Matrix>(nodesNum);
+	// 	for(auto i = 0u; i < proxis.size(); ++i) {
+	// 		auto from = firstInnerMat.begin() + i * step;
+	// 		auto to = from + step;
+	// 		std::copy(from, to, std::back_inserter(proxis[i].innerMat()));
+	// 	}
+	// 	mpi::scatter(world, proxis, outProxy, 0);
+	// } else {
+	// 	mpi::scatter(world, outProxy, 0);
+	// }
+
+	// for(auto i = 0u; i < outProxy.rows(); ++i) {
+	// 	for(auto j = 0; j < matSize; ++j) {
+	// 		for(auto k = 0; k < matSize; ++k) {
+	// 			result[i][j] += outProxy[i][k] * second[k][j];
+	// 		}
+	// 	}
+	// }
 }
 
 void initLog() {
