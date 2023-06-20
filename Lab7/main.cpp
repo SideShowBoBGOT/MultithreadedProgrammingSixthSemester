@@ -39,8 +39,7 @@ static const std::string MANY_TO_MANY = "many_to_many";
 static constexpr char TAB = '\t';
 
 void initLog();
-void oneToMany(const mpi::communicator& world, unsigned matSize);
-void manyToMany(const mpi::communicator& world, unsigned matSize);
+void doMul(const mpi::communicator& world, unsigned matSize, const std::string& algType);
 
 int main(int argc, char* argv[]) {
 
@@ -60,18 +59,16 @@ int main(int argc, char* argv[]) {
 	}
 	auto algType = std::string(argv[2]);
 
-	if(algType == ONE_TO_MANY) {
-		oneToMany(world, matSize);
-	} else if(algType == MANY_TO_MANY) {
-		manyToMany(world, matSize);
-	} else {
+	if(algType != ONE_TO_MANY && algType != MANY_TO_MANY) {
 		throw std::invalid_argument(INVALID_ALG_TYPE);
 	}
+
+	doMul(world, matSize, algType);
 
 	return 0;
 }
 
-void oneToMany(const mpi::communicator& world, unsigned matSize) {
+void doMul(const mpi::communicator& world, unsigned matSize, const std::string& algType) {
 	auto rank = static_cast<unsigned>(world.rank());
 
 	Matrix first, second;
@@ -115,10 +112,15 @@ void oneToMany(const mpi::communicator& world, unsigned matSize) {
 		}
 	}
 
+	std::vector<Matrix> subResults;
+
 	if(rank == 0) {
 		// receive subResults to main thread from worker thread
-		auto subResults = std::vector<Matrix>(nodesNum);
-		mpi::gather(world, result, subResults, 0);
+		if(algType == ONE_TO_MANY) {
+			mpi::gather(world, result, subResults, 0);
+		} else if(algType == MANY_TO_MANY) {
+			mpi::all_gather(world, result, subResults);
+		}
 		auto& sub = subResults.front();
 		for(auto i = 1u; i < subResults.size(); ++i) {
 			sub.sum(subResults[i]);
@@ -139,50 +141,16 @@ void oneToMany(const mpi::communicator& world, unsigned matSize) {
 		auto end = std::chrono::high_resolution_clock::now();
 		auto millis = std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count();
 	
-		BOOST_LOG_TRIVIAL(info) << ONE_TO_MANY << TAB << matSize
+		BOOST_LOG_TRIVIAL(info) << algType << TAB << matSize
 			<< TAB << world.size() << TAB << millis;
 	} else {
 		// send subResult of worker thread to the main thread
-		mpi::gather(world, result, 0);
+		if(algType == ONE_TO_MANY) {
+			mpi::gather(world, result, 0);
+		} else if(algType == MANY_TO_MANY) {
+			mpi::all_gather(world, result, subResults);
+		}
 	}
-}
-
-void manyToMany(const mpi::communicator& world, unsigned matSize) {
-	// auto rank = world.rank();
-
-	// Matrix first, second;
-	// auto result = Matrix(matSize, matSize);
-
-	// if(rank == 0) {		
-	// 	auto factory = MatrixFactory();
-	// 	first = factory.GenerateMatrix(matSize, matSize, MIN_VAL, MAX_VAL);
-	// 	second = factory.GenerateMatrix(matSize, matSize, MIN_VAL, MAX_VAL);
-	// }		
-
-	// mpi::broadcast(world, second, 0);
-
-	// auto start = std::chrono::high_resolution_clock::now();
-
-	// if(rank == 0) {
-	// 	auto firstInnerMat = first.innerMat();
-	// 	auto proxis = std::vector<Matrix>(nodesNum);
-	// 	for(auto i = 0u; i < proxis.size(); ++i) {
-	// 		auto from = firstInnerMat.begin() + i * step;
-	// 		auto to = from + step;
-	// 		std::copy(from, to, std::back_inserter(proxis[i].innerMat()));
-	// 	}
-	// 	mpi::scatter(world, proxis, outProxy, 0);
-	// } else {
-	// 	mpi::scatter(world, outProxy, 0);
-	// }
-
-	// for(auto i = 0u; i < outProxy.rows(); ++i) {
-	// 	for(auto j = 0; j < matSize; ++j) {
-	// 		for(auto k = 0; k < matSize; ++k) {
-	// 			result[i][j] += outProxy[i][k] * second[k][j];
-	// 		}
-	// 	}
-	// }
 }
 
 void initLog() {
