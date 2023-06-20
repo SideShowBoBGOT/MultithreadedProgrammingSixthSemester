@@ -5,6 +5,7 @@ static constexpr char COMMA_SYMBOL = ',';
 static constexpr char OPEN_BRACKETS_SYMBOL = '{';
 static constexpr char CLOSING_BRACKETS_SYMBOL = '}';
 static constexpr char SPACE_SYMBOL = ' ';
+static const std::string MATRICES_NOT_THE_SAME_SIZE = "Matrices are not the same size";
 
 Matrix::Matrix(unsigned int rows, unsigned int cols) {
 	mat.resize(rows);
@@ -50,7 +51,7 @@ std::ostream& operator<<(std::ostream& out, const Matrix& matrix) {
 	return out;
 }
 
-void Matrix::sum(const IMatrix& other) {
+void Matrix::sum(const Matrix& other) {
 	if(rows() != other.rows() || cols() != other.cols()) {
 		throw std::invalid_argument(MATRICES_NOT_THE_SAME_SIZE);
 	}

@@ -33,8 +33,8 @@ static const std::string LOG_FILE = "log.log";
 static const std::string LOG_FORMAT = "%Message%";
 static constexpr auto LOG_OPEN_MODE = std::ios_base::app;
 
-static const std::string ONE_TO_MANY = "oneToMany";
-static const std::string MANY_TO_MANY = "manyToMany";
+static const std::string ONE_TO_MANY = "one_to_many";
+static const std::string MANY_TO_MANY = "many_to_many";
 
 static constexpr char TAB = '\t';
 
@@ -54,6 +54,7 @@ int main(int argc, char* argv[]) {
 	initLog();
 
 	auto matSize = static_cast<unsigned>(std::stoi(argv[1]));
+
 	if(matSize < 0) {
 		throw std::invalid_argument(MAT_SIZE_NEGATIVE);
 	}
@@ -73,27 +74,27 @@ int main(int argc, char* argv[]) {
 void oneToMany(const mpi::communicator& world, unsigned matSize) {
 	auto rank = world.rank();
 
-	Matrix first, second, result;
-	
+	Matrix first, second;
+	auto result = Matrix(matSize, matSize);
+
 	if(rank == 0) {		
-		factory = MatrixFactory();
+		auto factory = MatrixFactory();
 		first = factory.GenerateMatrix(matSize, matSize, MIN_VAL, MAX_VAL);
 		second = factory.GenerateMatrix(matSize, matSize, MIN_VAL, MAX_VAL);
-	} else {
-		first = Matrix(matSize)
-	}
+	}		
 
 	mpi::broadcast(world, second, 0);
 
 	auto start = std::chrono::high_resolution_clock::now();
-	auto nodesNum = static_case<unsigned>(world.size());
+
+	auto nodesNum = static_cast<unsigned>(world.size());
 	auto step = matSize / nodesNum;
 	auto extraSteps = matSize % nodesNum;
-	auto firstInnerMat = first.innerMat();
 
 	auto outProxy = Matrix();
 
 	if(rank == 0) {
+		auto firstInnerMat = first.innerMat();
 		auto proxis = std::vector<Matrix>(nodesNum);
 		for(auto i = 0u; i < proxis.size(); ++i) {
 			auto from = firstInnerMat.begin() + i * step;
@@ -105,7 +106,7 @@ void oneToMany(const mpi::communicator& world, unsigned matSize) {
 		mpi::scatter(world, outProxy, 0);
 	}
 
-	for(auto i = 0u; i < outProxy.size(); ++i) {
+	for(auto i = 0u; i < outProxy.rows(); ++i) {
 		for(auto j = 0; j < matSize; ++j) {
 			for(auto k = 0; k < matSize; ++k) {
 				result[i][j] += outProxy[i][k] * second[k][j];
@@ -113,13 +114,23 @@ void oneToMany(const mpi::communicator& world, unsigned matSize) {
 		}
 	}
 
-	mpi::gather(world, )
-
-	auto end = std::chrono::high_resolution_clock::now();
-	auto millis = std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count();
+	if(rank == 0) {
+		// receive subResults to main thread from worker thread
+		auto subResults = std::vector<Matrix>(nodesNum);
+		mpi::gather(world, result, subResults, 0);
+		auto& sub = subResults.front();
+		for(auto i = 1u; i < subResults.size(); ++i) {
+			sub.sum(subResults[i]);
+		}
+		auto end = std::chrono::high_resolution_clock::now();
+		auto millis = std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count();
 	
-	BOOST_LOG_TRIVIAL(info) << blockType << TAB << size
-		<< TAB << world.size() << TAB << millis;
+		BOOST_LOG_TRIVIAL(info) << ONE_TO_MANY << TAB << matSize
+			<< TAB << world.size() << TAB << millis;
+	} else {
+		// send subResult of worker thread to the main thread
+		mpi::gather(world, result, 0);
+	}
 }
 
 void manyToMany(const mpi::communicator& world, unsigned matSize) {
