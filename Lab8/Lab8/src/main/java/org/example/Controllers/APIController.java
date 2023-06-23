@@ -28,7 +28,7 @@ public class APIController {
 		MultipartFile fileMatrix1,
 		MultipartFile fileMatrix2
 	) {
-		List<List<Integer>> firstMatri = MatrixUtil.getFromFile(fileMatrix1, size, size);
+		List<List<Integer>> firstMatrix = MatrixUtil.getFromFile(fileMatrix1, size, size);
 		List<List<Integer>> secondMatrix = MatrixUtil.getFromFile(fileMatrix2, size, size);
 		return BenchmarkPerformer.performBenchmark(switch (algoName) {
 			case BLOCK_STRIPED -> new BlockStripedAlgo();
