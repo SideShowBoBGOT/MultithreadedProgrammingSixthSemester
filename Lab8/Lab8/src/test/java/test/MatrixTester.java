@@ -127,8 +127,8 @@ public class MatrixTester {
 
                     var startTime = System.currentTimeMillis();
 
-                    var first = matrixFactory.getRandom(size, size, minVal, maxVal);
-                    var second = matrixFactory.getRandom(size, size, minVal, maxVal);
+                    var first = matrixFactory.getRandom(size, size, minVal, maxVal, 0);
+                    var second = matrixFactory.getRandom(size, size, minVal, maxVal, 0);
 
                     algorithm.setThreadsNum(threadsNum);
                     algorithm.setFirst(first);

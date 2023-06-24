@@ -2,8 +2,7 @@ package org.example.LabMatrixService.Controllers;
 
 import org.example.LabMath.Matrixes.Matrix2D;
 import org.example.LabMath.Matrixes.Matrix2DFactory;
-import org.example.LabMatrixService.Models.RandomMultiplyRequest;
-import org.example.LabMatrixService.Models.Result;
+import org.example.LabMatrixService.Models.*;
 import org.example.LabMatrixService.Services.MultiplyService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -15,8 +14,6 @@ import jakarta.validation.constraints.NotNull;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import org.example.LabMatrixService.Models.MultiplyRequest;
-
 @RestController
 @RequestMapping("/api")
 public class APIController {
@@ -24,27 +21,29 @@ public class APIController {
 	private static final int MAX_VAL = 1;
 	private static final int DEFAULT_SEED = 0;
 
-	@PostMapping("/multiply")
-	public ResponseEntity<Result> multiply(@NotNull @RequestBody MultiplyRequest request) throws Exception {
-		var result = MultiplyService.solve(
-			request.algType(), request.threadsNum(),
-			request.first(), request.second()
-		);
-		return ResponseEntity.ok(result);
-	}
-
 	@GetMapping("/multiply")
-	public ResponseEntity<Result> randomMultiply(@NotNull @RequestBody RandomMultiplyRequest request) throws Exception {
-		var factory = new Matrix2DFactory();
-		var first = factory.getRandom(request.rows(), request.cols(),
-			MIN_VAL, MAX_VAL, DEFAULT_SEED);
-		var second = factory.getRandom(request.rows(), request.cols(),
-			MIN_VAL, MAX_VAL, DEFAULT_SEED);
-		var result = MultiplyService.solve(
-			request.algType(), request.threadsNum(),
-			first, second
-		);
+	public ResponseEntity<Result> multiply(@RequestParam AlgType algType, @RequestParam Matrix2D first,
+										   @RequestParam Matrix2D second, @RequestParam int threadsNum) throws Exception {
+		var result = MultiplyService.solve(algType, threadsNum, first, second);
 		return ResponseEntity.ok(result);
 	}
 
+	@GetMapping("/randomMultiply")
+	public ResponseEntity<Result> randomMultiply(
+		@RequestParam AlgType algType, @RequestParam int rows, @RequestParam int cols,
+		@RequestParam int seed, @RequestParam int threadsNum) throws Exception {
+
+		var factory = new Matrix2DFactory();
+		var first = factory.getRandom(rows, cols,
+			MIN_VAL, MAX_VAL, DEFAULT_SEED);
+		var second = factory.getRandom(rows, cols,
+			MIN_VAL, MAX_VAL, DEFAULT_SEED);
+		var result = MultiplyService.solve(algType, threadsNum, first, second);
+		return ResponseEntity.ok(result);
+	}
+
+	@GetMapping
+	public ResponseEntity<String> func(@RequestBody MatrixJSON algType) {
+		return ResponseEntity.ok("CABAN");
+	}
 }

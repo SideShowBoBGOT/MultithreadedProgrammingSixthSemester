@@ -21,9 +21,10 @@ public class FoxAlgorithm extends GeneralAlgorithm {
         var minVal = 0;
         var maxVal = 10;
         var threadsNum = 3;
+        var seed = 0;
 
-        var first = matrixFactory.getRandom(rows, cols, minVal, maxVal);
-        var second = matrixFactory.getRandom(rows, cols, minVal, maxVal);
+        var first = matrixFactory.getRandom(rows, cols, minVal, maxVal, seed);
+        var second = matrixFactory.getRandom(rows, cols, minVal, maxVal, seed);
 
         var algorithm = new FoxAlgorithm(threadsNum, first, second);
         var striped = new BlockStripedAlgorithm(threadsNum, first, second);
