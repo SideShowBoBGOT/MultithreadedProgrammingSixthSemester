@@ -45,19 +45,27 @@ def server_multiply(algType: AlgType, size: int, threadsNum: int):
     return requests.get(URL_SERVER_MULTIPLY, headers=HEADERS, json=data) 
 
 
-sizes = [s for s in range(50, 750, 50)]
+sizes = [s for s in range(30, 390, 30)]
 threads = [s for s in range(2, 5)]
-funcs = [client_multiply, server_multiply]
+funcs = ['client_multiply', 'server_multiply']
+
+lines = []
+for f in funcs:
+    for s in sizes:
+        for t in threads:
+            nanoseconds = time.time_ns()
+            if f == funcs[0]:   
+                client_multiply(AlgType.BLOCK_STRIPED, s, t)
+            else:
+                server_multiply(AlgType.BLOCK_STRIPED, s, t)
+            nanoseconds = time.time_ns() - nanoseconds
+            millisecs = float(nanoseconds) / 10e6
+            res_str = f'{f}\t{s}\t{t}\t{millisecs}\n'
+            print(res_str, end='')
+            lines.append(res_str)
 
 with open('log.log', 'w') as file:
-    for f in funcs:
-        for s in sizes:
-            for t in threads:
-                nanoseconds = time.time_ns()
-                response = f(AlgType.BLOCK_STRIPED, s, t)
-                result = json.loads(response.content.decode())
-                nanoseconds = time.time_ns() - nanoseconds
-                nanoseconds += result['nanoseconds']
+    file.writelines(lines)
                 
             
             
