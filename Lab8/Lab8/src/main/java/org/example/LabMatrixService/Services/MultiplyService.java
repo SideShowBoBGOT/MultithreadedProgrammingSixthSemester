@@ -15,19 +15,12 @@ public class MultiplyService {
 	public MultiplyService() {}
 
 	public static Result solve(AlgType algType, int threadsNum, Matrix2D first, Matrix2D second) throws Exception {
-		var result = new Profiler().performBenchmark(() -> switch(algType) {
+		var data = new Profiler().performBenchmark(() -> switch(algType) {
 				case BlockStriped -> new BlockStripedAlgorithm(threadsNum, first, second).solve();
 				case Fox -> new FoxAlgorithm(threadsNum, first, second).solve();
 				case Native -> first.getMul(second);
 			}
 		);
-		var result = new Result(
-			new Matrix(
-				resultMatrix,
-				this.firstMatrix.getRows(),
-				this.secondMatrix.getColumns()),
-			endTime - startTime);
-
-		return result;
+		return new Result(algType, threadsNum, data.getValue());
 	}
 }
