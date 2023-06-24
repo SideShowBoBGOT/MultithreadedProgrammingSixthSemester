@@ -1,37 +1,66 @@
-from enum import Enum
-from enum import auto
+
 import requests
 import json
 import random
+import time
+from enum import Enum, auto
+
+URL_CLIENT_MULTIPLY = 'http://localhost:8080/api/clientMultiply'
+URL_SERVER_MULTIPLY = 'http://localhost:8080/api/serverMultiply'
+HEADERS = {"Content-Type": "application/json; charset=utf-8"}
 
 class AlgType(Enum):
     BLOCK_STRIPED = auto()
     FOX = auto()
     NATIVE = auto()
 
-URL_MULTIPLY = 'http://localhost:8080/api/multiply'
-URL_RANDOM_MULTIPLY = 'http://localhost:8080/api/randomMultiply'
-HEADERS = {"Content-Type": "application/json; charset=utf-8"}
 
-def genList(size: int):
-    return [random.uniform(0, 1) for _ in range(size * size)]
-
-def getMultiplyData(algType: AlgType, size: int, threadsNum: int) -> dict:
-    return {
+def gen_list(size: int):
+    return [random.uniform(0, 1) for _ in range(size * size)] 
+    
+def client_multiply(algType: AlgType, size: int, threadsNum: int):
+    data = {
         'algType': algType.name,
         'first': {
             'rows': size,
             'cols': size,
-            'values': genList(size)
+            'values': gen_list(size)
             },
         'second': {
             'rows': size, 
             'cols': size,
-            'values': genList(size)
+            'values': gen_list(size)
             },
         'threadsNum': threadsNum
         }
+    return requests.get(URL_CLIENT_MULTIPLY, headers=HEADERS, json=data)
+    
+def server_multiply(algType: AlgType, size: int, threadsNum: int):
+    data = {
+        'algType': algType.name,
+        'rows': size,
+        'cols': size,
+        'threadsNum': threadsNum
+        }
+    return requests.get(URL_SERVER_MULTIPLY, headers=HEADERS, json=data) 
 
 
-response = requests.get(URL_MULTIPLY, headers=HEADERS, json=getMultiplyData(AlgType.BLOCK_STRIPED, 10, 2))
-print(response.content)
+sizes = [s for s in range(50, 750, 50)]
+threads = [s for s in range(2, 5)]
+funcs = [client_multiply, server_multiply]
+
+with open('log.log', 'w') as file:
+    for f in funcs:
+        for s in sizes:
+            for t in threads:
+                nanoseconds = time.time_ns()
+                response = f(AlgType.BLOCK_STRIPED, s, t)
+                result = json.loads(response.content.decode())
+                nanoseconds = time.time_ns() - nanoseconds
+                nanoseconds += result['nanoseconds']
+                
+            
+            
+
+
+
