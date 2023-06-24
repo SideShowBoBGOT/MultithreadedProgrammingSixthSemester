@@ -1,4 +1,4 @@
-package org.example.Models;
+package org.example.MatrixService.Models;
 
 import org.example.Algorithms.AlgType;
 
