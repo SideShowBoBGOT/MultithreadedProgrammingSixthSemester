@@ -1,4 +1,4 @@
-package org.example.Algorithms;
+package org.example.LabMatrixService.Models;
 
 public enum AlgType {
 	BlockStriped,

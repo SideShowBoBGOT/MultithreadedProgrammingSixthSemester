@@ -1,7 +1,7 @@
-package org.example.MatrixService.Controllers;
+package org.example.LabMatrixService.Controllers;
 
 import org.example.LabMath.Matrixes.Matrix2DFactory;
-import org.example.MatrixService.Models.Result;
+import org.example.LabMatrixService.Models.Result;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -12,14 +12,14 @@ import jakarta.validation.constraints.NotNull;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import org.example.MatrixService.Models.MultiplyRequest;
+import org.example.LabMatrixService.Models.MultiplyRequest;
 
 @RestController
 @RequestMapping("/api")
 public class APIController {
 	private static final int MIN_VAL = 0;
 	private static final int MAX_VAL = 1;
-	private static final int MAX_VAL = 1;
+	private static final int DEFAULT_SEED = 0;
 
 	@PostMapping("/multiply")
 	public ResponseEntity<Result> multiply(@NotNull @RequestBody MultiplyRequest request) {
@@ -35,8 +35,8 @@ public class APIController {
 	@GetMapping("/multiply")
 	public ResponseEntity<Result> randomMultiply(@RequestParam int rows, @RequestParam int columns,  @RequestParam int numberOfThreads) {
 		var factory = new Matrix2DFactory();
-		var first = factory.getRandom(rows, columns, MIN_VAL, MAX_VAL);
-		var second = factory.getRandom(rows, columns, MIN_VAL, MAX_VAL);
+		var first = factory.getRandom(rows, columns, MIN_VAL, MAX_VAL, DEFAULT_SEED);
+		var second = factory.getRandom(rows, columns, MIN_VAL, MAX_VAL, DEFAULT_SEED);
 
 		var multiplyService = new MultiplyService(firstMatrix, secondMatrix);
 		var result = multiplyService.solve(numberOfThreads);

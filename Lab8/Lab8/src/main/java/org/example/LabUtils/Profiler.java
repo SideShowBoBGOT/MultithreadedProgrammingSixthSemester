@@ -1,4 +1,4 @@
-package org.example.Utils;
+package org.example.LabUtils;
 
 import javafx.util.Pair;
 import java.util.concurrent.Callable;
