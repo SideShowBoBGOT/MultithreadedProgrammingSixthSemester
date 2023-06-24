@@ -1,6 +1,6 @@
 package org.example.LabMath.Vectors;
 
-import org.LabMath.Interfaces.MathVector;
+import org.example.LabMath.Interfaces.MathVector;
 
 import java.util.Arrays;
 

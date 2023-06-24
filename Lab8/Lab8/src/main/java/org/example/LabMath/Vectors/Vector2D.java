@@ -1,7 +1,7 @@
 package org.example.LabMath.Vectors;
 
-import org.LabMath.Enums.*;
-import org.LabMath.Interfaces.MathVector;
+import org.example.LabMath.Enums.*;
+import org.example.LabMath.Interfaces.MathVector;
 
 public class Vector2D implements MathVector<Vector2D> {
     private final GeneralVector vec = new GeneralVector(2);

@@ -1,8 +1,8 @@
 package org.example.LabMath.Matrixes;
 
 import jdk.jshell.spi.ExecutionControl;
-import org.LabMath.Interfaces.MathMatrix;
-import org.LabMath.Vectors.GeneralVector;
+import org.example.LabMath.Interfaces.MathMatrix;
+import org.example.LabMath.Vectors.GeneralVector;
 
 import java.util.Arrays;
 

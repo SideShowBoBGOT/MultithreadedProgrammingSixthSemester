@@ -1,7 +1,8 @@
 package org.example.LabMath.Matrixes;
 
 import jdk.jshell.spi.ExecutionControl;
-import org.LabMath.Interfaces.MathMatrix;
+import org.example.LabMath.Interfaces.MathMatrix;
+import org.springframework.web.multipart.MultipartFile;
 
 public class Matrix2D implements MathMatrix<Matrix2D> {
     private static final String ERROR_MULTIPLICATION = "Rows and columns are not equal";

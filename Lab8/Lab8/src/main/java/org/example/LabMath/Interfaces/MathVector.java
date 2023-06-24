@@ -1,6 +1,6 @@
 package org.example.LabMath.Interfaces;
 
-import org.LabMath.Interfaces.General.*;
+import org.example.LabMath.Interfaces.General.*;
 
 public interface MathVector<T> extends Cloneable, Divisible<T>, Multipliable<T>, Addable<T>, Subtractable<T>,
         DoubleDivisible, DoubleMultipliable, DoubleAddable, DoubleSubtractable {
