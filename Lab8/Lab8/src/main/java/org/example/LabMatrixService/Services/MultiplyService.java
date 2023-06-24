@@ -1,28 +1,26 @@
 package org.example.LabMatrixService.Services;
 
+import org.example.Algorithms.BlockStripedAlgorithm;
+import org.example.Algorithms.FoxAlgorithm;
 import org.example.LabMatrixService.Models.AlgType;
 import org.example.LabMatrixService.Models.Result;
 import org.example.LabMath.Matrixes.Matrix2D;
+import org.example.LabUtils.Profiler;
 
 import java.util.ArrayList;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
 public class MultiplyService {
-	private final Matrix2D first;
-	private final Matrix2D second;
+	public MultiplyService() {}
 
-
-	public MultiplyService(Matrix2D first, Matrix2D second, int threadsNum) {
-		this.first = first;
-		this.second = second;
-	}
-
-	public Result solve(int threadsNumber) {
-		var startTime = System.currentTimeMillis();
-
-
-		var endTime = System.currentTimeMillis();
+	public static Result solve(AlgType algType, int threadsNum, Matrix2D first, Matrix2D second) throws Exception {
+		var result = new Profiler().performBenchmark(() -> switch(algType) {
+				case BlockStriped -> new BlockStripedAlgorithm(threadsNum, first, second).solve();
+				case Fox -> new FoxAlgorithm(threadsNum, first, second).solve();
+				case Native -> first.getMul(second);
+			}
+		);
 		var result = new Result(
 			new Matrix(
 				resultMatrix,
@@ -31,16 +29,5 @@ public class MultiplyService {
 			endTime - startTime);
 
 		return result;
-	}
-
-	private static Matrix[][] initMatrix(int matrixLength, int subMatrixSize) {
-		var matrix = new Matrix[matrixLength][matrixLength];
-		for (var i = 0; i < matrixLength; i++) {
-			for (var j = 0; j < matrixLength; j++) {
-				matrix[i][j] = new Matrix(subMatrixSize, subMatrixSize);
-			}
-		}
-
-		return matrix;
 	}
 }
