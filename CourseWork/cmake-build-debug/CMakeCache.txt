@@ -221,6 +221,9 @@ CourseWork_IS_TOP_LEVEL:STATIC=ON
 //Value Computed by CMake
 CourseWork_SOURCE_DIR:STATIC=/home/choleraplague/university/MultithreadedProgramming/labs/CourseWork
 
+//The directory containing a CMake configuration file for fmt.
+fmt_DIR:PATH=/usr/lib/x86_64-linux-gnu/cmake/fmt
+
 
 ########################
 # INTERNAL cache entries
