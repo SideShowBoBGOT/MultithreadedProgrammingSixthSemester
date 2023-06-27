@@ -19,27 +19,24 @@ namespace AStar {
 	class Node;
 	
 	template<typename DataType, typename CostType> requires IsCostType<CostType>
-	using PNode = std::shared_ptr<Node<DataType, CostType>>;
-	
-	template<typename DataType, typename CostType> requires IsCostType<CostType>
 	class Node {
 		public:
 		Node() = default;
 		virtual ~Node() = default;
 		
 		public:
-		void AddNeighbours(const std::map<PNode<DataType, CostType>, CostType>& neighbours);
+		void AddNeighbours(const std::map<std::shared_ptr<Node>, CostType>& neighbours);
 		const std::shared_ptr<DataType>& Data() const;
 		
 		protected:
 		std::shared_ptr<DataType> m_pData = nullptr;
-		std::map<PNode<DataType, CostType>, CostType> m_mNeighbours;
+		std::map<std::shared_ptr<Node>, CostType> m_mNeighbours;
 	};
 	
 	template<typename DataType, typename CostType>
 	requires IsCostType<CostType>
 	void Node<DataType, CostType>::AddNeighbours(
-		const std::map<PNode<DataType, CostType>, CostType>& neighbours) {
+		const std::map<std::shared_ptr<Node>, CostType>& neighbours) {
 		std::copy(neighbours.begin(), neighbours.end(), std::back_inserter(m_mNeighbours));
 	}
 	
@@ -56,22 +53,22 @@ namespace AStar {
 		virtual~ TAStar() = default;
 		
 		public:
-		using Heuristic = std::function<CostType(const std::shared_ptr<Node<DataType, CostType>>&,
-												 const std::shared_ptr<Node<DataType, CostType>>&)>;
+		using PNode = std::shared_ptr<Node<DataType, CostType>>;
+		using Heuristic = std::function<CostType(const PNode&, const PNode&)>;
 		
-		virtual std::vector<PNode<DataType, CostType>> Solve(const PNode<DataType, CostType>& start,
-															 const PNode<DataType, CostType>& end,
-															 const std::vector<PNode<DataType, CostType>>& nodes,
-															 const Heuristic& heuristic) const;
+		virtual std::vector<PNode> Solve(const PNode& start, const PNode& end,
+										 const std::vector<PNode>& nodes, const Heuristic& heuristic);
+		
+		
 	};
 	
 	template<typename DataType, typename CostType>
 	requires IsCostType<CostType>
-	std::vector<PNode<DataType, CostType>> TAStar<DataType, CostType>::Solve(const PNode<DataType, CostType>& start,
-																			 const PNode<DataType, CostType>& end,
-																			 const std::vector<PNode<DataType, CostType>>& nodes,
-																			 const Heuristic& heuristic) const {
-		
+	std::vector<typename TAStar<DataType, CostType>::PNode>
+	TAStar<DataType, CostType>::Solve(const PNode& start,
+									  const PNode& end,
+									  const std::vector<PNode>& nodes,
+									  const Heuristic& heuristic) {
 		
 	}
 }
