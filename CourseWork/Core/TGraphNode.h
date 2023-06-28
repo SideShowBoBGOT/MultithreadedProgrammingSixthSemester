@@ -1,11 +1,7 @@
-//
-// Created by choleraplague on 28.06.23.
-//
-
 #ifndef COURSEWORK_TGRAPHNODE_H
 #define COURSEWORK_TGRAPHNODE_H
 
-#include <vector>
+#include <list>
 
 #include "TNode.h"
 
@@ -26,12 +22,12 @@ namespace AStar {
 		const UPGraphNode& Parent() const;
 		
 		public:
-		void AddChildren(const std::vector<UPChildNode>& children);
-		const std::vector<UPChildNode>& Children() const;
+		void AddChildren(const std::list<UPChildNode>& children);
+		const std::list<UPChildNode>& Children() const;
 		
 		private:
 		UPGraphNode m_pParent = nullptr;
-		std::vector<UPChildNode> m_vChildren;
+		std::list<UPChildNode> m_vChildren;
 		
 	};
 	
@@ -40,7 +36,7 @@ namespace AStar {
 	}
 	
 	template<typename DataType, CCost CostType>
-	void TGraphNode<DataType, CostType>::AddChildren(const std::vector<UPChildNode>& children) {
+	void TGraphNode<DataType, CostType>::AddChildren(const std::list<UPChildNode>& children) {
 		std::copy(children.begin(), children.end(), std::back_inserter(m_vChildren));
 	}
 	
@@ -51,7 +47,7 @@ namespace AStar {
 	}
 	
 	template<typename DataType, CCost CostType>
-	const std::vector<typename TGraphNode<DataType, CostType>::UPChildNode>&
+	const std::list<typename TGraphNode<DataType, CostType>::UPChildNode>&
 	TGraphNode<DataType, CostType>::Children() const {
 		return m_vChildren;
 	}

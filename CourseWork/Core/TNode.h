@@ -1,7 +1,3 @@
-//
-// Created by choleraplague on 28.06.23.
-//
-
 #ifndef COURSEWORK_TNODE_H
 #define COURSEWORK_TNODE_H
 
@@ -20,7 +16,7 @@ namespace AStar {
 	class TNode {
 		public:
 		TNode() = default;
-		TNode(const DataType& data, const std::map<std::weak_ptr<TNode>, CostType>& neighbours);
+		explicit TNode(const DataType& data, const std::map<std::weak_ptr<TNode>, CostType>& neighbours);
 		
 		public:
 		const std::map<std::weak_ptr<TNode>, CostType>& Neighbours() const;
