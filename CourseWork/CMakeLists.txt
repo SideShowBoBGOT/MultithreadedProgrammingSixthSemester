@@ -6,5 +6,5 @@ set(CMAKE_CXX_STANDARD 23)
 find_package(fmt REQUIRED)
 include_directories(${fmt_INCLUDE_DIRS})
 
-add_executable(CourseWork main.cpp TAStar.h AStar.cpp)
+add_executable(CourseWork main.cpp Core/TAStar.h Core/TNode.h Core/TGraphNode.h)
 target_link_libraries(CourseWork fmt::fmt)

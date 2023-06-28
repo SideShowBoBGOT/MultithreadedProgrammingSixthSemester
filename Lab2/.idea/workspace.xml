@@ -5,8 +5,36 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="fe65f168-1ae9-41d7-aacc-4bb917f65ae2" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/../Lab4/Lab4/pom.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../Lab8/Lab8/src/main/java/org/example/Algorithms/BlockStripedAlgorithm.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../Lab8/Lab8/src/main/java/org/example/Algorithms/BlockStripedThread.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../Lab8/Lab8/src/main/java/org/example/Algorithms/FoxAlgorithm.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../Lab8/Lab8/src/main/java/org/example/Algorithms/FoxAlgorithmThread.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../Lab8/Lab8/src/main/java/org/example/Algorithms/GeneralAlgorithm.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../Lab8/Lab8/src/main/java/org/example/Algorithms/GeneralAlgorithmThread.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../Lab8/Lab8/src/main/java/org/example/Controllers/APIController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../Lab8/Lab8/src/main/java/org/example/LabMath/Enums/Coords.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../Lab8/Lab8/src/main/java/org/example/LabMath/Interfaces/General/Addable.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../Lab8/Lab8/src/main/java/org/example/LabMath/Interfaces/General/Divisible.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../Lab8/Lab8/src/main/java/org/example/LabMath/Interfaces/General/DoubleAddable.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../Lab8/Lab8/src/main/java/org/example/LabMath/Interfaces/General/DoubleDivisible.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../Lab8/Lab8/src/main/java/org/example/LabMath/Interfaces/General/DoubleMultipliable.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../Lab8/Lab8/src/main/java/org/example/LabMath/Interfaces/General/DoubleSubtractable.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../Lab8/Lab8/src/main/java/org/example/LabMath/Interfaces/General/GetMultipliable.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../Lab8/Lab8/src/main/java/org/example/LabMath/Interfaces/General/Multipliable.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../Lab8/Lab8/src/main/java/org/example/LabMath/Interfaces/General/Settable.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../Lab8/Lab8/src/main/java/org/example/LabMath/Interfaces/General/Subtractable.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../Lab8/Lab8/src/main/java/org/example/LabMath/Interfaces/MathMatrix.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../Lab8/Lab8/src/main/java/org/example/LabMath/Interfaces/MathVector.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../Lab8/Lab8/src/main/java/org/example/LabMath/Matrixes/GeneralMatrix.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../Lab8/Lab8/src/main/java/org/example/LabMath/Matrixes/Matrix2D.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../Lab8/Lab8/src/main/java/org/example/LabMath/Matrixes/Matrix2DFactory.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../Lab8/Lab8/src/main/java/org/example/LabMath/Vectors/GeneralVector.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../Lab8/Lab8/src/main/java/org/example/LabMath/Vectors/Vector2D.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../Lab8/Lab8/src/main/java/org/example/Models/MultiplyRequest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../Lab8/Lab8/src/main/resources/log4j2.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../Lab8/Lab8/src/test/java/test/MatrixTester.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Lab8/Lab8/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../Lab8/Lab8/pom.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -42,7 +70,7 @@
     "SHARE_PROJECT_CONFIGURATION_FILES": "true",
     "WebServerToolWindowFactoryState": "false",
     "git-widget-placeholder": "main",
-    "last_opened_file_path": "/home/choleraplague/university/MethodsParallelProgramming/labs/Lab4",
+    "last_opened_file_path": "/home/choleraplague/university/MultithreadedProgramming/labs/Lab8",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -119,6 +147,7 @@
       <workItem from="1685980307745" duration="643000" />
       <workItem from="1686241435677" duration="78000" />
       <workItem from="1686243138566" duration="32000" />
+      <workItem from="1687463280645" duration="1277000" />
     </task>
     <servers />
   </component>

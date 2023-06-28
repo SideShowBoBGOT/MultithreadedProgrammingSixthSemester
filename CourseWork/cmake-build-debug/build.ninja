@@ -56,13 +56,6 @@ build CMakeFiles/CourseWork.dir/main.cpp.o: CXX_COMPILER__CourseWork_Debug /home
   OBJECT_DIR = CMakeFiles/CourseWork.dir
   OBJECT_FILE_DIR = CMakeFiles/CourseWork.dir
 
-build CMakeFiles/CourseWork.dir/AStar.cpp.o: CXX_COMPILER__CourseWork_Debug /home/choleraplague/university/MultithreadedProgramming/labs/CourseWork/AStar.cpp || cmake_object_order_depends_target_CourseWork
-  DEFINES = -DFMT_LOCALE -DFMT_SHARED
-  DEP_FILE = CMakeFiles/CourseWork.dir/AStar.cpp.o.d
-  FLAGS = -g -fdiagnostics-color=always -std=gnu++23
-  OBJECT_DIR = CMakeFiles/CourseWork.dir
-  OBJECT_FILE_DIR = CMakeFiles/CourseWork.dir
-
 
 # =============================================================================
 # Link build statements for EXECUTABLE target CourseWork
@@ -71,7 +64,7 @@ build CMakeFiles/CourseWork.dir/AStar.cpp.o: CXX_COMPILER__CourseWork_Debug /hom
 #############################################
 # Link the executable CourseWork
 
-build CourseWork: CXX_EXECUTABLE_LINKER__CourseWork_Debug CMakeFiles/CourseWork.dir/main.cpp.o CMakeFiles/CourseWork.dir/AStar.cpp.o | /usr/lib/x86_64-linux-gnu/libfmt.so.8.1.1
+build CourseWork: CXX_EXECUTABLE_LINKER__CourseWork_Debug CMakeFiles/CourseWork.dir/main.cpp.o | /usr/lib/x86_64-linux-gnu/libfmt.so.8.1.1
   FLAGS = -g
   LINK_LIBRARIES = /usr/lib/x86_64-linux-gnu/libfmt.so.8.1.1  -Wl,--as-needed
   OBJECT_DIR = CMakeFiles/CourseWork.dir
