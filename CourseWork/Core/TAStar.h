@@ -14,26 +14,25 @@ namespace AStar {
 		TAStar() = default;
 		
 		public:
-		using UPNode = std::weak_ptr<TNode<DataType, CostType>>;
-		using UPNodes = std::list<UPNode>;
-		using UHeuristic = std::function<CostType(const UPNode, const UPNode)>;
-		using UCostNode = std::pair<UPNode, CostType>;
+		using UWPNode = std::weak_ptr<TNode<DataType, CostType>>;
+		using UPNodes = std::list<UWPNode>;
+		using UHeuristic = std::function<CostType(const UWPNode, const UWPNode)>;
+		using UCostNode = std::pair<UWPNode, CostType>;
 		
-		std::list<UPNode> Solve(const UPNode& start, const UPNode& end,
-								const UPNodes& TNodes, const UHeuristic& heuristic);
+		std::list<UWPNode> Solve(const UWPNode& start, const UWPNode& end,
+								 const UPNodes& TNodes, const UHeuristic& heuristic);
 		
-		protected:
+		private:
 		
 	};
 	
 	template<typename DataType, CCost CostType>
-	std::list<typename TAStar<DataType, CostType>::UPNode>
-	TAStar<DataType, CostType>::Solve(const UPNode& start,
-									  const UPNode& end,
+	std::list<typename TAStar<DataType, CostType>::UWPNode>
+	TAStar<DataType, CostType>::Solve(const UWPNode& start,
+									  const UWPNode& end,
 									  const UPNodes& TNodes,
 									  const UHeuristic& heuristic) {
 		
-		auto paths = std::list<UPNodes>();
 		paths.push_back({start});
 		if(start == end) {
 			return paths.front();
