@@ -47,7 +47,7 @@ public class MatrixTester {
             var tester = new MatrixTester();
             var threadsNums = new int[] {2, 4, 10};
             var matrixSizes = new int[] {100, 300, 500, 700, 1000, 1200, 1400, 1500, 1700, 1800, 2000};
-            //tester.testAlgorithm(threadsNums, matrixSizes);
+            tester.testAlgorithm(threadsNums, matrixSizes);
             tester.plotStatistic();
             tester.plotSpeedup();
     }
