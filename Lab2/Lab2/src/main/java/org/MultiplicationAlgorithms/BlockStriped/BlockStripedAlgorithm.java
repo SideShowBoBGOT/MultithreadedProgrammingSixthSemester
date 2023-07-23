@@ -1,4 +1,4 @@
-package org.MultiplicationAlgorithms;
+package org.MultiplicationAlgorithms.BlockStriped;
 
 import org.LabMath.Matrixes.Matrix2D;
 

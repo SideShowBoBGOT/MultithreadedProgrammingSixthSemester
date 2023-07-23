@@ -1112,7 +1112,7 @@ package test;
 
 import com.github.sh0nk.matplotlib4j.*;
 import org.LabMath.Matrixes.Matrix2DFactory;
-import org.MultiplicationAlgorithms.BlockStripedAlgorithm;
+import org.MultiplicationAlgorithms.BlockStriped.BlockStripedAlgorithm;
 import org.MultiplicationAlgorithms.FoxAlgorithm;
 import org.MultiplicationAlgorithms.GeneralAlgorithm;
 
