@@ -45,15 +45,14 @@ public class MatrixTester {
 
     public static void main(String[] args) throws PythonExecutionException, IOException {
             var tester = new MatrixTester();
-            var threadsNums = new int[] {2, 4};
-            var matrixSizes = new int[] {500, 1000, 1500, 2000};
-            var ff = FoxAlgorithm.class;
-            tester.testAlgorithm(threadsNums, matrixSizes);
+            var threadsNums = new int[] {2, 4, 10};
+            var matrixSizes = new int[] {100, 300, 500, 700, 1000, 1200, 1400, 1500, 1700, 1800, 2000};
+            //tester.testAlgorithm(threadsNums, matrixSizes);
             tester.plotStatistic();
             tester.plotSpeedup();
     }
 
-    public void plotStatistic() throws PythonExecutionException, IOException {
+    public void plotStatistic() throws IOException, PythonExecutionException {
         Plot plt = Plot.create();
         var results = readStatistic();
         var algorithms = results.stream().map(r -> r.name).distinct().toList();
