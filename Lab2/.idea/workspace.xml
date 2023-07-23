@@ -5,12 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="fe65f168-1ae9-41d7-aacc-4bb917f65ae2" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Lab2/code.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Lab2/code.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Lab2/src/main/java/org/MultiplicationAlgorithms/BlockStripedAlgorithm.java" beforeDir="false" afterPath="$PROJECT_DIR$/Lab2/src/main/java/org/MultiplicationAlgorithms/BlockStriped/BlockStripedAlgorithm.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Lab2/src/main/java/org/MultiplicationAlgorithms/BlockStripedAlgorithmTask.java" beforeDir="false" afterPath="$PROJECT_DIR$/Lab2/src/main/java/org/MultiplicationAlgorithms/BlockStriped/BlockStripedAlgorithmTask.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Lab2/src/main/java/org/MultiplicationAlgorithms/FoxAlgorithm.java" beforeDir="false" afterPath="$PROJECT_DIR$/Lab2/src/main/java/org/MultiplicationAlgorithms/FoxAlgorithm.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Lab2/src/main/java/org/MultiplicationAlgorithms/FoxAlgorithmTask.java" beforeDir="false" afterPath="$PROJECT_DIR$/Lab2/src/main/java/org/MultiplicationAlgorithms/FoxAlgorithmTask.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -126,7 +121,7 @@
       <workItem from="1687463280645" duration="1277000" />
       <workItem from="1690035386930" duration="1592000" />
       <workItem from="1690104289099" duration="817000" />
-      <workItem from="1690107447106" duration="4417000" />
+      <workItem from="1690107447106" duration="5440000" />
     </task>
     <servers />
   </component>
