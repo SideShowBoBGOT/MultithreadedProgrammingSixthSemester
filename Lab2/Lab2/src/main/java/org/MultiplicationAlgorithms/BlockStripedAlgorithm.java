@@ -1,63 +1,67 @@
 package org.MultiplicationAlgorithms;
 
 import org.LabMath.Matrixes.Matrix2D;
-import org.LabMath.Matrixes.Matrix2DFactory;
 
-public class BlockStripedAlgorithm extends GeneralAlgorithm {
+import java.util.concurrent.Future;
+import java.util.ArrayList;
+import java.util.concurrent.*;
 
-    public BlockStripedAlgorithm() {}
+public class BlockStripedAlgorithm {
+	protected static final String ERROR_MULTIPLICATION = "Rows and columns are not equal";
+	protected static final String ERROR_NUM_OF_THREADS = "Number of threads must be positive";
+	
+	public BlockStripedAlgorithm() {}
 
-    public BlockStripedAlgorithm(int threadsNum, Matrix2D first, Matrix2D second) {
-        super(threadsNum, first, second);
-    }
+	public Matrix2D multiply(int threadsNum, Matrix2D first, Matrix2D second) {
+		if(threadsNum <= 0) {
+			throw new IllegalArgumentException(ERROR_NUM_OF_THREADS);
+		}
 
-    public static void main(String[] args) {
-        var matrixFactory = new Matrix2DFactory();
-        var rows = 10;
-        var cols = 10;
-        var minVal = 0;
-        var maxVal = 10;
-        var threadsNum = 5;
-        var first = matrixFactory.getRandom(rows, cols, minVal, maxVal);
-        var second = matrixFactory.getRandom(rows, cols, minVal, maxVal);
-        var algorithm = new BlockStripedAlgorithm(threadsNum, first, second);
-        var result = algorithm.solve();
-        System.out.println("First:\t" + first);
-        System.out.println("Second:\t" + second);
-        System.out.println("Result:\t" + result);
-    }
+		var firstRows = first.getRows();
+		var firstCols = first.getCols();
+		var secondRows = second.getRows();
+		var secondCols = second.getCols();
 
-    public Matrix2D solve() {
-        var firstRows = first.getRows();
-        var firstCols = first.getCols();
-        var secondRows = second.getRows();
-        var secondCols = second.getCols();
+		if(firstCols != secondRows) {
+			throw new IllegalArgumentException(ERROR_MULTIPLICATION);
+		}
 
-        if(firstCols != secondRows) {
-            throw new IllegalArgumentException(ERROR_MULTIPLICATION);
-        }
+		var result = new Matrix2D(firstRows, secondCols);
 
-        var result = new Matrix2D(firstRows, secondCols);
-        var isRowsLess = firstRows < threads.length;
-        var totalThreads = isRowsLess ? firstRows : threads.length;
-        var step = isRowsLess ? 1 : threads.length;
+		var executor = Executors.newFixedThreadPool(threadsNum);
+		var callables = new ArrayList<BlockStripedAlgorithmTask>();
+		var futures = new ArrayList<Future<Double>>();
 
-        for(var i = 0; i < totalThreads; ++i) {
-            threads[i] = new BlockStripedThread(i, step, first, second, result);
-        }
+		for(int i = 0; i < firstRows; ++i) {
+			for(int j = 0; j < secondCols; ++j) {
+				var index = (j + i) % firstRows;
+				var task = new BlockStripedAlgorithmTask(index, first, second);
+				callables.add(task);
+			}
 
-        for(var i = 0; i < totalThreads; ++i) {
-            threads[i].start();
-        }
+			try{
+				futures.addAll(executor.invokeAll(callables));
+				callables.clear();
+			} catch (InterruptedException e) {
+				throw new RuntimeException(e);
+			}
 
-        for(var i = 0; i < totalThreads; ++i) {
-            try {
-                threads[i].join();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
+		}
+		executor.shutdown();
 
-        return result;
-    }
+		try{
+			for (int i = 0; i < firstRows; i++) {
+				for (int j = 0; j < secondCols; j++) {
+					var future = futures.get(i * secondCols + j);
+					var index = (j + i) % firstRows;
+					result.setAt(future.get(), index, j);
+				}
+			}
+		}
+		catch (InterruptedException | ExecutionException e) {
+			throw new RuntimeException(e);
+		}
+
+		return result;
+	}
 }

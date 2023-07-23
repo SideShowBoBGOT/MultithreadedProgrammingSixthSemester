@@ -118,6 +118,16 @@ public class Matrix2D implements MathMatrix<Matrix2D> {
         return this.mat.calcIndex(indexes);
     }
 
+    public Matrix2D transpose() {
+        var result = new Matrix2D(this.getCols(), this.getRows());
+        for(var i = 0; i < this.getRows(); ++i) {
+            for(var j = 0; j < this.getCols(); ++j) {
+                result.setAt(this.getAt(i, j), j, i);
+            }
+        }
+        return result;
+    }
+
     public boolean isSquare() {
         return this.rows == this.cols;
     }

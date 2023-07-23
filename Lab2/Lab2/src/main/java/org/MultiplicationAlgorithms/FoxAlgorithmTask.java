@@ -1,4 +1,4 @@
 package org.MultiplicationAlgorithms;
 
-public class FoxAlgorithm {
+public class FoxAlgorithmTask {
 }

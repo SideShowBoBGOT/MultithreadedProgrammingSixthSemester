@@ -5,36 +5,16 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="fe65f168-1ae9-41d7-aacc-4bb917f65ae2" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/../Lab8/Lab8/src/main/java/org/example/Algorithms/BlockStripedAlgorithm.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../Lab8/Lab8/src/main/java/org/example/Algorithms/BlockStripedThread.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../Lab8/Lab8/src/main/java/org/example/Algorithms/FoxAlgorithm.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../Lab8/Lab8/src/main/java/org/example/Algorithms/FoxAlgorithmThread.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../Lab8/Lab8/src/main/java/org/example/Algorithms/GeneralAlgorithm.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../Lab8/Lab8/src/main/java/org/example/Algorithms/GeneralAlgorithmThread.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../Lab8/Lab8/src/main/java/org/example/Controllers/APIController.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../Lab8/Lab8/src/main/java/org/example/LabMath/Enums/Coords.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../Lab8/Lab8/src/main/java/org/example/LabMath/Interfaces/General/Addable.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../Lab8/Lab8/src/main/java/org/example/LabMath/Interfaces/General/Divisible.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../Lab8/Lab8/src/main/java/org/example/LabMath/Interfaces/General/DoubleAddable.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../Lab8/Lab8/src/main/java/org/example/LabMath/Interfaces/General/DoubleDivisible.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../Lab8/Lab8/src/main/java/org/example/LabMath/Interfaces/General/DoubleMultipliable.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../Lab8/Lab8/src/main/java/org/example/LabMath/Interfaces/General/DoubleSubtractable.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../Lab8/Lab8/src/main/java/org/example/LabMath/Interfaces/General/GetMultipliable.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../Lab8/Lab8/src/main/java/org/example/LabMath/Interfaces/General/Multipliable.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../Lab8/Lab8/src/main/java/org/example/LabMath/Interfaces/General/Settable.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../Lab8/Lab8/src/main/java/org/example/LabMath/Interfaces/General/Subtractable.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../Lab8/Lab8/src/main/java/org/example/LabMath/Interfaces/MathMatrix.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../Lab8/Lab8/src/main/java/org/example/LabMath/Interfaces/MathVector.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../Lab8/Lab8/src/main/java/org/example/LabMath/Matrixes/GeneralMatrix.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../Lab8/Lab8/src/main/java/org/example/LabMath/Matrixes/Matrix2D.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../Lab8/Lab8/src/main/java/org/example/LabMath/Matrixes/Matrix2DFactory.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../Lab8/Lab8/src/main/java/org/example/LabMath/Vectors/GeneralVector.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../Lab8/Lab8/src/main/java/org/example/LabMath/Vectors/Vector2D.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../Lab8/Lab8/src/main/java/org/example/Models/MultiplyRequest.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../Lab8/Lab8/src/main/resources/log4j2.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../Lab8/Lab8/src/test/java/test/MatrixTester.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Lab2/src/main/java/org/MultiplicationAlgorithms/BlockStripedAlgorithmTask.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Lab8/Lab8/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../Lab8/Lab8/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Lab2/src/main/java/org/LabMath/Matrixes/Matrix2D.java" beforeDir="false" afterPath="$PROJECT_DIR$/Lab2/src/main/java/org/LabMath/Matrixes/Matrix2D.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Lab2/src/main/java/org/MultiplicationAlgorithms/BlockStripedAlgorithm.java" beforeDir="false" afterPath="$PROJECT_DIR$/Lab2/src/main/java/org/MultiplicationAlgorithms/BlockStripedAlgorithm.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Lab2/src/main/java/org/MultiplicationAlgorithms/BlockStripedThread.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Lab2/src/main/java/org/MultiplicationAlgorithms/FoxAlgorithm.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Lab2/src/main/java/org/MultiplicationAlgorithms/FoxAlgorithmThread.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Lab2/src/main/java/org/MultiplicationAlgorithms/GeneralAlgorithm.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Lab2/src/main/java/org/MultiplicationAlgorithms/GeneralAlgorithmThread.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Lab2/src/test/java/test/MatrixTester.java" beforeDir="false" afterPath="$PROJECT_DIR$/Lab2/src/test/java/test/MatrixTester.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -63,25 +43,25 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "WebServerToolWindowFactoryState": "false",
-    "git-widget-placeholder": "main",
-    "last_opened_file_path": "/home/choleraplague/university/MultithreadedProgramming/labs/Lab8",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "project.structure.last.edited": "Modules",
-    "project.structure.proportion": "0.0",
-    "project.structure.side.proportion": "0.0",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/home/choleraplague/university/MultithreadedProgramming/labs/Lab2&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;Modules&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.0&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.0&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="MoveClassesOrPackagesDialog.RECENTS_KEY">
       <recent name="org.MultiplicationAlgorithms" />
@@ -89,11 +69,11 @@
   </component>
   <component name="RunManager" selected="Application.MatrixTester">
     <configuration name="BlockStripedAlgorithm" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="org.MultiplicationAlgorithms.BlockStripedAlgorithm" />
+      <option name="MAIN_CLASS_NAME" value="org.MultiplicationAlgorithms.BlockStripedAlgorithm.BlockStripedAlgorithm" />
       <module name="Lab2" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="org.MultiplicationAlgorithms.*" />
+          <option name="PATTERN" value="org.MultiplicationAlgorithms.BlockStripedAlgorithm.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
@@ -106,7 +86,7 @@
       <module name="Lab2" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="org.MultiplicationAlgorithms.*" />
+          <option name="PATTERN" value="org.MultiplicationAlgorithms.BlockStripedAlgorithm.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
@@ -148,6 +128,9 @@
       <workItem from="1686241435677" duration="78000" />
       <workItem from="1686243138566" duration="32000" />
       <workItem from="1687463280645" duration="1277000" />
+      <workItem from="1690035386930" duration="1592000" />
+      <workItem from="1690104289099" duration="817000" />
+      <workItem from="1690107447106" duration="2861000" />
     </task>
     <servers />
   </component>

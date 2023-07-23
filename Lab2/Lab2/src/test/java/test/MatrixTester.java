@@ -2,15 +2,9 @@ package test;
 
 import com.github.sh0nk.matplotlib4j.*;
 import org.LabMath.Matrixes.Matrix2DFactory;
-import org.MultiplicationAlgorithms.BlockStripedAlgorithm;
-import org.MultiplicationAlgorithms.FoxAlgorithm;
-import org.MultiplicationAlgorithms.GeneralAlgorithm;
 
-import java.awt.*;
 import java.io.*;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 
 public class MatrixTester {
     private static final int minVal = -10;
@@ -48,10 +42,10 @@ public class MatrixTester {
 
     public static void main(String[] args) throws PythonExecutionException, IOException {
             var tester = new MatrixTester();
-//            var threadsNums = new int[] {1, 4, 10};
-//            var matrixSizes = new int[] {100, 200, 300, 400, 500, 600, 700};
-//            var algorithms = new GeneralAlgorithm[] {new FoxAlgorithm(), new BlockStripedAlgorithm()};
-//            tester.testAlgorithm(threadsNums, matrixSizes, algorithms);
+            var threadsNums = new int[] {1, 2, 4};
+            var matrixSizes = new int[] {500, 1000, 1500, 2000};
+            var algorithms = new GeneralAlgorithm[] {new FoxAlgorithm(), new BlockStripedAlgorithm()};
+            tester.testAlgorithm(threadsNums, matrixSizes, algorithms);
 
             tester.plotStatistic();
             tester.plotSpeedup();
