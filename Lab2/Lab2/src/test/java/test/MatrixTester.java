@@ -2,6 +2,9 @@ package test;
 
 import com.github.sh0nk.matplotlib4j.*;
 import org.LabMath.Matrixes.Matrix2DFactory;
+import org.MultiplicationAlgorithms.BlockStriped.BlockStripedAlgorithm;
+import org.MultiplicationAlgorithms.Fox.FoxAlgorithm;
+import org.MultiplicationAlgorithms.MultiplyAlgo;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -42,11 +45,10 @@ public class MatrixTester {
 
     public static void main(String[] args) throws PythonExecutionException, IOException {
             var tester = new MatrixTester();
-            var threadsNums = new int[] {1, 2, 4};
+            var threadsNums = new int[] {2, 4};
             var matrixSizes = new int[] {500, 1000, 1500, 2000};
-            var algorithms = new GeneralAlgorithm[] {new FoxAlgorithm(), new BlockStripedAlgorithm()};
-            tester.testAlgorithm(threadsNums, matrixSizes, algorithms);
-
+            var ff = FoxAlgorithm.class;
+            tester.testAlgorithm(threadsNums, matrixSizes);
             tester.plotStatistic();
             tester.plotSpeedup();
     }
@@ -114,36 +116,41 @@ public class MatrixTester {
         return results;
     }
 
-    public void testAlgorithm(int[] threadNums, int[] matrixSizes, GeneralAlgorithm[] algorithms) throws IOException {
+    public void testAlgorithm(int[] threadNums, int[] matrixSizes) throws IOException {
         var file = new File( FILE_NAME);
         var results = new FileOutputStream(file);
         var matrixFactory = new Matrix2DFactory();
-        for(var algorithm : algorithms) {
-            var algName = algorithm.getClass().getSimpleName();
-            for(var size : matrixSizes) {
-                long threadTimeOne = 0;
+        for(var size : matrixSizes) {
+            var first = matrixFactory.getRandom(size, size, minVal, maxVal);
+            var second = matrixFactory.getRandom(size, size, minVal, maxVal);
+            var threadTimeOne = 0L;
+            {
+                var startTime = System.currentTimeMillis();
+                first.getMul(second);
+                threadTimeOne = System.currentTimeMillis() - startTime;
+                var result = new AlgorithmResult(
+                    threadTimeOne, 1, size,
+                    threadTimeOne / (double) threadTimeOne , "General").toString();
+                System.out.println(result);
+                results.write((result + "\n").getBytes());
+            }
+            for(var i = 0; i < 2; ++i) {
                 for(var threadsNum : threadNums) {
-
+                    var algName = "";
+                    MultiplyAlgo algo;
+                    if(i == 0) {
+                        algName = BlockStripedAlgorithm.class.getSimpleName();
+                        algo = new BlockStripedAlgorithm();
+                    } else {
+                        algName = FoxAlgorithm.class.getSimpleName();
+                        algo = new FoxAlgorithm();
+                    }
                     var startTime = System.currentTimeMillis();
-
-                    var first = matrixFactory.getRandom(size, size, minVal, maxVal);
-                    var second = matrixFactory.getRandom(size, size, minVal, maxVal);
-
-                    algorithm.setThreadsNum(threadsNum);
-                    algorithm.setFirst(first);
-                    algorithm.setSecond(second);
-
-                    algorithm.solve();
-
-                    var endTime = System.currentTimeMillis();
-
-                    var duration = endTime - startTime;
-                    if(threadsNum==1) threadTimeOne = duration;
-
+                    algo.multiply(threadsNum, first, second);
+                    var duration = System.currentTimeMillis() - startTime;
                     var result = new AlgorithmResult(
                             duration, threadsNum, size,
                             threadTimeOne / (double) duration , algName).toString();
-
                     System.out.println(result);
                     results.write((result + "\n").getBytes());
                 }

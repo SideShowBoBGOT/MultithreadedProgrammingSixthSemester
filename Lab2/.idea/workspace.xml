@@ -5,7 +5,13 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="fe65f168-1ae9-41d7-aacc-4bb917f65ae2" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/Lab2/src/main/java/org/MultiplicationAlgorithms/FoxAlgorithm.java" beforeDir="false" afterPath="$PROJECT_DIR$/Lab2/src/main/java/org/MultiplicationAlgorithms/FoxAlgorithm.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Lab2/src/main/java/org/MultiplicationAlgorithms/MultiplyAlgo.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Lab2/src/main/java/org/MultiplicationAlgorithms/BlockStriped/BlockStripedAlgorithm.java" beforeDir="false" afterPath="$PROJECT_DIR$/Lab2/src/main/java/org/MultiplicationAlgorithms/BlockStriped/BlockStripedAlgorithm.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Lab2/src/main/java/org/MultiplicationAlgorithms/Fox/FoxAlgorithm.java" beforeDir="false" afterPath="$PROJECT_DIR$/Lab2/src/main/java/org/MultiplicationAlgorithms/Fox/FoxAlgorithm.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Lab2/src/test/java/test/MatrixTester.java" beforeDir="false" afterPath="$PROJECT_DIR$/Lab2/src/test/java/test/MatrixTester.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Results.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/results.csv" beforeDir="false" afterPath="$PROJECT_DIR$/results.csv" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -16,6 +22,7 @@
     <option name="RECENT_TEMPLATES">
       <list>
         <option value="Class" />
+        <option value="Interface" />
       </list>
     </option>
   </component>
@@ -73,7 +80,7 @@
       </method>
     </configuration>
     <configuration name="FoxAlgorithm" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="org.MultiplicationAlgorithms.FoxAlgorithm" />
+      <option name="MAIN_CLASS_NAME" value="org.MultiplicationAlgorithms.Fox.FoxAlgorithm" />
       <module name="Lab2" />
       <extension name="coverage">
         <pattern>
@@ -121,7 +128,7 @@
       <workItem from="1687463280645" duration="1277000" />
       <workItem from="1690035386930" duration="1592000" />
       <workItem from="1690104289099" duration="817000" />
-      <workItem from="1690107447106" duration="5440000" />
+      <workItem from="1690107447106" duration="11157000" />
     </task>
     <servers />
   </component>

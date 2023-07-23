@@ -1,15 +1,16 @@
 package org.MultiplicationAlgorithms.Fox;
 
 import org.LabMath.Matrixes.Matrix2D;
+import org.MultiplicationAlgorithms.MultiplyAlgo;
 
 import java.util.ArrayList;
-import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
-public class FoxAlgorithm {
+public class FoxAlgorithm implements MultiplyAlgo {
 	public FoxAlgorithm() {}
 
+	@Override
 	public Matrix2D multiply(int countThread, Matrix2D first, Matrix2D second) {
 		var complexSize = (int) Math.sqrt(countThread - 1) + 1;
 		var complexFirst = MatrixToComplexMatrix(first, complexSize);
@@ -28,9 +29,10 @@ public class FoxAlgorithm {
 			var futures = new ArrayList<Future<Matrix2D>>();
 			for(var i = 0; i < complexSize; ++i) {
 				for(var j = 0; j < complexSize; ++j) {
-					TaskFoxAlgorithm task = new TaskFoxAlgorithm(
-						complexFirst[i][(i + k) % complexSize],
-						complexSecond[(i + k) % complexSize][j],
+					var index = (i + k) % complexSize;
+					var task = new FoxAlgorithmTask(
+						complexFirst[i][index],
+						complexSecond[index][j],
 						complex[i][j]);
 					futures.add(executor.submit(task));
 				}
