@@ -150,4 +150,14 @@ public final class GeneralMatrix implements MathMatrix<GeneralMatrix> {
         }
         return index;
     }
+
+    @Override
+    public int compareTo(GeneralMatrix o) {
+        for(var i = 0; i < total; ++i) {
+            if((Math.abs(this.mat.getAt(i) - o.mat.getAt(i)) > 0.000000001)) {
+                return 1;
+            }
+        }
+        return 0;
+    }
 }

@@ -9,7 +9,7 @@ import org.MultiplicationAlgorithms.MultiplyAlgo;
 import java.io.*;
 import java.util.ArrayList;
 
-public class MatrixTester {
+public class MatrixAlgoTester {
     private static final int minVal = -10;
     private static final int maxVal = 10;
     private static final String FILE_NAME = "results.csv";
@@ -44,7 +44,7 @@ public class MatrixTester {
     }
 
     public static void main(String[] args) throws PythonExecutionException, IOException {
-            var tester = new MatrixTester();
+            var tester = new MatrixAlgoTester();
             var threadsNums = new int[] {2, 4, 10};
             var matrixSizes = new int[] {100, 300, 500, 700, 1000, 1200, 1400, 1500, 1700, 1800, 2000};
             tester.testAlgorithm(threadsNums, matrixSizes);

@@ -58,9 +58,9 @@ public class FoxAlgorithm implements MultiplyAlgo {
 		for(var i = 0; i < size; ++i) {
 			for(var j = 0; j < size; ++j) {
 				complexMatrix[i][j] = new Matrix2D(inner, inner);
+				var local = complexMatrix[i][j];
 				for(var k = 0; k < inner; ++k) {
 					for (var l = 0; l < inner; ++l) {
-						var local = complexMatrix[i][j];
 						var rowIndex = i * inner + k;
 						var colIndex = j * inner + l;
 						if(rowIndex >= rows || colIndex >= cols){

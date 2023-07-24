@@ -34,14 +34,16 @@ public class BlockStripedAlgorithm implements MultiplyAlgo {
 		var callables = new ArrayList<BlockStripedAlgorithmTask>();
 		var futures = new ArrayList<Future<Double>>();
 
-		for(int i = 0; i < firstRows; ++i) {
-			for(int j = 0; j < secondCols; ++j) {
-				var index = (j + i) % firstRows;
-				var task = new BlockStripedAlgorithmTask(index, first, second);
+		for(var i = 0; i < secondCols; ++i) {
+			//System.out.println("Iteration: " + i);
+			for(var row = 0; row < firstRows; ++row) {
+				var col = row - i;
+				col = col < 0 ? col + secondCols : col;
+				//System.out.println("\tProc: " + row + "\tCol: " + col);
+				var task = new BlockStripedAlgorithmTask(row, col, first, second);
 				callables.add(task);
 			}
-
-			try{
+			try {
 				futures.addAll(executor.invokeAll(callables));
 				callables.clear();
 			} catch (InterruptedException e) {
@@ -50,17 +52,16 @@ public class BlockStripedAlgorithm implements MultiplyAlgo {
 
 		}
 		executor.shutdown();
-
-		try{
-			for (int i = 0; i < firstRows; i++) {
-				for (int j = 0; j < secondCols; j++) {
-					var future = futures.get(i * secondCols + j);
-					var index = (j + i) % firstRows;
-					result.setAt(future.get(), index, j);
+		try {
+			for(var i = 0; i < secondCols; ++i) {
+				for(var row = 0; row < firstRows; ++row) {
+					var col = row - i;
+					col = col < 0 ? col + secondCols : col;
+					var future = futures.get(i * firstRows + row);
+					result.setAt(future.get(), row, col);
 				}
 			}
-		}
-		catch (InterruptedException | ExecutionException e) {
+		} catch (InterruptedException | ExecutionException e) {
 			throw new RuntimeException(e);
 		}
 
