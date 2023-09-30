@@ -1,0 +1,6 @@
+[submodule "CourseWork/external/CLI11"]
+	path = CourseWork/external/CLI11
+	url = https://github.com/CLIUtils/CLI11
+[submodule "CourseWork/external/magic_enum"]
+	path = CourseWork/external/magic_enum
+	url = https://github.com/Neargye/magic_enum
