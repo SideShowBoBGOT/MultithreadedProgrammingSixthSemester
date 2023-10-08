@@ -1,25 +1,48 @@
-use std::collections::{HashMap, HashSet};
-use std::ops::DerefMut;
-use std::sync::{Arc, Mutex, RwLock};
+use std::collections::{HashMap};
+use std::hash::{Hash, Hasher};
+use std::sync::{Arc, RwLock};
 
 use rand::prelude::*;
 
-pub type SingleNode<T> = Arc<Mutex<T>>;
-pub type Nodes<T> = Arc<RwLock<Vec<SingleNode<T>>>>;
-pub type SinglePath<T> = Vec<SingleNode<T>>;
+pub struct SingleNode<T>(Arc<RwLock<T>>);
+
+impl<T> PartialEq<Self> for SingleNode<T> {
+    fn eq(&self, other: &Self) -> bool {
+        Arc::ptr_eq(&self.0, &other.0)
+    }
+}
+
+impl<T> Eq for SingleNode<T> {}
+
+impl<T> Clone for SingleNode<T> {
+    fn clone(&self) -> Self {
+        Self(self.0.clone())
+    }
+}
+
+impl<T: Hash> Hash for SingleNode<T> {
+    fn hash<H: Hasher>(&self, state: &mut H) {
+        let read_inner = self.0.read().unwrap();
+        read_inner.hash(state)
+    }
+}
+
+pub type Nodes<T> = Arc<RwLock<im::Vector<SingleNode<T>>>>;
+pub type SinglePath<T> = Arc<RwLock<im::Vector<SingleNode<T>>>>;
 pub type ResultPath<T> = Arc<RwLock<Option<SinglePath<T>>>>;
-pub type Paths<T> = Arc<RwLock<Vec<SinglePath<T>>>>;
+pub type Paths<T> = Arc<RwLock<im::Vector<SinglePath<T>>>>;
 pub type Graph<T> = Arc<HashMap<SingleNode<T>, Vec<SingleNode<T>>>>;
 type CommunicationMarker = Arc<RwLock<bool>>;
 
 pub fn find_path<T>(from: SingleNode<T>, to: SingleNode<T>, graph: Graph<T>, total_threads: usize)
-    where T: Eq + std::hash::Hash + Send {
+    where T: Eq + std::hash::Hash + Send + Sync {
 
     std::thread::scope(|s| {
-        let initial_path = vec![from.clone()];
+
+        let initial_path = im::Vector::from(vec![from.clone()]);
         let result_path = Arc::new(RwLock::new(None));
         let visited_nodes = Arc::new(RwLock::new(initial_path.clone()));
-        let paths = Arc::new(RwLock::new(vec![initial_path]));
+        let paths = Arc::new(RwLock::new(im::Vector::from(vec![visited_nodes.clone()])));
         let comm_mark = Arc::new(RwLock::new(true));
         for index in 0..total_threads {
             let mut task = ThreadTask::<T>::new(
@@ -42,6 +65,11 @@ enum ChoosePathResult<T> {
     FinalPathFound(SinglePath<T>),
 }
 
+enum UpdatePathsResult<T> {
+    DeadEnd(SinglePath<T>),
+    Updated
+}
+
 struct ThreadTask<T> {
     visited_nodes: Nodes<T>,
     paths: Paths<T>,
@@ -51,7 +79,7 @@ struct ThreadTask<T> {
     comm_mark: CommunicationMarker
 }
 
-impl<T: Eq + std::hash::Hash> ThreadTask<T> {
+impl<T: Hash> ThreadTask<T> {
     fn new(visited_nodes: Nodes<T>, paths: Paths<T>, graph: Graph<T>,
            end_node: SingleNode<T>, result_path: ResultPath<T>,
            comm_mark: CommunicationMarker) -> Self {
@@ -63,10 +91,14 @@ impl<T: Eq + std::hash::Hash> ThreadTask<T> {
         let is_do_work = true;
         while is_do_work {
             match self.choose_path(&mut rand_gen) {
-                ChoosePathResult::Locked => {}
                 ChoosePathResult::DeadEnd(path) => self.remove_path(path),
                 ChoosePathResult::PathChosen((path, unvisited_nodes)) => {
-                    self.update_paths(path, unvisited_nodes)
+                    match self.update_paths(path, unvisited_nodes) {
+                        UpdatePathsResult::DeadEnd(chosen_path) => {
+                            self.remove_path(chosen_path);
+                        }
+                        UpdatePathsResult::Updated => {}
+                    }
                 },
                 ChoosePathResult::NoPaths => {
                     let mut mark_write = self.comm_mark.write().unwrap();
@@ -75,9 +107,9 @@ impl<T: Eq + std::hash::Hash> ThreadTask<T> {
                 },
                 ChoosePathResult::FinalPathFound(path) => {
                     let mut mark_write = self.comm_mark.write().unwrap();
-                    if mark_write {
+                    if *mark_write {
                         *mark_write = false;
-                        let res_write = self.result_path.write().unwrap();
+                        let mut res_write = self.result_path.write().unwrap();
                         *res_write = Some(path);
                     }
                     break;
@@ -86,67 +118,68 @@ impl<T: Eq + std::hash::Hash> ThreadTask<T> {
         }
     }
 
-    fn update_paths(&mut self, path: SinglePath<T>, nodes: Vec<SingleNode<T>>) {
+    fn update_paths(&mut self, chosen_path: SinglePath<T>, unvisited_nodes: Vec<SingleNode<T>>)
+        -> UpdatePathsResult<T> {
+
         let mut visited_write = self.visited_nodes.write().unwrap();
-        let sure_unvisited = nodes.into_iter()
-            .filter(|n| !self.is_node_visited(n)).collect::<Vec<_>>();
+        let sure_unvisited = unvisited_nodes.into_iter()
+            .filter(|n| !visited_write.contains(n)).collect::<Vec<_>>();
 
         if sure_unvisited.is_empty() {
-            return self.remove_path(path);
+            return UpdatePathsResult::DeadEnd(chosen_path);
         }
 
         let mut paths_write = self.paths.write().unwrap();
 
         for (i, node) in sure_unvisited.into_iter().enumerate() {
-            visited_write.push(node.clone());
+            visited_write.push_back(node.clone());
             if i == 0 {
-                let mut p_write = path.write().unwrap();
-                p_write.push(node);
+                let mut chosen_path_write = chosen_path.write().unwrap();
+                chosen_path_write.push_back(node);
             } else {
-                let mut new_path = {
-                    let p_read = path.read().unwrap();
-                    p_read.clone()
-                };
-                new_path.push(node);
-                paths_write.push(Arc::new(RwLock::new(new_path)));
+                let mut new_path = chosen_path.read().unwrap().clone();
+                new_path.push_back(node);
+                paths_write.push_back(Arc::new(RwLock::new(new_path)));
             }
         }
+
+        UpdatePathsResult::Updated
     }
 
     fn choose_path(&mut self, rand_gen: &mut ThreadRng) -> ChoosePathResult<T> {
 
         let paths_read = self.paths.read().unwrap();
         if paths_read.is_empty() { return ChoosePathResult::NoPaths; }
-        let p = paths_read.choose(rand_gen).unwrap();
-        let p_read = p.read().unwrap();
+
+        let chosen_path = paths_read.iter().choose(rand_gen).unwrap();
+        let chosen_path_read = chosen_path.read().unwrap();
+
+        let path_last_node = chosen_path_read.last().unwrap();
+        if *path_last_node == self.end_node {
+            return ChoosePathResult::FinalPathFound(chosen_path.clone());
+        }
 
         let unvisited_nodes = {
-            let path_last_node = p_read.last().unwrap();
             let last_node_neighbours = &self.graph[path_last_node];
+            let visited_nodes_read = self.visited_nodes.read().unwrap();
             last_node_neighbours.iter().filter(|neighbour_node| {
-                !self.is_node_visited(neighbour_node)
+                !visited_nodes_read.contains(neighbour_node)
             }).map(|n| n.clone()).collect::<Vec<_>>()
         };
 
         if unvisited_nodes.is_empty() {
-            FindUnvisitedResult::AllNeighboursVisited(p.clone())
+            ChoosePathResult::DeadEnd(chosen_path.clone())
         } else {
-            FindUnvisitedResult::PathChosen((p.clone(), unvisited_nodes))
+            ChoosePathResult::PathChosen((chosen_path.clone(), unvisited_nodes))
         }
     }
-    //
-    // fn remove_path(&mut self, path: SinglePath<T>) {
-    //     let mut path_write = self.paths.write().unwrap();
-    //     let position_opt = path_write.iter().position(
-    //         |node| { Arc::ptr_eq(node, &path) });
-    //     if let Some(position) = position_opt {
-    //         path_write.remove(position);
-    //     }
-    // }
-    //
-    // fn is_node_visited(&self, node: &SingleNode<T>) -> bool {
-    //     self.visited_nodes.read().unwrap().iter().find(|visited| {
-    //         Arc::ptr_eq(visited, node)
-    //     }).is_some()
-    // }
+
+    fn remove_path(&mut self, path: SinglePath<T>) {
+        let mut path_write = self.paths.write().unwrap();
+        let position_opt = path_write.iter().position(
+            |node| { Arc::ptr_eq(node, &path) });
+        if let Some(position) = position_opt {
+            path_write.remove(position);
+        }
+    }
 }
