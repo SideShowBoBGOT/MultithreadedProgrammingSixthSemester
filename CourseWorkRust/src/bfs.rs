@@ -36,7 +36,6 @@ pub fn find_path<T>(from: SingleNode<T>, to: SingleNode<T>, graph: Graph<T>, tot
 }
 
 enum ChoosePathResult<T> {
-    Locked,
     DeadEnd(SinglePath<T>),
     PathChosen((SinglePath<T>, Vec<SingleNode<T>>)),
     NoPaths,
@@ -63,7 +62,7 @@ impl<T: Eq + std::hash::Hash> ThreadTask<T> {
         let mut rand_gen = ThreadRng::default();
         let is_do_work = true;
         while is_do_work {
-            match self.find_path_and_unvisited_node(&mut rand_gen) {
+            match self.choose_path(&mut rand_gen) {
                 ChoosePathResult::Locked => {}
                 ChoosePathResult::DeadEnd(path) => self.remove_path(path),
                 ChoosePathResult::PathChosen((path, unvisited_nodes)) => {
@@ -87,56 +86,54 @@ impl<T: Eq + std::hash::Hash> ThreadTask<T> {
         }
     }
 
-    // fn update_paths(&mut self, path: SinglePath<T>, nodes: Vec<SingleNode<T>>) {
-    //     let mut visited_write = self.visited_nodes.write().unwrap();
-    //     let sure_unvisited = nodes.into_iter()
-    //         .filter(|n| !self.is_node_visited(n)).collect::<Vec<_>>();
-    //
-    //     if sure_unvisited.is_empty() {
-    //         return self.remove_path(path);
-    //     }
-    //
-    //     let mut paths_write = self.paths.write().unwrap();
-    //
-    //     for (i, node) in sure_unvisited.into_iter().enumerate() {
-    //         visited_write.push(node.clone());
-    //         if i == 0 {
-    //             let mut p_write = path.write().unwrap();
-    //             p_write.push(node);
-    //         } else {
-    //             let mut new_path = {
-    //                 let p_read = path.read().unwrap();
-    //                 p_read.clone()
-    //             };
-    //             new_path.push(node);
-    //             paths_write.push(Arc::new(RwLock::new(new_path)));
-    //         }
-    //     }
-    // }
-    //
-    // fn find_path_and_unvisited_node(&mut self, rand_gen: &mut ThreadRng) -> FindUnvisitedResult<T> {
-    //
-    //     let paths_read = self.paths.try_read();
-    //     if paths_read.is_err() { return FindUnvisitedResult::PathsLocked; }
-    //
-    //     let paths_read = paths_read.unwrap();
-    //     let p = paths_read.choose(rand_gen).unwrap();
-    //     let p_read = p.read().unwrap();
-    //
-    //     let unvisited_nodes = {
-    //         let path_last_node = p_read.last().unwrap();
-    //         let last_node_neighbours = &self.graph[path_last_node];
-    //         last_node_neighbours.iter().filter(|neighbour_node| {
-    //             !self.is_node_visited(neighbour_node)
-    //         }).map(|n| n.clone()).collect::<Vec<_>>()
-    //     };
-    //
-    //     if unvisited_nodes.is_empty() {
-    //         FindUnvisitedResult::AllNeighboursVisited(p.clone())
-    //     } else {
-    //         FindUnvisitedResult::PathChosen((p.clone(), unvisited_nodes))
-    //     }
-    // }
+    fn update_paths(&mut self, path: SinglePath<T>, nodes: Vec<SingleNode<T>>) {
+        let mut visited_write = self.visited_nodes.write().unwrap();
+        let sure_unvisited = nodes.into_iter()
+            .filter(|n| !self.is_node_visited(n)).collect::<Vec<_>>();
+
+        if sure_unvisited.is_empty() {
+            return self.remove_path(path);
+        }
+
+        let mut paths_write = self.paths.write().unwrap();
+
+        for (i, node) in sure_unvisited.into_iter().enumerate() {
+            visited_write.push(node.clone());
+            if i == 0 {
+                let mut p_write = path.write().unwrap();
+                p_write.push(node);
+            } else {
+                let mut new_path = {
+                    let p_read = path.read().unwrap();
+                    p_read.clone()
+                };
+                new_path.push(node);
+                paths_write.push(Arc::new(RwLock::new(new_path)));
+            }
+        }
+    }
+
+    fn choose_path(&mut self, rand_gen: &mut ThreadRng) -> ChoosePathResult<T> {
+
+        let paths_read = self.paths.read().unwrap();
+        if paths_read.is_empty() { return ChoosePathResult::NoPaths; }
+        let p = paths_read.choose(rand_gen).unwrap();
+        let p_read = p.read().unwrap();
+
+        let unvisited_nodes = {
+            let path_last_node = p_read.last().unwrap();
+            let last_node_neighbours = &self.graph[path_last_node];
+            last_node_neighbours.iter().filter(|neighbour_node| {
+                !self.is_node_visited(neighbour_node)
+            }).map(|n| n.clone()).collect::<Vec<_>>()
+        };
+
+        if unvisited_nodes.is_empty() {
+            FindUnvisitedResult::AllNeighboursVisited(p.clone())
+        } else {
+            FindUnvisitedResult::PathChosen((p.clone(), unvisited_nodes))
+        }
+    }
     //
     // fn remove_path(&mut self, path: SinglePath<T>) {
     //     let mut path_write = self.paths.write().unwrap();
