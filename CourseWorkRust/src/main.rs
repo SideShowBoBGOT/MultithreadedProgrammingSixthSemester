@@ -34,5 +34,9 @@ fn main() {
             k.clone() => vec![g.clone(), m.clone()]
         }
     );
-    bfs::find_path(a.clone(), m.clone(), graph, 1);
+    let mut path_opt = bfs::find_path(a.clone(), m.clone(), graph, 1);
+    let mut path = path_opt.unwrap();
+    for el in path {
+        println!("{}", *el.write().unwrap());
+    }
 }

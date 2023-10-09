@@ -1,4 +1,6 @@
+use std::fmt::Display;
 use std::hash::{Hash, Hasher};
+use std::ops::{Deref, DerefMut};
 use std::sync::{Arc, RwLock};
 
 use rand::prelude::*;
@@ -32,6 +34,16 @@ impl<T: Hash> Hash for SingleNode<T> {
     }
 }
 
+impl<T> Deref for SingleNode<T> {
+    type Target = Arc<RwLock<T>>;
+
+    fn deref(&self) -> &Self::Target { &self.0 }
+}
+
+impl<T> DerefMut for SingleNode<T> {
+    fn deref_mut(&mut self) -> &mut Self::Target { &mut self.0 }
+}
+
 pub type Nodes<T> = Arc<RwLock<Vec<SingleNode<T>>>>;
 pub type SinglePath<T> = Arc<RwLock<im::Vector<SingleNode<T>>>>;
 pub type ResultPath<T> = Arc<RwLock<Option<SinglePath<T>>>>;
@@ -39,12 +51,12 @@ pub type Paths<T> = Arc<RwLock<Vec<SinglePath<T>>>>;
 pub type Graph<T> = Arc<im::HashMap<SingleNode<T>, Vec<SingleNode<T>>>>;
 type CommunicationMarker = Arc<RwLock<bool>>;
 
-pub fn find_path<T>(from: SingleNode<T>, to: SingleNode<T>, graph: Graph<T>, total_threads: usize)
+pub fn find_path<T>(from: SingleNode<T>, to: SingleNode<T>, graph: Graph<T>, total_threads: usize) -> Option<im::Vector<SingleNode<T>>>
     where T: Eq + std::hash::Hash + Send + Sync {
 
-    std::thread::scope(|s| {
+    let result_path = Arc::new(RwLock::new(None));
 
-        let result_path = Arc::new(RwLock::new(None));
+    std::thread::scope(|s| {
         let visited_nodes = Arc::new(RwLock::new(vec![from.clone()]));
         let paths = Arc::new(RwLock::new(vec![
             Arc::new(RwLock::new(im::Vector::from(vec![from.clone()])))
@@ -62,6 +74,11 @@ pub fn find_path<T>(from: SingleNode<T>, to: SingleNode<T>, graph: Graph<T>, tot
         }
     });
 
+    let result = std::mem::take(&mut *result_path.write().unwrap());
+    if let Some(path) = result {
+        return Some(std::mem::take(&mut *path.write().unwrap()));
+    }
+    None
 }
 
 enum ChoosePathResult<T> {
@@ -136,9 +153,10 @@ impl<T: Hash> ThreadTask<T> {
         let mut paths_write = self.paths.write().unwrap();
         let mut chosen_path_write = chosen_path.write().unwrap();
 
+        let last_index = sure_unvisited.len() - 1;
         for (i, node) in sure_unvisited.into_iter().enumerate() {
             visited_write.push(node.clone());
-            if i == 0 {
+            if i == last_index {
                 chosen_path_write.push_back(node);
             } else {
                 let mut new_path = chosen_path_write.clone();
