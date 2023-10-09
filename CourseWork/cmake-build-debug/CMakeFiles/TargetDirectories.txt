@@ -1,7 +1,0 @@
-/home/sideshowbobgot/university/MultithreadedProgrammingSixthSemester/CourseWork/cmake-build-debug/CMakeFiles/CourseWork.dir
-/home/sideshowbobgot/university/MultithreadedProgrammingSixthSemester/CourseWork/cmake-build-debug/CMakeFiles/edit_cache.dir
-/home/sideshowbobgot/university/MultithreadedProgrammingSixthSemester/CourseWork/cmake-build-debug/CMakeFiles/rebuild_cache.dir
-/home/sideshowbobgot/university/MultithreadedProgrammingSixthSemester/CourseWork/cmake-build-debug/_deps/gsl-build/CMakeFiles/edit_cache.dir
-/home/sideshowbobgot/university/MultithreadedProgrammingSixthSemester/CourseWork/cmake-build-debug/_deps/gsl-build/CMakeFiles/rebuild_cache.dir
-/home/sideshowbobgot/university/MultithreadedProgrammingSixthSemester/CourseWork/cmake-build-debug/_deps/gsl-build/include/CMakeFiles/edit_cache.dir
-/home/sideshowbobgot/university/MultithreadedProgrammingSixthSemester/CourseWork/cmake-build-debug/_deps/gsl-build/include/CMakeFiles/rebuild_cache.dir
