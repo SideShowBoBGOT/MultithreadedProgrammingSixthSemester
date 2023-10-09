@@ -1,6 +1,6 @@
 use std::sync::Arc;
-use im::{HashMap, hashmap};
-use crate::bfs::{SingleNode, Graph};
+use im::hashmap;
+use crate::bfs::SingleNode;
 
 mod bfs;
 
@@ -34,7 +34,8 @@ fn main() {
             k.clone() => vec![g.clone(), m.clone()]
         }
     );
-    let mut path_opt = bfs::find_path(a.clone(), m.clone(), graph, 1);
+    let total_threads = 6;
+    let mut path_opt = bfs::find_path(a.clone(), m.clone(), graph, total_threads);
     let mut path = path_opt.unwrap();
     for el in path {
         println!("{}", *el.write().unwrap());

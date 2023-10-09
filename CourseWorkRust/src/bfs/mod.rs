@@ -1,55 +1,12 @@
 use std::fmt::Display;
 use std::hash::{Hash, Hasher};
-use std::ops::{Deref, DerefMut};
+
 use std::sync::{Arc, RwLock};
-
 use rand::prelude::*;
+pub use types::{SingleNode, Graph};
+use types::{SinglePath, Nodes, Paths, ResultPath, CommunicationMarker};
 
-pub struct SingleNode<T>(Arc<RwLock<T>>);
-
-impl<T> SingleNode<T> {
-    pub fn new(value: T) -> Self {
-        Self(Arc::new(RwLock::new(value)))
-    }
-}
-
-impl<T> PartialEq<Self> for SingleNode<T> {
-    fn eq(&self, other: &Self) -> bool {
-        Arc::ptr_eq(&self.0, &other.0)
-    }
-}
-
-impl<T> Eq for SingleNode<T> {}
-
-impl<T> Clone for SingleNode<T> {
-    fn clone(&self) -> Self {
-        Self(self.0.clone())
-    }
-}
-
-impl<T: Hash> Hash for SingleNode<T> {
-    fn hash<H: Hasher>(&self, state: &mut H) {
-        let read_inner = self.0.read().unwrap();
-        read_inner.hash(state)
-    }
-}
-
-impl<T> Deref for SingleNode<T> {
-    type Target = Arc<RwLock<T>>;
-
-    fn deref(&self) -> &Self::Target { &self.0 }
-}
-
-impl<T> DerefMut for SingleNode<T> {
-    fn deref_mut(&mut self) -> &mut Self::Target { &mut self.0 }
-}
-
-pub type Nodes<T> = Arc<RwLock<Vec<SingleNode<T>>>>;
-pub type SinglePath<T> = Arc<RwLock<im::Vector<SingleNode<T>>>>;
-pub type ResultPath<T> = Arc<RwLock<Option<SinglePath<T>>>>;
-pub type Paths<T> = Arc<RwLock<Vec<SinglePath<T>>>>;
-pub type Graph<T> = Arc<im::HashMap<SingleNode<T>, Vec<SingleNode<T>>>>;
-type CommunicationMarker = Arc<RwLock<bool>>;
+mod types;
 
 pub fn find_path<T>(from: SingleNode<T>, to: SingleNode<T>, graph: Graph<T>, total_threads: usize) -> Option<im::Vector<SingleNode<T>>>
     where T: Eq + std::hash::Hash + Send + Sync {
@@ -82,6 +39,7 @@ pub fn find_path<T>(from: SingleNode<T>, to: SingleNode<T>, graph: Graph<T>, tot
 }
 
 enum ChoosePathResult<T> {
+    Locked,
     DeadEnd(SinglePath<T>),
     PathChosen((SinglePath<T>, Vec<SingleNode<T>>)),
     NoPaths,
@@ -113,6 +71,7 @@ impl<T: Hash> ThreadTask<T> {
         let mut rand_gen = ThreadRng::default();
         while *self.comm_mark.read().unwrap() {
             match self.choose_path(&mut rand_gen) {
+                ChoosePathResult::Locked => {}
                 ChoosePathResult::DeadEnd(path) => self.remove_path(path),
                 ChoosePathResult::PathChosen((path, unvisited_nodes)) => {
                     match self.update_paths(path, unvisited_nodes) {
@@ -141,7 +100,7 @@ impl<T: Hash> ThreadTask<T> {
     }
 
     fn update_paths(&mut self, chosen_path: SinglePath<T>, unvisited_nodes: Vec<SingleNode<T>>)
-        -> UpdatePathsResult<T> {
+                    -> UpdatePathsResult<T> {
 
         let mut visited_write = self.visited_nodes.write().unwrap();
         let sure_unvisited = unvisited_nodes.into_iter()
@@ -152,7 +111,6 @@ impl<T: Hash> ThreadTask<T> {
 
         let mut paths_write = self.paths.write().unwrap();
         let mut chosen_path_write = chosen_path.write().unwrap();
-
         let last_index = sure_unvisited.len() - 1;
         for (i, node) in sure_unvisited.into_iter().enumerate() {
             visited_write.push(node.clone());
@@ -169,9 +127,19 @@ impl<T: Hash> ThreadTask<T> {
     }
 
     fn choose_path(&mut self, rand_gen: &mut ThreadRng) -> ChoosePathResult<T> {
+        let paths_read = {
+            let paths_try_read = self.paths.try_read();
+            if paths_try_read.is_err() { return ChoosePathResult::Locked; }
+            paths_try_read.unwrap()
+        };
 
-        let paths_read = self.paths.read().unwrap();
         if paths_read.is_empty() { return ChoosePathResult::NoPaths; }
+
+        let visited_nodes_read = {
+            let visited_nodes_try_read = self.visited_nodes.try_read();
+            if visited_nodes_try_read.is_err() { return ChoosePathResult::Locked; }
+            visited_nodes_try_read.unwrap()
+        };
 
         let chosen_path = paths_read.iter().choose(rand_gen).unwrap();
         let chosen_path_read = chosen_path.read().unwrap();
@@ -181,9 +149,8 @@ impl<T: Hash> ThreadTask<T> {
             return ChoosePathResult::FinalPathFound(chosen_path.clone());
         }
 
+        let last_node_neighbours = &self.graph[path_last_node];
         let unvisited_nodes = {
-            let last_node_neighbours = &self.graph[path_last_node];
-            let visited_nodes_read = self.visited_nodes.read().unwrap();
             last_node_neighbours.iter().filter(|neighbour_node| {
                 !visited_nodes_read.contains(neighbour_node)
             }).map(|n| n.clone()).collect::<Vec<_>>()
