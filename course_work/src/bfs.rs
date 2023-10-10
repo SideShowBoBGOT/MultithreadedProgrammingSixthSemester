@@ -1,12 +1,11 @@
 use std::collections::HashMap;
-use std::fmt::Display;
-use std::hash::{Hash, Hasher};
+use std::hash::{Hash};
 
 use std::sync::{Arc, RwLock};
 use rand::prelude::*;
-pub use crate::my_types::{Graph, SingleNode};
-use crate::my_types::{CommunicationMarker, Paths, ResultPath, SinglePath};
-use crate::my_types::NodesMap;
+use crate::types::{Graph, SingleNode};
+use crate::types::{CommunicationMarker, Paths, ResultPath, SinglePath};
+use crate::types::NodesMap;
 
 pub fn find_path<T>(from: SingleNode<T>, to: SingleNode<T>, graph: Graph<T>, total_threads: usize) -> Option<im::Vector<SingleNode<T>>>
     where T: Eq + std::hash::Hash + Send + Sync {

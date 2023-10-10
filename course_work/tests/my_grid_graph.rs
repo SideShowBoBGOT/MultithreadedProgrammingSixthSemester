@@ -1,6 +1,6 @@
 use std::sync::Arc;
 use std::collections::HashMap;
-use crate::my_types::{Graph, SingleNode};
+use course_work::types::{Graph, SingleNode};
 
 #[derive(PartialEq, Eq, Hash, Copy, Clone)]
 enum Direction { Up, Down, Left, Right }
