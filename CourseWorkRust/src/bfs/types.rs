@@ -1,3 +1,4 @@
+use std::collections::HashMap;
 use std::sync::{Arc, RwLock};
 use std::hash::{Hash, Hasher};
 use std::ops::{Deref, DerefMut};
@@ -40,9 +41,9 @@ impl<T> DerefMut for SingleNode<T> {
     fn deref_mut(&mut self) -> &mut Self::Target { &mut self.0 }
 }
 
-pub type Nodes<T> = Arc<RwLock<Vec<SingleNode<T>>>>;
 pub type SinglePath<T> = Arc<RwLock<im::Vector<SingleNode<T>>>>;
 pub type ResultPath<T> = Arc<RwLock<Option<SinglePath<T>>>>;
 pub type Paths<T> = Arc<RwLock<Vec<SinglePath<T>>>>;
-pub type Graph<T> = Arc<im::HashMap<SingleNode<T>, Vec<SingleNode<T>>>>;
+pub type NodesMap<T> = Arc<RwLock<HashMap<SingleNode<T>, Vec<SingleNode<T>>>>>;
+pub type Graph<T> = Arc<HashMap<SingleNode<T>, Vec<SingleNode<T>>>>;
 pub type CommunicationMarker = Arc<RwLock<bool>>;

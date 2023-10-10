@@ -1,10 +1,12 @@
+use std::collections::HashMap;
 use std::fmt::Display;
 use std::hash::{Hash, Hasher};
 
 use std::sync::{Arc, RwLock};
 use rand::prelude::*;
 pub use types::{SingleNode, Graph};
-use types::{SinglePath, Nodes, Paths, ResultPath, CommunicationMarker};
+use types::{SinglePath, Paths, ResultPath, CommunicationMarker};
+use crate::bfs::types::NodesMap;
 
 mod types;
 
@@ -14,7 +16,8 @@ pub fn find_path<T>(from: SingleNode<T>, to: SingleNode<T>, graph: Graph<T>, tot
     let result_path = Arc::new(RwLock::new(None));
 
     std::thread::scope(|s| {
-        let visited_nodes = Arc::new(RwLock::new(vec![from.clone()]));
+        let visited_nodes = Arc::new(RwLock::new(
+            HashMap::from([(from.clone(), vec![])])));
         let paths = Arc::new(RwLock::new(vec![
             Arc::new(RwLock::new(im::Vector::from(vec![from.clone()])))
         ]));
@@ -52,7 +55,7 @@ enum UpdatePathsResult<T> {
 }
 
 struct ThreadTask<T> {
-    visited_nodes: Nodes<T>,
+    visited_map: NodesMap<T>,
     paths: Paths<T>,
     graph: Graph<T>,
     end_node: SingleNode<T>,
@@ -61,10 +64,10 @@ struct ThreadTask<T> {
 }
 
 impl<T: Hash> ThreadTask<T> {
-    fn new(visited_nodes: Nodes<T>, paths: Paths<T>, graph: Graph<T>,
+    fn new(visited_nodes: NodesMap<T>, paths: Paths<T>, graph: Graph<T>,
            end_node: SingleNode<T>, result_path: ResultPath<T>,
            comm_mark: CommunicationMarker) -> Self {
-        Self { visited_nodes, paths, graph, end_node, result_path, comm_mark }
+        Self { visited_map: visited_nodes, paths, graph, end_node, result_path, comm_mark }
     }
 
     fn execute(&mut self) {
@@ -102,18 +105,37 @@ impl<T: Hash> ThreadTask<T> {
     fn update_paths(&mut self, chosen_path: SinglePath<T>, unvisited_nodes: Vec<SingleNode<T>>)
                     -> UpdatePathsResult<T> {
 
-        let mut visited_write = self.visited_nodes.write().unwrap();
-        let sure_unvisited = unvisited_nodes.into_iter()
-            .filter(|n| !visited_write.contains(n)).collect::<Vec<_>>();
+        let mut chosen_path_write = chosen_path.write().unwrap();
+        let last_node = chosen_path_write.last().unwrap();
+
+        let mut visited_map_write = self.visited_map.write().unwrap();
+        let visited_nodes_opt = &visited_map_write.get(last_node);
+
+        let sure_unvisited = if visited_nodes_opt.is_none() {
+            unvisited_nodes
+        } else {
+            let visited_nodes = visited_nodes_opt.unwrap();
+            unvisited_nodes.into_iter().filter(|neighbour_node| {
+                return !visited_nodes.contains(neighbour_node);
+            }).map(|n| n.clone()).collect::<Vec<_>>()
+        };
+
         if sure_unvisited.is_empty() {
-            return UpdatePathsResult::DeadEnd(chosen_path);
+            return UpdatePathsResult::DeadEnd(chosen_path.clone());
         }
 
+        if visited_nodes_opt.is_none() {
+            visited_map_write.insert(last_node.clone(), vec![]);
+        }
+
+        let visited_nodes = visited_map_write.get_mut(last_node).unwrap();
+
         let mut paths_write = self.paths.write().unwrap();
-        let mut chosen_path_write = chosen_path.write().unwrap();
+
         let last_index = sure_unvisited.len() - 1;
         for (i, node) in sure_unvisited.into_iter().enumerate() {
-            visited_write.push(node.clone());
+            visited_nodes.push(node.clone());
+
             if i == last_index {
                 chosen_path_write.push_back(node);
             } else {
@@ -135,14 +157,18 @@ impl<T: Hash> ThreadTask<T> {
 
         if paths_read.is_empty() { return ChoosePathResult::NoPaths; }
 
-        let visited_nodes_read = {
-            let visited_nodes_try_read = self.visited_nodes.try_read();
-            if visited_nodes_try_read.is_err() { return ChoosePathResult::Locked; }
-            visited_nodes_try_read.unwrap()
+        let visited_map_read = {
+            let visited_map_try_read = self.visited_map.try_read();
+            if visited_map_try_read.is_err() { return ChoosePathResult::Locked; }
+            visited_map_try_read.unwrap()
         };
 
         let chosen_path = paths_read.iter().choose(rand_gen).unwrap();
-        let chosen_path_read = chosen_path.read().unwrap();
+        let chosen_path_read = {
+            let chosen_path_try_read = chosen_path.try_read();
+            if chosen_path_try_read.is_err() { return ChoosePathResult::Locked; }
+            chosen_path_try_read.unwrap()
+        };
 
         let path_last_node = chosen_path_read.last().unwrap();
         if *path_last_node == self.end_node {
@@ -150,9 +176,14 @@ impl<T: Hash> ThreadTask<T> {
         }
 
         let last_node_neighbours = &self.graph[path_last_node];
-        let unvisited_nodes = {
+        let visited_nodes_opt = visited_map_read.get(path_last_node);
+
+        let unvisited_nodes = if visited_nodes_opt.is_none() {
+            last_node_neighbours.clone()
+        } else {
+            let visited_nodes = visited_nodes_opt.unwrap();
             last_node_neighbours.iter().filter(|neighbour_node| {
-                !visited_nodes_read.contains(neighbour_node)
+                    return !visited_nodes.contains(neighbour_node);
             }).map(|n| n.clone()).collect::<Vec<_>>()
         };
 
