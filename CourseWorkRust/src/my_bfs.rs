@@ -4,11 +4,9 @@ use std::hash::{Hash, Hasher};
 
 use std::sync::{Arc, RwLock};
 use rand::prelude::*;
-pub use types::{SingleNode, Graph};
-use types::{SinglePath, Paths, ResultPath, CommunicationMarker};
-use crate::bfs::types::NodesMap;
-
-mod types;
+pub use crate::my_types::{Graph, SingleNode};
+use crate::my_types::{CommunicationMarker, Paths, ResultPath, SinglePath};
+use crate::my_types::NodesMap;
 
 pub fn find_path<T>(from: SingleNode<T>, to: SingleNode<T>, graph: Graph<T>, total_threads: usize) -> Option<im::Vector<SingleNode<T>>>
     where T: Eq + std::hash::Hash + Send + Sync {
@@ -183,7 +181,7 @@ impl<T: Hash> ThreadTask<T> {
         } else {
             let visited_nodes = visited_nodes_opt.unwrap();
             last_node_neighbours.iter().filter(|neighbour_node| {
-                    return !visited_nodes.contains(neighbour_node);
+                return !visited_nodes.contains(neighbour_node);
             }).map(|n| n.clone()).collect::<Vec<_>>()
         };
 

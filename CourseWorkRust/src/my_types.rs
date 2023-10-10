@@ -2,11 +2,11 @@ use std::collections::HashMap;
 use std::sync::{Arc, RwLock};
 use std::hash::{Hash, Hasher};
 use std::ops::{Deref, DerefMut};
-pub struct SingleNode<T>(Arc<RwLock<T>>);
+pub struct SingleNode<T>(Arc<T>);
 
 impl<T> SingleNode<T> {
     pub fn new(value: T) -> Self {
-        Self(Arc::new(RwLock::new(value)))
+        Self(Arc::new(value))
     }
 }
 
@@ -26,13 +26,12 @@ impl<T> Clone for SingleNode<T> {
 
 impl<T: Hash> Hash for SingleNode<T> {
     fn hash<H: Hasher>(&self, state: &mut H) {
-        let read_inner = self.0.read().unwrap();
-        read_inner.hash(state)
+        self.0.hash(state)
     }
 }
 
 impl<T> Deref for SingleNode<T> {
-    type Target = Arc<RwLock<T>>;
+    type Target = Arc<T>;
 
     fn deref(&self) -> &Self::Target { &self.0 }
 }
