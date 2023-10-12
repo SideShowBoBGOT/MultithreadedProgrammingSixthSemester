@@ -4,35 +4,31 @@ use std::hash::{Hash, Hasher};
 use std::ops::{Deref, DerefMut};
 use std::rc::Rc;
 
-pub trait Node<T> : Clone + Eq + Hash + DerefMut {
+pub trait Node<T: Hash + Eq + Clone> : Clone + Eq + Hash + DerefMut {
     fn new(value: T) -> Self;
 }
 
 pub struct RcNode<T>(Rc<T>);
 
-impl<T> Node<T> for RcNode<T> {
+impl<T> PartialEq<Self> for RcNode<T> {
+    fn eq(&self, other: &Self) -> bool { Rc::ptr_eq(&self.0, &other.0) }
+}
+
+impl<T> Eq for RcNode<T> {}
+
+impl<T: Hash> Hash for RcNode<T> {
+    fn hash<H: Hasher>(&self, state: &mut H) { self.0.hash(state) }
+}
+
+impl<T: Hash + Eq + Clone> Node<T> for RcNode<T> {
     fn new(value: T) -> Self {
         Self(Rc::new(value))
     }
 }
 
-impl<T> PartialEq<Self> for RcNode<T> {
-    fn eq(&self, other: &Self) -> bool {
-        Rc::ptr_eq(&self.0, &other.0)
-    }
-}
-
-impl<T> Eq for RcNode<T> {}
-
 impl<T> Clone for RcNode<T> {
     fn clone(&self) -> Self {
         Self(self.0.clone())
-    }
-}
-
-impl<T: Hash> Hash for RcNode<T> {
-    fn hash<H: Hasher>(&self, state: &mut H) {
-        self.0.hash(state)
     }
 }
 
@@ -50,12 +46,6 @@ pub type RcGraph<T> = HashMap<RcNode<T>, Vec<RcNode<T>>>;
 
 pub struct ArcNode<T>(Arc<T>);
 
-impl<T> ArcNode<T> {
-    pub fn new(value: T) -> Self {
-        Self(Arc::new(value))
-    }
-}
-
 impl<T> PartialEq<Self> for ArcNode<T> {
     fn eq(&self, other: &Self) -> bool {
         Arc::ptr_eq(&self.0, &other.0)
@@ -64,15 +54,15 @@ impl<T> PartialEq<Self> for ArcNode<T> {
 
 impl<T> Eq for ArcNode<T> {}
 
-impl<T> Clone for ArcNode<T> {
-    fn clone(&self) -> Self {
-        Self(self.0.clone())
-    }
-}
-
 impl<T: Hash> Hash for ArcNode<T> {
     fn hash<H: Hasher>(&self, state: &mut H) {
         self.0.hash(state)
+    }
+}
+
+impl<T> Clone for ArcNode<T> {
+    fn clone(&self) -> Self {
+        Self(self.0.clone())
     }
 }
 
@@ -84,6 +74,12 @@ impl<T> Deref for ArcNode<T> {
 
 impl<T> DerefMut for ArcNode<T> {
     fn deref_mut(&mut self) -> &mut Self::Target { &mut self.0 }
+}
+
+impl<T: Hash + Eq + Clone> Node<T> for ArcNode<T> {
+    fn new(value: T) -> Self {
+        Self(Arc::new(value))
+    }
 }
 
 pub type SinglePath<T> = Arc<RwLock<im::Vector<ArcNode<T>>>>;

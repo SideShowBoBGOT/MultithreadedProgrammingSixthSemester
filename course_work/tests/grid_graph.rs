@@ -28,7 +28,7 @@ fn get_mat<T: Node<usize>>(grid_size: usize) -> Vec<Vec<T>> {
     grid
 }
 
-pub fn get_grid_graph<T: Node<usize> + Clone>(grid_size: usize) -> (HashMap<T, Vec<T>>, Vec<Vec<T>>) {
+pub fn get_grid_graph<T: Node<usize>>(grid_size: usize) -> (HashMap<T, Vec<T>>, Vec<Vec<T>>) {
     let mat = get_mat::<T>(grid_size);
     let mut graph = HashMap::new();
     for i in 0..grid_size {
