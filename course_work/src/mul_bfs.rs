@@ -3,11 +3,11 @@ use std::hash::{Hash};
 
 use std::sync::{Arc, RwLock};
 use rand::prelude::*;
-use crate::types::{Graph, SingleNode};
+use crate::types::{ArcGraph, ArcNode};
 use crate::types::{CommunicationMarker, Paths, ResultPath, SinglePath};
 use crate::types::NodesMap;
 
-pub fn find_path<T>(from: SingleNode<T>, to: SingleNode<T>, graph: Graph<T>, total_threads: usize) -> Option<im::Vector<SingleNode<T>>>
+pub fn find_path<T>(from: ArcNode<T>, to: ArcNode<T>, graph: ArcGraph<T>, total_threads: usize) -> Option<im::Vector<ArcNode<T>>>
     where T: Eq + std::hash::Hash + Send + Sync {
 
     let result_path = Arc::new(RwLock::new(None));
@@ -45,7 +45,7 @@ enum BFSError {
 
 enum ChoosePathMarker<T> {
     DeadEnd(SinglePath<T>),
-    PathChosen((SinglePath<T>, Vec<SingleNode<T>>)),
+    PathChosen((SinglePath<T>, Vec<ArcNode<T>>)),
     NoPaths,
     FinalPathFound(SinglePath<T>),
 }
@@ -58,15 +58,15 @@ enum UpdatePathsMarker<T> {
 struct ThreadTask<T> {
     visited_map: NodesMap<T>,
     paths: Paths<T>,
-    graph: Graph<T>,
-    end_node: SingleNode<T>,
+    graph: ArcGraph<T>,
+    end_node: ArcNode<T>,
     result_path: ResultPath<T>,
     comm_mark: CommunicationMarker
 }
 
 impl<T: Hash> ThreadTask<T> {
-    fn new(visited_nodes: NodesMap<T>, paths: Paths<T>, graph: Graph<T>,
-           end_node: SingleNode<T>, result_path: ResultPath<T>,
+    fn new(visited_nodes: NodesMap<T>, paths: Paths<T>, graph: ArcGraph<T>,
+           end_node: ArcNode<T>, result_path: ResultPath<T>,
            comm_mark: CommunicationMarker) -> Self {
         Self { visited_map: visited_nodes, paths, graph, end_node, result_path, comm_mark }
     }
@@ -104,7 +104,7 @@ impl<T: Hash> ThreadTask<T> {
         }
     }
 
-    fn update_paths(&mut self, chosen_path: SinglePath<T>, unvisited_nodes: Vec<SingleNode<T>>)
+    fn update_paths(&mut self, chosen_path: SinglePath<T>, unvisited_nodes: Vec<ArcNode<T>>)
                     -> UpdatePathsMarker<T> {
         let mut chosen_path_write = chosen_path.write().unwrap();
         let last_node = chosen_path_write.last().unwrap();

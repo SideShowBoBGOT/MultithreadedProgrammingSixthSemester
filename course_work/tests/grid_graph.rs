@@ -1,32 +1,35 @@
-use std::sync::Arc;
 use std::collections::HashMap;
-use course_work::types::{Graph, SingleNode};
+use lazy_static::lazy_static;
+use course_work::types::Node;
 
 #[derive(PartialEq, Eq, Hash, Copy, Clone)]
 enum Direction { Up, Down, Left, Right }
 
+lazy_static!(
+    static ref DIRECTIONS: HashMap<Direction, bool> = HashMap::from([
+        (Direction::Up, true),
+        (Direction::Down, true),
+        (Direction::Left, true),
+        (Direction::Right, true)
+    ]);
+);
+
 fn get_index(i: usize, j: usize, grid_size: usize) -> usize { i * grid_size + j }
 
-fn get_mat(grid_size: usize) -> Vec<Vec<SingleNode<usize>>> {
+fn get_mat<T: Node<usize>>(grid_size: usize) -> Vec<Vec<T>> {
     let mut grid = Vec::with_capacity(grid_size);
     for i in 0..grid_size {
         let mut row = Vec::with_capacity(grid_size);
         for j in 0..grid_size {
-            row.push(SingleNode::new(get_index(i, j, grid_size)));
+            row.push(T::new(get_index(i, j, grid_size)));
         }
         grid.push(row);
     }
     grid
 }
 
-pub fn get_grid_graph(grid_size: usize) -> (Graph<usize>, Vec<Vec<SingleNode<usize>>>) {
-    let mat = get_mat(grid_size);
-    let dirs = HashMap::from([
-        (Direction::Up, true),
-        (Direction::Down, true),
-        (Direction::Left, true),
-        (Direction::Right, true)
-    ]);
+pub fn get_grid_graph<T: Node<usize> + Clone>(grid_size: usize) -> (HashMap<T, Vec<T>>, Vec<Vec<T>>) {
+    let mat = get_mat::<T>(grid_size);
     let mut graph = HashMap::new();
     for i in 0..grid_size {
         for j in 0..grid_size {
@@ -36,7 +39,7 @@ pub fn get_grid_graph(grid_size: usize) -> (Graph<usize>, Vec<Vec<SingleNode<usi
     let last_index = grid_size - 1;
     for i in 0..grid_size {
         for j in 0..grid_size {
-            let mut dirs_c = dirs.clone();
+            let mut dirs_c = DIRECTIONS.clone();
             if i == 0 {
                 dirs_c.insert(Direction::Up, false);
             } else if i == last_index {
@@ -59,5 +62,5 @@ pub fn get_grid_graph(grid_size: usize) -> (Graph<usize>, Vec<Vec<SingleNode<usi
             }
         }
     }
-    (Arc::new(graph), mat)
+    (graph, mat)
 }
