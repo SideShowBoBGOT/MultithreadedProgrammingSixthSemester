@@ -4,7 +4,8 @@ use im::Vector;
 use rand::prelude::*;
 use crate::types::{RcGraph, RcNode};
 
-pub fn find_path<T>(start_node: &RcNode<T>, end_node: &RcNode<T>, graph: &RcGraph<T>) -> Option<Vector<RcNode<T>>>
+pub fn find_path<T>(start_node: &RcNode<T>, end_node: &RcNode<T>, graph: &RcGraph<T>)
+    -> Option<Vector<RcNode<T>>>
     where T: Eq + Hash {
     let mut graph_visited: RcGraph<T> = HashMap::new();
     let mut paths = vec![im::Vector::from(vec![start_node.clone()])];
@@ -48,6 +49,7 @@ pub fn find_path<T>(start_node: &RcNode<T>, end_node: &RcNode<T>, graph: &RcGrap
                 new_path.push_back(node.clone());
                 paths.push(new_path);
             }
+            visited_nodes.push(last_node_neighbours[last_index].clone());
             paths[chosen_path_index].push_back(last_node_neighbours[last_index].clone());
         }
     }
