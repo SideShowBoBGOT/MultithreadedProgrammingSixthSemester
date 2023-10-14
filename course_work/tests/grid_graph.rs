@@ -1,6 +1,8 @@
 use std::collections::HashMap;
+use std::hash::Hash;
 use lazy_static::lazy_static;
-use course_work::types::Node;
+use course_work::single_bfs::RcNode;
+use course_work::types::{ArcNode};
 
 #[derive(PartialEq, Eq, Hash, Copy, Clone)]
 enum Direction { Up, Down, Left, Right }
@@ -14,9 +16,35 @@ lazy_static!(
     ]);
 );
 
+trait NewMixin {
+    fn new(value: usize) -> Self;
+}
+
+impl NewMixin for RcNode<usize> {
+    fn new(value: usize) -> Self {
+        RcNode::new(value)
+    }
+}
+
+impl NewMixin for ArcNode<usize> {
+    fn new(value: usize) -> Self {
+        ArcNode::new(value)
+    }
+}
+
+pub fn get_rc_grid_graph(grid_size: usize)
+    -> (HashMap<RcNode<usize>, Vec<RcNode<usize>>>, Vec<Vec<RcNode<usize>>>) {
+    get_grid_graph::<RcNode<usize>>(grid_size)
+}
+
+pub fn get_arc_grid_graph(grid_size: usize)
+    -> (HashMap<ArcNode<usize>, Vec<ArcNode<usize>>>, Vec<Vec<ArcNode<usize>>>) {
+    get_grid_graph::<ArcNode<usize>>(grid_size)
+}
+
 fn get_index(i: usize, j: usize, grid_size: usize) -> usize { i * grid_size + j }
 
-fn get_mat<T: Node<usize>>(grid_size: usize) -> Vec<Vec<T>> {
+fn get_mat<T: NewMixin + Clone + Eq + Hash>(grid_size: usize) -> Vec<Vec<T>> {
     let mut grid = Vec::with_capacity(grid_size);
     for i in 0..grid_size {
         let mut row = Vec::with_capacity(grid_size);
@@ -28,7 +56,7 @@ fn get_mat<T: Node<usize>>(grid_size: usize) -> Vec<Vec<T>> {
     grid
 }
 
-pub fn get_grid_graph<T: Node<usize>>(grid_size: usize) -> (HashMap<T, Vec<T>>, Vec<Vec<T>>) {
+fn get_grid_graph<T: NewMixin + Clone + Eq + Hash>(grid_size: usize) -> (HashMap<T, Vec<T>>, Vec<Vec<T>>) {
     let mat = get_mat::<T>(grid_size);
     let mut graph = HashMap::new();
     for i in 0..grid_size {
