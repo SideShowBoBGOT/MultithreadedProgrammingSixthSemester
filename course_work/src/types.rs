@@ -1,7 +1,5 @@
 use std::collections::HashMap;
 use std::sync::{Arc, RwLock};
-use std::rc::Rc;
-
 
 pub type ArcNode<T> = Arc<T>;
 pub type SinglePath<T> = Arc<RwLock<im::Vector<ArcNode<T>>>>;
