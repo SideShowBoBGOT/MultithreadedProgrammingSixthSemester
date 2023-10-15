@@ -1,8 +1,7 @@
 use std::collections::HashMap;
 use std::hash::Hash;
 use lazy_static::lazy_static;
-use course_work::single_bfs::RcNode;
-use course_work::types::{ArcNode};
+use course_work::bfs::{ArcNode, RcNode};
 
 #[derive(PartialEq, Eq, Hash, Copy, Clone)]
 enum Direction { Up, Down, Left, Right }
