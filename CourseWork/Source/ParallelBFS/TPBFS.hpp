@@ -1,23 +1,19 @@
 #ifndef PARALLELBFS_TPBFS_HPP
 #define PARALLELBFS_TPBFS_HPP
 
-#include <vector>
-#include <unordered_map>
 #include <queue>
-#include <algorithm>
-#include <ranges>
-#include <concepts>
 #include <thread>
-#include <atomic>
+#include <unordered_set>
 #include <RwLock/TRwLock.hpp>
+#include <ParallelBFS/TBaseBFS.hpp>
 
 namespace bfs {
 
 template<std::equality_comparable T>
-using TGraph = std::unordered_map<T, std::vector<T>>;
+class TPBFS : public TBaseBFS<T, TPBFS<T>> {
+	protected:
+	TPBFS(const TGraph<T>& graph, const T& start, const T& end, const unsigned threadsNum);
 
-template<std::equality_comparable T>
-class TPBFS {
 	protected:
 	struct SynchronizedData {
 		size_t TotalEnqueuedNum = 0;
@@ -25,57 +21,63 @@ class TPBFS {
 		std::unordered_map<T, T> PredecessorNodes;
 	};
 
-	public:
-	static std::vector<T> Do(const TGraph<T>& graph, const T& startNode, const T& endNode, unsigned threadsNum) {
-		auto visitedNodes = rwl::TRwLock<std::vector<T>>();
-		auto data = rwl::TRwLock<SynchronizedData>();
-		data.Write()->Queue.push(startNode);
-		threadsNum = std::min(threadsNum, std::jthread::hardware_concurrency());
-		{
-			auto threads = std::vector<std::jthread>();
-			for(auto i = 0u; i < threadsNum; ++i) {
-				threads.emplace_back([&data, &visitedNodes, &graph]() {
-					const auto isStop = [&data, &graph]() {
-						const auto dataRead = data.Read();
-						return dataRead->TotalEnqueuedNum == graph.size() && dataRead->Queue.empty();
-					}();
-					while(!isStop) {
-						{
-							auto visitedNodesWrite = visitedNodes.Write();
-							auto dataWrite = data.Write();
-							visitedNodesWrite->push_back(std::move(dataWrite->Queue.front()));
-							dataWrite->Queue.pop();
-						}
-						const auto currentNode = visitedNodes.Read()->back();
-						for(const auto& neighbour : graph.at(currentNode)) {
-							const auto visitedNodesRead = visitedNodes.Read();
-							if(not std::ranges::contains(*visitedNodesRead, neighbour)) {
-								auto dataWrite = data.Write();
-								dataWrite->Queue.push(neighbour);
-								dataWrite->PredecessorNodes.insert_or_assign(neighbour, currentNode);
-								dataWrite->TotalEnqueuedNum++;
-							}
-						}
-					}
-				});
-			}
-		}
-
-		return ShortestPath(data.Read()->PredecessorNodes, startNode, endNode);
-	}
+	protected:
+	std::unordered_map<T, T> PredecessorNodesImpl() const;
 
 	protected:
-	static std::vector<T> ShortestPath(const std::unordered_map<T, T>& predecessorNodes, const T& startNode, const T& endNode) {
-		auto path = std::vector<T>{endNode};
-		auto currentNode = endNode;
-		while(currentNode != startNode) {
-			currentNode = predecessorNodes.at(currentNode);
-			path.push_back(currentNode);
-		}
-		std::reverse(path.begin(), path.end());
-		return path;
-	}
+	const unsigned m_uThreadsNum = 0;
 };
+
+template<std::equality_comparable T>
+TPBFS<T>::TPBFS(const TGraph<T>& graph, const T& start, const T& end, const unsigned threadsNum)
+	: m_uThreadsNum{std::min(threadsNum, std::jthread::hardware_concurrency())},
+	  TBaseBFS<T, TPBFS>(graph, start, end) {}
+
+template<std::equality_comparable T>
+std::unordered_map<T, T> TPBFS<T>::PredecessorNodesImpl() const {
+	auto visitedNodes = rwl::TRwLock<std::unordered_set<T>>();
+	auto data = rwl::TRwLock<SynchronizedData>();
+	data.Write()->Queue.push(this->m_refStart);
+	{
+		auto threads = std::vector<std::jthread>();
+		for(auto i = 0u; i < m_uThreadsNum; ++i) {
+			threads.emplace_back([this, &data, &visitedNodes]() {
+				while(true) {
+					{
+						const auto dataRead = data.Read();
+						const auto isEnqueued = dataRead->TotalEnqueuedNum >= this->m_refGraph.size();
+						const auto isEmptyQueue = dataRead->Queue.empty();
+						if(isEnqueued && isEmptyQueue) {
+							break;
+						} else if(isEmptyQueue) {
+							continue;
+						}
+					}
+					const auto currentNode = [&visitedNodes, &data]() -> std::optional<T> {
+						auto visitedNodesWrite = visitedNodes.Write();
+						auto dataWrite = data.Write();
+						if(dataWrite->Queue.empty()) return std::nullopt;
+						auto backValue = std::move(dataWrite->Queue.front());
+						const auto isInserted = visitedNodesWrite->insert(backValue).second;
+						dataWrite->Queue.pop();
+						if(not isInserted) return std::nullopt;
+						return backValue;
+					}();
+					if(not currentNode) continue;
+					for(const auto& neighbour : this->m_refGraph.at(*currentNode)) {
+						const auto visitedNodesRead = visitedNodes.Read();
+						if(std::ranges::contains(*visitedNodesRead, neighbour)) continue;
+						auto dataWrite = data.Write();
+						dataWrite->Queue.push(neighbour);
+						dataWrite->PredecessorNodes.insert_or_assign(neighbour, *currentNode);
+						dataWrite->TotalEnqueuedNum++;
+					}
+				}
+			});
+		}
+	}
+	return data.Read()->PredecessorNodes;
+}
 
 }
 

@@ -24,8 +24,8 @@ TEST_F(TBFSTestFixture, SequentialBFS) {
 		{9, {8}}
 	};
 
-	const auto result = bfs::TSequentialBFS<int>::Do(graph, 0, 8);
-	EXPECT_EQ(result, std::vector({0, 2, 4, 6, 8}));
+	const auto bfs = bfs::TSequentialBFS<int>(graph, 0, 8);
+	EXPECT_EQ(bfs.Execute(), std::vector({0, 2, 4, 6, 8}));
 }
 
 TEST_F(TBFSTestFixture, PBFS) {
@@ -42,8 +42,8 @@ TEST_F(TBFSTestFixture, PBFS) {
 		{9, {8}}
 	};
 
-	const auto result = bfs::TPBFS<int>::Do(graph, 0, 8, 5);
-	EXPECT_EQ(result, std::vector({0, 2, 4, 6, 8}));
+	const auto bfs = bfs::TPBFS<int>(graph, 0, 8, 5);
+	EXPECT_EQ(bfs.Execute(), std::vector({0, 2, 4, 6, 8}));
 }
 
 //template<typename T>
