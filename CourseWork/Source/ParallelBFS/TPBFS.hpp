@@ -11,11 +11,14 @@ namespace bfs {
 
 template<std::equality_comparable T>
 class TPBFS : public TBaseBFS<T, TPBFS<T>> {
+	friend class TBaseBFS<T, TPBFS<T>>;
+
 	protected:
 	TPBFS(const TGraph<T>& graph, const T& start, const T& end, const unsigned threadsNum);
 
 	protected:
 	struct SynchronizedData {
+		SynchronizedData(const T& queueVal);
 		size_t TotalEnqueuedNum = 0;
 		std::queue<T> Queue;
 		std::unordered_map<T, T> PredecessorNodes;
@@ -34,10 +37,13 @@ TPBFS<T>::TPBFS(const TGraph<T>& graph, const T& start, const T& end, const unsi
 	  TBaseBFS<T, TPBFS>(graph, start, end) {}
 
 template<std::equality_comparable T>
+TPBFS<T>::SynchronizedData::SynchronizedData(const T& queueVal)
+	: Queue({queueVal}) {}
+
+template<std::equality_comparable T>
 std::unordered_map<T, T> TPBFS<T>::PredecessorNodesImpl() const {
 	auto visitedNodes = rwl::TRwLock<std::unordered_set<T>>();
-	auto data = rwl::TRwLock<SynchronizedData>();
-	data.Write()->Queue.push(this->m_refStart);
+	auto data = rwl::TRwLock<SynchronizedData>(this->m_refStart);
 	{
 		auto threads = std::vector<std::jthread>();
 		for(auto i = 0u; i < m_uThreadsNum; ++i) {
@@ -65,8 +71,7 @@ std::unordered_map<T, T> TPBFS<T>::PredecessorNodesImpl() const {
 					}();
 					if(not currentNode) continue;
 					for(const auto& neighbour : this->m_refGraph.at(*currentNode)) {
-						const auto visitedNodesRead = visitedNodes.Read();
-						if(std::ranges::contains(*visitedNodesRead, neighbour)) continue;
+						if(visitedNodes.Read()->contains(neighbour)) continue;
 						auto dataWrite = data.Write();
 						dataWrite->Queue.push(neighbour);
 						dataWrite->PredecessorNodes.insert_or_assign(neighbour, *currentNode);
