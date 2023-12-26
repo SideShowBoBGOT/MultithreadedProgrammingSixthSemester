@@ -2,6 +2,11 @@
 #include <ParallelBFS/TSequentialBFS.hpp>
 #include <ParallelBFS/TPBFS.hpp>
 
+class T2DGridGenerator {
+
+};
+
+
 class TBFSTestFixture : public ::testing::Test {
 	protected:
 	static void SetUpTestSuite() {}
@@ -45,38 +50,3 @@ TEST_F(TBFSTestFixture, PBFS) {
 	const auto result = bfs::TPBFS<int>::Do(graph, 0, 8, 5);
 	EXPECT_EQ(result, std::vector({0, 2, 4, 6, 8}));
 }
-
-//template<typename T>
-//struct Guard {
-//	Guard(T* o) : obj {o} {
-//		std::cout << "Created" << std::endl;
-//	}
-//	~Guard() {
-//		std::cout << "Destructed" << std::endl;
-//	}
-//	T* operator->() {
-//		return obj;
-//	}
-//
-//	protected:
-//	T* obj;
-//};
-//
-//template<typename T>
-//struct Base {
-//	T obj;
-//	Guard<T> Create() {
-//		return Guard<T>(&obj);
-//	}
-//};
-//
-//struct Some {
-//	void Do() {
-//		std::cout << "do" << std::endl;
-//	}
-//};
-//
-//TEST_F(TBFSTestFixture, oooo) {
-//	auto b = Base<Some>();
-//	b.Create()->Do();
-//}
