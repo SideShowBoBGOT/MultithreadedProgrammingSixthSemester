@@ -33,57 +33,21 @@ static std::unordered_map<unsigned, std::vector<unsigned>> Create2DGrid(const un
 class TBFSTestFixture : public ::testing::Test {
 	protected:
 	static void SetUpTestSuite() {
-		//s_umGrid = Create2DGrid(s_uGridSize);
+		s_umGrid = Create2DGrid(s_uGridSize);
 	}
 	static void TearDownTestSuite() {}
 
+
 	protected:
-	static constexpr auto s_uGridSize = 1000u;
+	static constexpr auto s_uGridSize = 2000u;
 	static std::unordered_map<unsigned, std::vector<unsigned>> s_umGrid;
 };
 
-std::unordered_map<unsigned, std::vector<unsigned>> TBFSTestFixture::s_umGrid = Create2DGrid(s_uGridSize);
-
-//TEST_F(TBFSTestFixture, SequentialBFS_Simple) {
-//	const auto graph = bfs::TGraph<int>{
-//		{0, {1, 2}},
-//		{1, {3}},
-//		{2, {3, 4}},
-//		{3, {5}},
-//		{4, {5, 6, 7}},
-//		{5, {}},
-//		{6, {5, 8}},
-//		{7, {6, 9}},
-//		{8, {}},
-//		{9, {8}}
-//	};
-//
-//	const auto result = bfs::TSequentialBFS<int>::Do(graph, 0, 8);
-//	EXPECT_EQ(result, std::vector({0, 2, 4, 6, 8}));
-//}
-//
-//TEST_F(TBFSTestFixture, PBFS_Simple) {
-//	const auto graph = bfs::TGraph<int>{
-//		{0, {1, 2}},
-//		{1, {3}},
-//		{2, {3, 4}},
-//		{3, {5}},
-//		{4, {5, 6, 7}},
-//		{5, {}},
-//		{6, {5, 8}},
-//		{7, {6, 9}},
-//		{8, {}},
-//		{9, {8}}
-//	};
-//
-//	const auto result = bfs::TPBFS<int>::Do(graph, 0, 8, 5);
-//	EXPECT_EQ(result, std::vector({0, 2, 4, 6, 8}));
-//}
+std::unordered_map<unsigned, std::vector<unsigned>> TBFSTestFixture::s_umGrid = std::unordered_map<unsigned, std::vector<unsigned>>();
 
 TEST_F(TBFSTestFixture, SimpleSequentialBFS_Grid2D) {
 	constexpr auto lastIndex = (s_uGridSize - 1) * s_uGridSize + s_uGridSize - 1;
 	const auto result = bfs::TSequentialBFS<unsigned>::Do(s_umGrid, 0, lastIndex);
-	//const auto result = bfs::TPBFS<unsigned>::Do(s_umGrid, 0, lastIndex, 1);
 	EXPECT_EQ(true, false);
 }
 

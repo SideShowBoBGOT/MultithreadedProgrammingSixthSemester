@@ -64,7 +64,7 @@ TPBFS<T>::TPBFS(const TGraph<T>& graph, const T& start, const T& end, const unsi
 
 template<std::equality_comparable T>
 std::unordered_map<T, std::pair<std::atomic_flag, T>> TPBFS<T>::PredecessorNodes() const {
-	auto queue = rwl::TRwLock<std::queue<T>>({this->m_refStart});
+	auto queue = rwl::TRwLock<std::queue<T>>(std::initializer_list{this->m_refStart});
 	auto visitorMap = CreateVisitorMap();
 	auto totalEnqueuedNum = std::atomic_size_t{0};
 	{
@@ -72,8 +72,10 @@ std::unordered_map<T, std::pair<std::atomic_flag, T>> TPBFS<T>::PredecessorNodes
 		for(auto i = 0u; i < m_uThreadsNum; ++i) {
 			threads.emplace_back([this, &queue, &visitorMap, &totalEnqueuedNum]() {
 				while(true) {
-					if(totalEnqueuedNum >= this->m_refGraph.size() && queue.Read()->empty()) {
-						break;
+					if(totalEnqueuedNum.load(std::memory_order_relaxed) >= this->m_refGraph.size()) {
+						if(queue.Read()->empty()) {
+							break;
+						}
 					}
 					const auto currentNode = [&queue]() -> std::optional<T> {
 						auto queueWrite = queue.Write();
@@ -83,11 +85,10 @@ std::unordered_map<T, std::pair<std::atomic_flag, T>> TPBFS<T>::PredecessorNodes
 						return backValue;
 					}();
 					if(not currentNode) continue;
-					if(visitorMap.find(*currentNode)->second.first.test_and_set(std::memory_order_relaxed)) continue;
 					for(const auto& neighbour : this->m_refGraph.at(*currentNode)) {
 						const auto neighbourIt = visitorMap.find(neighbour);
 						if(neighbourIt->second.first.test_and_set(std::memory_order_relaxed)) continue;
-						totalEnqueuedNum++;
+						totalEnqueuedNum.fetch_add(1, std::memory_order_relaxed);
 						queue.Write()->push(neighbour);
 					}
 				}
