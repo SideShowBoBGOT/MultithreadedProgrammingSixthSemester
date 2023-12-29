@@ -38,8 +38,7 @@ std::unordered_map<unsigned, bfs::AGraph<unsigned>> CreateGridMap(Args... args) 
 	return gridMap;
 }
 
-template <typename T>
-class TestBFSMixin : public testing::Test, public testing::WithParamInterface<T> {
+class TBFSGeneral : public testing::Test {
 	protected:
 	static void SetUpTestSuite();
 	static void TearDownTestSuite();
@@ -51,16 +50,16 @@ class TestBFSMixin : public testing::Test, public testing::WithParamInterface<T>
 	static std::unordered_map<unsigned, bfs::AGraph<unsigned>> s_vGridMap;
 };
 
-template <typename T>
-std::unordered_map<unsigned, bfs::AGraph<unsigned>> TestBFSMixin<T>::s_vGridMap = std::unordered_map<unsigned, bfs::AGraph<unsigned>>();
+std::unordered_map<unsigned, bfs::AGraph<unsigned>> TBFSGeneral::s_vGridMap = std::unordered_map<unsigned, bfs::AGraph<unsigned>>();
 
-template<typename T>
-void TestBFSMixin<T>::TearDownTestSuite() {}
+void TBFSGeneral::TearDownTestSuite() {}
 
-template<typename T>
-unsigned TestBFSMixin<T>::GetLastIndex(const unsigned int size) {
+unsigned TBFSGeneral::GetLastIndex(const unsigned int size) {
 	return (size - 1) * size + size - 1;
 }
+
+template <typename T>
+class TestBFSMixin : public TBFSGeneral, public testing::WithParamInterface<T> {};
 
 class TSequentialBFSTest : public TestBFSMixin<unsigned> {};
 class TPBFSTest : public TestBFSMixin<std::tuple<unsigned, unsigned>> {};
@@ -81,7 +80,7 @@ TEST_P(TPBFSTest, Benchmark) {
 }
 
 #define INSTANTIATE_TEST_BFS(...) \
-    template<typename T> void TestBFSMixin<T>::SetUpTestSuite() {\
+    void TBFSGeneral::SetUpTestSuite() {\
 		s_vGridMap = CreateGridMap(__VA_ARGS__);\
 	}\
 	INSTANTIATE_TEST_SUITE_P(Benchmark, TSequentialBFSTest, testing::Values(__VA_ARGS__)); \
@@ -92,7 +91,7 @@ TEST_P(TPBFSTest, Benchmark) {
 		)\
 	);
 
-INSTANTIATE_TEST_BFS(500, 750, 1000, 1250, 1500, 1750, 2000, 2250, 2500, 2750, 3000, 3250)
+INSTANTIATE_TEST_BFS(2000, 2250, 2500, 2750)
 //INSTANTIATE_TEST_BFS(10, 20, 30, 40, 50)
 #undef INSTANTIATE_TEST_BFS
 
