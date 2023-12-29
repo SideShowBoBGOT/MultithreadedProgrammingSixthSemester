@@ -12,15 +12,22 @@ class TSequentialBFS : public TBaseBFS<T, TSequentialBFS<T>> {
 	friend class TBaseBFS<T, TSequentialBFS<T>>;
 	protected:
 	TSequentialBFS(const TGraph<T>& graph, const T& start, const T& end);
-	std::unordered_map<T, T> PredecessorNodesImpl() const;
+	std::optional<std::vector<T>> Execute();
+	std::unordered_map<T, T> PredecessorNodes() const;
+	std::optional<std::vector<T>> DeterminePath(const std::unordered_map<T, T>& predecessorNodes) const;
 };
+
+template<std::equality_comparable T>
+std::optional<std::vector<T>> TSequentialBFS<T>::Execute() {
+	return DeterminePath(PredecessorNodes());
+}
 
 template<std::equality_comparable T>
 TSequentialBFS<T>::TSequentialBFS(const TGraph<T>& graph, const T& start, const T& end)
 	: TBaseBFS<T, TSequentialBFS>(graph, start, end) {}
 
 template<std::equality_comparable T>
-std::unordered_map<T, T> TSequentialBFS<T>::PredecessorNodesImpl() const {
+std::unordered_map<T, T> TSequentialBFS<T>::PredecessorNodes() const {
 	auto visitedNodes = std::unordered_set<T>();
 	auto queue = std::queue<T>({this->m_refStart});
 	auto predecessorNodes = std::unordered_map<T, T>();
@@ -42,6 +49,19 @@ std::unordered_map<T, T> TSequentialBFS<T>::PredecessorNodesImpl() const {
 		}
 	}
 	return predecessorNodes;
+}
+
+template<std::equality_comparable T>
+std::optional<std::vector<T>> TSequentialBFS<T>::DeterminePath(const std::unordered_map<T, T>& predecessorNodes) const {
+	if(not predecessorNodes.contains(this->m_refEnd)) return std::nullopt;
+	auto path = std::vector<T>{this->m_refEnd};
+	auto currentNode = path.front();
+	while(currentNode != this->m_refStart) {
+		currentNode = predecessorNodes.at(currentNode);
+		path.push_back(currentNode);
+	}
+	std::reverse(path.begin(), path.end());
+	return path;
 }
 
 }

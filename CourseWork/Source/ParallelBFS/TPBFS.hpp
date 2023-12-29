@@ -18,17 +18,40 @@ class TPBFS : public TBaseBFS<T, TPBFS<T>> {
 	TPBFS(const TGraph<T>& graph, const T& start, const T& end, const unsigned threadsNum);
 
 	protected:
-	std::unordered_map<T, std::atomic_flag> CreateVisitorMap() const;
-	std::unordered_map<T, T> PredecessorNodesImpl() const;
+	std::optional<std::vector<T>> Execute();
+
+	protected:
+	using AVisitorMap = std::unordered_map<T, std::pair<std::atomic_flag, T>>;
+	AVisitorMap CreateVisitorMap() const;
+	AVisitorMap PredecessorNodes() const;
+	std::optional<std::vector<T>> DeterminePath(const AVisitorMap& predecessorNodes) const;
 
 	protected:
 	const unsigned m_uThreadsNum = 0;
 };
 
 template<std::equality_comparable T>
-std::unordered_map<T, std::atomic_flag> TPBFS<T>::CreateVisitorMap() const {
-	auto visitorMap = std::unordered_map<T, std::atomic_flag>();
-	for(const auto& key : this->m_refGraph | std::views::keys) {
+std::optional<std::vector<T>> TPBFS<T>::DeterminePath(const TPBFS::AVisitorMap& predecessorNodes) const {
+	if(not predecessorNodes.contains(this->m_refEnd)) return std::nullopt;
+	auto path = std::vector<T>{this->m_refEnd};
+	auto currentNode = path.front();
+	while(currentNode != this->m_refStart) {
+		currentNode = predecessorNodes.at(currentNode).second;
+		path.push_back(currentNode);
+	}
+	std::reverse(path.begin(), path.end());
+	return path;
+}
+
+template<std::equality_comparable T>
+std::optional<std::vector<T>> TPBFS<T>::Execute() {
+	return DeterminePath(PredecessorNodes());
+}
+
+template<std::equality_comparable T>
+std::unordered_map<T, std::pair<std::atomic_flag, T>> TPBFS<T>::CreateVisitorMap() const {
+	auto visitorMap = std::unordered_map<T, std::pair<std::atomic_flag, T>>();
+	for(const auto& [key, _] : this->m_refGraph) {
 		visitorMap.emplace(std::piecewise_construct, std::forward_as_tuple(key), std::forward_as_tuple());
 	}
 	return visitorMap;
@@ -40,46 +63,38 @@ TPBFS<T>::TPBFS(const TGraph<T>& graph, const T& start, const T& end, const unsi
 	  TBaseBFS<T, TPBFS>(graph, start, end) {}
 
 template<std::equality_comparable T>
-std::unordered_map<T, T> TPBFS<T>::PredecessorNodesImpl() const {
-	const auto visitorMap = CreateVisitorMap();
-	auto data = rwl::TRwLock<SynchronizedData>(this->m_refStart);
+std::unordered_map<T, std::pair<std::atomic_flag, T>> TPBFS<T>::PredecessorNodes() const {
+	auto queue = rwl::TRwLock<std::queue<T>>({this->m_refStart});
+	auto visitorMap = CreateVisitorMap();
+	auto totalEnqueuedNum = std::atomic_size_t{0};
 	{
 		auto threads = std::vector<std::jthread>();
 		for(auto i = 0u; i < m_uThreadsNum; ++i) {
-			threads.emplace_back([this, &data, &visitorMap]() {
+			threads.emplace_back([this, &queue, &visitorMap, &totalEnqueuedNum]() {
 				while(true) {
-					{
-						const auto dataRead = data.Read();
-						const auto isEnqueued = dataRead->TotalEnqueuedNum >= this->m_refGraph.size();
-						const auto isEmptyQueue = dataRead->Queue.empty();
-						if(isEnqueued && isEmptyQueue) {
-							break;
-						} else if(isEmptyQueue) {
-							continue;
-						}
+					if(totalEnqueuedNum >= this->m_refGraph.size() && queue.Read()->empty()) {
+						break;
 					}
-					const auto currentNode = [&visitorMap, &data]() -> std::optional<T> {
-						auto dataWrite = data.Write();
-						if(dataWrite->Queue.empty()) return std::nullopt;
-						auto backValue = std::move(dataWrite->Queue.front());
-						dataWrite->Queue.pop();
+					const auto currentNode = [&queue]() -> std::optional<T> {
+						auto queueWrite = queue.Write();
+						if(queueWrite->empty()) return std::nullopt;
+						auto backValue = std::move(queueWrite->front());
+						queueWrite->pop();
 						return backValue;
 					}();
 					if(not currentNode) continue;
-					if(visitorMap.find(currentNode)->second.test_and_set()) continue;
+					if(visitorMap.find(*currentNode)->second.first.test_and_set(std::memory_order_relaxed)) continue;
 					for(const auto& neighbour : this->m_refGraph.at(*currentNode)) {
-						if(visitorMap.contains(neighbour)) continue;
-						auto dataWrite = data.Write();
-						dataWrite->Queue.push(neighbour);
-						dataWrite->PredecessorNodes.insert_or_assign(neighbour, *currentNode);
-						dataWrite->TotalEnqueuedNum++;
+						const auto neighbourIt = visitorMap.find(neighbour);
+						if(neighbourIt->second.first.test_and_set(std::memory_order_relaxed)) continue;
+						totalEnqueuedNum++;
+						queue.Write()->push(neighbour);
 					}
 				}
 			});
 		}
 	}
-	return data.Read()->PredecessorNodes;
-	return std::unordered_map<T, T>();
+	return visitorMap;
 }
 
 }
