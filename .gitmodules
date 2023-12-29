@@ -1,6 +1,6 @@
-[submodule "CourseWork/External/RwLock"]
-	path = CourseWork/External/RwLock
-	url = https://github.com/SideShowBoBGOT/RwLock
 [submodule "CourseWork/External/googletest"]
 	path = CourseWork/External/googletest
 	url = https://github.com/google/googletest
+[submodule "CourseWork/External/RwLock"]
+	path = CourseWork/External/RwLock
+	url = https://github.com/SideShowBoBGOT/RwLock
