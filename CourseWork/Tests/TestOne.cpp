@@ -39,7 +39,7 @@ class TBFSTestFixture : public ::testing::Test {
 
 
 	protected:
-	static constexpr auto s_uGridSize = 2000u;
+	static constexpr auto s_uGridSize = 3000u;
 	static std::unordered_map<unsigned, std::vector<unsigned>> s_umGrid;
 };
 

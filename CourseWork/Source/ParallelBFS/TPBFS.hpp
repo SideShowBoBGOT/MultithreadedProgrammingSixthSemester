@@ -10,45 +10,26 @@
 
 namespace bfs {
 
-template<std::equality_comparable T>
+template<CBFSUsable T>
 class TPBFS : public TBaseBFS<T, TPBFS<T>> {
 	friend class TBaseBFS<T, TPBFS<T>>;
 
 	protected:
-	TPBFS(const TGraph<T>& graph, const T& start, const T& end, const unsigned threadsNum);
-
-	protected:
-	std::optional<std::vector<T>> Execute();
+	TPBFS(const AGraph<T>& graph, const T& start, const T& end, const unsigned threadsNum);
 
 	protected:
 	using AVisitorMap = std::unordered_map<T, std::pair<std::atomic_flag, T>>;
+	AVisitorMap PredecessorNodesImpl() const;
+	static void UpdateCurrentNodeImpl(T& current, const std::pair<std::atomic_flag, T>& value);
+
+	protected:
 	AVisitorMap CreateVisitorMap() const;
-	AVisitorMap PredecessorNodes() const;
-	std::optional<std::vector<T>> DeterminePath(const AVisitorMap& predecessorNodes) const;
 
 	protected:
 	const unsigned m_uThreadsNum = 0;
 };
 
-template<std::equality_comparable T>
-std::optional<std::vector<T>> TPBFS<T>::DeterminePath(const TPBFS::AVisitorMap& predecessorNodes) const {
-	if(not predecessorNodes.contains(this->m_refEnd)) return std::nullopt;
-	auto path = std::vector<T>{this->m_refEnd};
-	auto currentNode = path.front();
-	while(currentNode != this->m_refStart) {
-		currentNode = predecessorNodes.at(currentNode).second;
-		path.push_back(currentNode);
-	}
-	std::reverse(path.begin(), path.end());
-	return path;
-}
-
-template<std::equality_comparable T>
-std::optional<std::vector<T>> TPBFS<T>::Execute() {
-	return DeterminePath(PredecessorNodes());
-}
-
-template<std::equality_comparable T>
+template<CBFSUsable T>
 std::unordered_map<T, std::pair<std::atomic_flag, T>> TPBFS<T>::CreateVisitorMap() const {
 	auto visitorMap = std::unordered_map<T, std::pair<std::atomic_flag, T>>();
 	for(const auto& [key, _] : this->m_refGraph) {
@@ -57,13 +38,13 @@ std::unordered_map<T, std::pair<std::atomic_flag, T>> TPBFS<T>::CreateVisitorMap
 	return visitorMap;
 }
 
-template<std::equality_comparable T>
-TPBFS<T>::TPBFS(const TGraph<T>& graph, const T& start, const T& end, const unsigned threadsNum)
+template<CBFSUsable T>
+TPBFS<T>::TPBFS(const AGraph<T>& graph, const T& start, const T& end, const unsigned threadsNum)
 	: m_uThreadsNum{std::min(threadsNum, std::jthread::hardware_concurrency())},
 	  TBaseBFS<T, TPBFS>(graph, start, end) {}
 
-template<std::equality_comparable T>
-std::unordered_map<T, std::pair<std::atomic_flag, T>> TPBFS<T>::PredecessorNodes() const {
+template<CBFSUsable T>
+std::unordered_map<T, std::pair<std::atomic_flag, T>> TPBFS<T>::PredecessorNodesImpl() const {
 	auto queue = rwl::TRwLock<std::queue<T>>(std::initializer_list{this->m_refStart});
 	auto visitorMap = CreateVisitorMap();
 	auto totalEnqueuedNum = std::atomic_size_t{0};
@@ -96,6 +77,11 @@ std::unordered_map<T, std::pair<std::atomic_flag, T>> TPBFS<T>::PredecessorNodes
 		}
 	}
 	return visitorMap;
+}
+
+template<CBFSUsable T>
+void TPBFS<T>::UpdateCurrentNodeImpl(T& current, const std::pair<std::atomic_flag, T>& value) {
+	current = value.second;
 }
 
 }
