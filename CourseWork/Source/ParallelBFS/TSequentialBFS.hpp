@@ -24,14 +24,20 @@ std::unordered_map<T, T> TSequentialBFS<T>::PredecessorNodesImpl() const {
 	auto visitedNodes = std::unordered_set<T>();
 	auto queue = std::queue<T>({this->m_refStart});
 	auto predecessorNodes = std::unordered_map<T, T>();
-	while(not queue.empty()) {
+	auto isFoundEndNode = false;
+	while(not queue.empty() and not isFoundEndNode) {
 		const auto currentNode = std::move(queue.front());
 		visitedNodes.insert(currentNode);
 		queue.pop();
 		for(const auto& neighbour : this->m_refGraph.at(currentNode)) {
-			if(not std::ranges::contains(visitedNodes, neighbour)) {
-				queue.push(neighbour);
+			if(not visitedNodes.contains(neighbour)) {
 				predecessorNodes[neighbour] = currentNode;
+				if(neighbour == this->m_refEnd) {
+					isFoundEndNode = true;
+					break;
+				}
+				visitedNodes.insert(neighbour);
+				queue.push(neighbour);
 			}
 		}
 	}

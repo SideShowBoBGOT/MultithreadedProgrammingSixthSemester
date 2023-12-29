@@ -15,7 +15,7 @@ template<std::equality_comparable T, typename Derived>
 class TBaseBFS {
 	public:
 	template<typename... Args>
-	static std::vector<T> Do(const TGraph<T>& graph, const T& start, const T& end, Args&&... args);
+	static std::optional<std::vector<T>> Do(const TGraph<T>& graph, const T& start, const T& end, Args&&... args);
 
 	protected:
 	TBaseBFS(const TGraph<T>& graph, const T& start, const T& end);
@@ -25,8 +25,8 @@ class TBaseBFS {
 	Derived* self();
 
 	protected:
-	std::vector<T> Execute() const;
-	std::vector<T> ShortestPath(const std::unordered_map<T, T>& predecessorNodes) const;
+	std::optional<std::vector<T>> Execute() const;
+	std::optional<std::vector<T>> DeterminePath(const std::unordered_map<T, T>& predecessorNodes) const;
 
 	protected:
 	const TGraph<T>& m_refGraph;
@@ -36,7 +36,7 @@ class TBaseBFS {
 
 template<std::equality_comparable T, typename Derived>
 template<typename... Args>
-std::vector<T> TBaseBFS<T, Derived>::Do(const TGraph<T>& graph, const T& start, const T& end, Args&&... args) {
+std::optional<std::vector<T>> TBaseBFS<T, Derived>::Do(const TGraph<T>& graph, const T& start, const T& end, Args&&... args) {
 	const auto alg = Derived(graph, start, end, std::forward<Args>(args)...);
 	return alg.Execute();
 }
@@ -56,12 +56,13 @@ Derived* TBaseBFS<T, Derived>::self() {
 }
 
 template<std::equality_comparable T, typename Derived>
-std::vector<T> TBaseBFS<T, Derived>::Execute() const {
-	return ShortestPath(self()->PredecessorNodesImpl());
+std::optional<std::vector<T>> TBaseBFS<T, Derived>::Execute() const {
+	return DeterminePath(self()->PredecessorNodesImpl());
 };
 
 template<std::equality_comparable T, typename Derived>
-std::vector<T> TBaseBFS<T, Derived>::ShortestPath(const std::unordered_map<T, T>& predecessorNodes) const {
+std::optional<std::vector<T>> TBaseBFS<T, Derived>::DeterminePath(const std::unordered_map<T, T>& predecessorNodes) const {
+	if(not predecessorNodes.contains(m_refEnd)) return std::nullopt;
 	auto path = std::vector<T>{m_refEnd};
 	auto currentNode = path.front();
 	while(currentNode != m_refStart) {
