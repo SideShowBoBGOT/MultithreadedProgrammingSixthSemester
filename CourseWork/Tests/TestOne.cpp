@@ -2,9 +2,7 @@
 #include <ParallelBFS/TSequentialBFS.hpp>
 #include <ParallelBFS/TPBFS.hpp>
 
-#include <ranges>
-
-static std::unordered_map<unsigned, std::vector<unsigned>> Create2DGrid(const unsigned size) {
+std::unordered_map<unsigned, std::vector<unsigned>> Create2DGrid(const unsigned int size) {
 	auto grid = std::unordered_map<unsigned , std::vector<unsigned>>();
 	const auto totalSize = size * size;
 	grid.reserve(totalSize);
@@ -30,29 +28,47 @@ static std::unordered_map<unsigned, std::vector<unsigned>> Create2DGrid(const un
 	return grid;
 }
 
-class TBFSTestFixture : public ::testing::Test {
-	protected:
-	static void SetUpTestSuite() {
-		s_umGrid = Create2DGrid(s_uGridSize);
+template<typename... Args> requires (std::same_as<int, Args> && ...)
+std::unordered_map<unsigned, bfs::AGraph<unsigned>> CreateGridMap(Args... args) {
+	auto gridMap = std::unordered_map<unsigned, bfs::AGraph<unsigned>>();
+	for(const auto size : {args...}) {
+		const auto sizeUnsigned = static_cast<unsigned>(size);
+		gridMap.insert_or_assign(sizeUnsigned, Create2DGrid(sizeUnsigned));
 	}
-	static void TearDownTestSuite() {}
+	return gridMap;
+}
 
+
+class TTestBFSMixin {
+	public:
+	TTestBFSMixin()=default;
 
 	protected:
-	static constexpr auto s_uGridSize = 3000u;
-	static std::unordered_map<unsigned, std::vector<unsigned>> s_umGrid;
+	static std::unordered_map<unsigned, bfs::AGraph<unsigned>> s_vGridMap;
 };
 
-std::unordered_map<unsigned, std::vector<unsigned>> TBFSTestFixture::s_umGrid = std::unordered_map<unsigned, std::vector<unsigned>>();
+class TSequentialBFSTest : public ::testing::TestWithParam<unsigned>, public TTestBFSMixin {};
+class TPBFSTest : public ::testing::TestWithParam<std::tuple<unsigned, unsigned>>, public TTestBFSMixin {};
 
-TEST_F(TBFSTestFixture, SimpleSequentialBFS_Grid2D) {
-	constexpr auto lastIndex = (s_uGridSize - 1) * s_uGridSize + s_uGridSize - 1;
-	const auto result = bfs::TSequentialBFS<unsigned>::Do(s_umGrid, 0, lastIndex);
-	EXPECT_EQ(true, false);
+#define INSTANTIATE_TEST_BFS(...)\
+	std::unordered_map<unsigned, bfs::AGraph<unsigned>> TTestBFSMixin::s_vGridMap = CreateGridMap(__VA_ARGS__); \
+	INSTANTIATE_TEST_SUITE_P(Benchmark, TSequentialBFSTest, testing::Values(__VA_ARGS__)); \
+	INSTANTIATE_TEST_SUITE_P(Benchmark, TPBFSTest,\
+		testing::Combine(\
+			testing::Values(1, 2, 3, 4, 5, 6),\
+			testing::Values(__VA_ARGS__)\
+		)\
+	);
+
+INSTANTIATE_TEST_BFS(500, 750, 1000, 1250, 1500, 1750, 2000, 2250, 2500, 2750, 3000, 3250)
+#undef INSTANTIATE_TEST_BFS
+
+TEST_P(TSequentialBFSTest, Benchmark) {
+	const auto size = GetParam();
+	s_vGridMap
+
 }
 
-TEST_F(TBFSTestFixture, PBFS_Grid2D) {
-	constexpr auto lastIndex = (s_uGridSize - 1) * s_uGridSize + s_uGridSize - 1;
-	const auto result = bfs::TPBFS<unsigned>::Do(s_umGrid, 0, lastIndex, 4);
-	EXPECT_EQ(true, false);
-}
+
+
+
