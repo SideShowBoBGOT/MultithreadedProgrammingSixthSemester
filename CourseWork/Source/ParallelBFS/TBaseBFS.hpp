@@ -33,7 +33,7 @@ class TBaseBFS {
 
 	protected:
 	template<typename ValueType>
-	std::optional<std::vector<T>> DeterminePath(const std::unordered_map<T, ValueType>& predecessorNodes) const;
+	std::vector<T> DeterminePath(const std::unordered_map<T, ValueType>& predecessorNodes) const;
 
 	protected:
 	const AGraph<T>& m_refGraph;
@@ -54,7 +54,9 @@ TBaseBFS<T, Derived>::TBaseBFS(const AGraph<T>& graph, const T& start, const T& 
 
 template<CBFSUsable T, typename Derived>
 std::optional<std::vector<T>> TBaseBFS<T, Derived>::Execute() {
-	return DeterminePath(self()->PredecessorNodesImpl());
+	const auto result = self()->PredecessorNodesImpl();
+	if(not result) return std::nullopt;
+	return DeterminePath(result.value());
 }
 
 template<CBFSUsable T, typename Derived>
@@ -69,12 +71,11 @@ Derived* TBaseBFS<T, Derived>::self() {
 
 template<CBFSUsable T, typename Derived>
 template<typename ValueType>
-std::optional<std::vector<T>> TBaseBFS<T, Derived>::DeterminePath(const std::unordered_map<T, ValueType>& predecessorNodes) const {
-	if(not predecessorNodes.contains(this->m_refEnd)) return std::nullopt;
+std::vector<T> TBaseBFS<T, Derived>::DeterminePath(const std::unordered_map<T, ValueType>& predecessorNodes) const {
 	auto path = std::vector<T>{this->m_refEnd};
 	auto currentNode = path.front();
 	while(currentNode != this->m_refStart) {
-		Derived::UpdateCurrentNodeImpl(currentNode, predecessorNodes.at(currentNode));
+		currentNode = predecessorNodes.at(currentNode).second;
 		path.push_back(currentNode);
 	}
 	std::reverse(path.begin(), path.end());

@@ -1,3 +1,6 @@
+#include <format>
+#include <fstream>
+#include <filesystem>
 #include <gtest/gtest.h>
 #include <ParallelBFS/TSequentialBFS.hpp>
 #include <ParallelBFS/TPBFS.hpp>
@@ -38,60 +41,159 @@ std::unordered_map<unsigned, bfs::AGraph<unsigned>> CreateGridMap(Args... args) 
 	return gridMap;
 }
 
-class TBFSGeneral : public testing::Test {
+// GridMap takes much time to be created. If its resources are
+// contained inside global static variable, I will get a timeout error
+// from googletest. So the solution is to delay the construction of this
+// resource and only have one instance of it. Therefore, Singleton is
+// the best way to do this.
+
+// Also this class is used for other things to be done only once, such as:
+// creation of benchmark file
+class TTestBenchmarkSetUpper {
+	public:
+	static const TTestBenchmarkSetUpper* GetInstance();
+	const std::unordered_map<unsigned, bfs::AGraph<unsigned>>& GridMap() const;
+	const std::filesystem::path& OutputFilePath() const;
+
+	protected:
+	TTestBenchmarkSetUpper();
+
+	protected:
+	template<typename... Sizes> requires (std::same_as<int, Sizes> && ...)
+	void Init(Sizes... args);
+
+	protected:
+	std::unordered_map<unsigned, bfs::AGraph<unsigned>> m_vGridMap;
+	std::filesystem::path m_sOutputFilePath;
+
+	protected:
+	static std::unique_ptr<TTestBenchmarkSetUpper> s_pInstance;
+};
+
+std::unique_ptr<TTestBenchmarkSetUpper> TTestBenchmarkSetUpper::s_pInstance = nullptr;
+
+const TTestBenchmarkSetUpper* TTestBenchmarkSetUpper::GetInstance() {
+	// Enable make_unique use protected constructor of TTestBenchmarkSetUpper;
+	struct TEnableMaker : public TTestBenchmarkSetUpper { using TTestBenchmarkSetUpper::TTestBenchmarkSetUpper; };
+	if(not s_pInstance) {
+		s_pInstance = std::make_unique<TEnableMaker>();
+	}
+	return s_pInstance.get();
+}
+
+const std::unordered_map<unsigned, bfs::AGraph<unsigned>>& TTestBenchmarkSetUpper::GridMap() const {
+	return m_vGridMap;
+}
+
+const std::filesystem::path& TTestBenchmarkSetUpper::OutputFilePath() const {
+	return m_sOutputFilePath;
+}
+
+template<typename... Sizes> requires (std::same_as<int, Sizes> && ...)
+void TTestBenchmarkSetUpper::Init(Sizes... args) {
+	m_vGridMap = CreateGridMap(args...);
+	m_sOutputFilePath = "Benchmark.txt";
+	std::filesystem::remove(m_sOutputFilePath);
+}
+
+class TTestBFSGeneral : public testing::Test {
+	protected:
+	virtual void TearDown() override;
+
 	protected:
 	static void SetUpTestSuite();
 	static void TearDownTestSuite();
 
 	protected:
+	virtual std::string GenerateReport(const long millis) const=0;
+
+	protected:
 	static unsigned GetLastIndex(const unsigned size);
 
 	protected:
-	static std::unordered_map<unsigned, bfs::AGraph<unsigned>> s_vGridMap;
+	std::chrono::time_point<std::chrono::system_clock> m_xStart;
+	std::chrono::time_point<std::chrono::system_clock> m_xEnd;
 };
 
-std::unordered_map<unsigned, bfs::AGraph<unsigned>> TBFSGeneral::s_vGridMap = std::unordered_map<unsigned, bfs::AGraph<unsigned>>();
+void TTestBFSGeneral::TearDown() {
+	Test::TearDown();
+	const auto delay = std::chrono::system_clock::now() - m_xStart;
+	const auto millis = std::chrono::duration_cast<std::chrono::milliseconds>(delay).count();
+	auto file = std::ofstream(TTestBenchmarkSetUpper::GetInstance()->OutputFilePath(), std::ios::app);
+	file << GenerateReport(millis) << std::endl;
+}
 
-void TBFSGeneral::TearDownTestSuite() {}
+void TTestBFSGeneral::SetUpTestSuite() {
+	// Create instance of TTestBenchmarkSetUpper
+	TTestBenchmarkSetUpper::GetInstance();
+}
 
-unsigned TBFSGeneral::GetLastIndex(const unsigned int size) {
+void TTestBFSGeneral::TearDownTestSuite() {}
+
+unsigned TTestBFSGeneral::GetLastIndex(const unsigned int size) {
 	return (size - 1) * size + size - 1;
 }
 
 template <typename T>
-class TestBFSMixin : public TBFSGeneral, public testing::WithParamInterface<T> {};
+class TestBFSMixin : public TTestBFSGeneral, public testing::WithParamInterface<T> {};
 
-class TSequentialBFSTest : public TestBFSMixin<unsigned> {};
-class TPBFSTest : public TestBFSMixin<std::tuple<unsigned, unsigned>> {};
+class TSequentialBFSTest : public TestBFSMixin<unsigned> {
+	protected:
+	virtual std::string GenerateReport(const long millis) const override;
+};
+
+std::string TSequentialBFSTest::GenerateReport(const long millis) const {
+	return std::format("{{ name: {}, size: {}, milliseconds: {} }}",
+		"TSequentialBFSTest", GetParam(), millis);
+}
+
+class TPBFSTest : public TestBFSMixin<std::tuple<unsigned, unsigned>> {
+	protected:
+	virtual std::string GenerateReport(const long millis) const override;
+};
+
+std::string TPBFSTest::GenerateReport(const long millis) const {
+	return std::format("{{ name: {}, size: {}, threadsNum: {}, milliseconds: {} }}", "TPBFSTest",
+		std::get<1>(GetParam()), std::get<0>(GetParam()), millis);
+}
 
 TEST_P(TSequentialBFSTest, Benchmark) {
+	m_xStart = std::chrono::system_clock::now();
 	const auto size = GetParam();
 	const auto lastIndex = GetLastIndex(size);
-	const auto& grid = s_vGridMap.at(size);
+	const auto& grid = TTestBenchmarkSetUpper::GetInstance()->GridMap().at(size);
 	const auto result = bfs::TSequentialBFS<unsigned>::Do(grid, 0, lastIndex);
+	m_xEnd = std::chrono::system_clock::now();
+	EXPECT_TRUE(result.has_value());
 }
 
 TEST_P(TPBFSTest, Benchmark) {
+	m_xStart = std::chrono::system_clock::now();
 	const auto threadsNum = std::get<0>(GetParam());
 	const auto size = std::get<1>(GetParam());
 	const auto lastIndex = GetLastIndex(size);
-	const auto& grid = s_vGridMap.at(size);
+	const auto& grid = TTestBenchmarkSetUpper::GetInstance()->GridMap().at(size);
 	const auto result = bfs::TPBFS<unsigned>::Do(grid, 0, lastIndex, threadsNum);
+	m_xEnd = std::chrono::system_clock::now();
+	EXPECT_TRUE(result.has_value());
+
 }
 
 #define INSTANTIATE_TEST_BFS(...) \
-    void TBFSGeneral::SetUpTestSuite() {\
-		s_vGridMap = CreateGridMap(__VA_ARGS__);\
+    TTestBenchmarkSetUpper::TTestBenchmarkSetUpper() {\
+		Init(__VA_ARGS__);\
 	}\
 	INSTANTIATE_TEST_SUITE_P(Benchmark, TSequentialBFSTest, testing::Values(__VA_ARGS__)); \
 	INSTANTIATE_TEST_SUITE_P(Benchmark, TPBFSTest,\
 		testing::Combine(\
-			testing::Values(1, 2, 3, 4, 5, 6),\
+			testing::Values(1, 2, 3, 4, 5),\
 			testing::Values(__VA_ARGS__)\
 		)\
 	);
 
-INSTANTIATE_TEST_BFS(2000, 2250, 2500, 2750)
+INSTANTIATE_TEST_BFS(2750, 3000)
+
+
 //INSTANTIATE_TEST_BFS(10, 20, 30, 40, 50)
 #undef INSTANTIATE_TEST_BFS
 
