@@ -17,6 +17,9 @@ class TSequentialBFS : public TBaseBFS<T, TSequentialBFS<T>> {
 	protected:
 	using AVisitorMap = std::unordered_map<T, std::pair<bool, T>>;
 	std::optional<AVisitorMap> PredecessorNodesImpl() const;
+
+	protected:
+	AVisitorMap CreateVisitorMap() const;
 };
 
 template<CBFSUsable T>
@@ -26,10 +29,7 @@ TSequentialBFS<T>::TSequentialBFS(const AGraph<T>& graph, const T& start, const 
 template<CBFSUsable T>
 std::optional<typename TSequentialBFS<T>::AVisitorMap> TSequentialBFS<T>::PredecessorNodesImpl() const {
 	auto queue = std::queue<T>({this->m_refStart});
-	auto visitorMap = std::unordered_map<T, std::pair<bool, T>>();
-	for(const auto& [key, _] : this->m_refGraph) {
-		visitorMap.insert_or_assign(key, std::make_pair(false, T()));
-	}
+	auto visitorMap = CreateVisitorMap();
 	auto isFoundEndNode = false;
 	while(not queue.empty() and not isFoundEndNode) {
 		const auto currentNode = std::move(queue.front());
@@ -48,6 +48,16 @@ std::optional<typename TSequentialBFS<T>::AVisitorMap> TSequentialBFS<T>::Predec
 		}
 	}
 	if(not isFoundEndNode) return std::nullopt;
+	return visitorMap;
+}
+
+template<CBFSUsable T>
+TSequentialBFS<T>::AVisitorMap TSequentialBFS<T>::CreateVisitorMap() const {
+	auto visitorMap = std::unordered_map<T, std::pair<bool, T>>();
+	visitorMap.reserve(this->m_refGraph.size());
+	for(const auto& [key, _] : this->m_refGraph) {
+		visitorMap.insert_or_assign(key, std::make_pair(false, T()));
+	}
 	return visitorMap;
 }
 
