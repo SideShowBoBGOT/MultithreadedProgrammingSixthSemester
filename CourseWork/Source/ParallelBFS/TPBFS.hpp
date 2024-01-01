@@ -72,6 +72,11 @@ class TPBFS : public TBaseBFS<T, TPBFS<T>> {
 	AVisitorMap CreateVisitorMap() const;
 
 	protected:
+	struct SInfo {
+
+	};
+
+	protected:
 	const unsigned m_uThreadsNum = 0;
 };
 
@@ -95,20 +100,21 @@ std::optional<typename TPBFS<T>::AVisitorMap> TPBFS<T>::PredecessorNodesImpl() c
 	auto queue = TAtomicQueue<T>();
 	queue.Push(this->m_refStart);
 	auto visitorMap = CreateVisitorMap();
-	auto totalEnqueuedNum = std::atomic_size_t{0};
-	auto isFoundEndNode = std::atomic_flag{false};
+	auto totalEnqueuedNum = std::atomic_int64_t{0};
 	{
 		auto threads = std::vector<std::jthread>();
 		threads.reserve(m_uThreadsNum);
 		for(auto i = 0u; i < m_uThreadsNum; ++i) {
-			threads.emplace_back([this, &queue, &visitorMap, &totalEnqueuedNum, &isFoundEndNode]() {
+			threads.emplace_back([this, &queue, &visitorMap, &totalEnqueuedNum]() {
 				while(true) {
-					if(isFoundEndNode.test(std::memory_order_relaxed)) {
-						break;
-					}
-					if(totalEnqueuedNum.load(std::memory_order_relaxed) >= this->m_refGraph.size()) {
-						if(queue.IsEmpty()) {
+					{
+						const auto totalEnqueuedNumValue = totalEnqueuedNum.load();
+						if(totalEnqueuedNumValue == -1) {
 							break;
+						} else if(totalEnqueuedNumValue >= this->m_refGraph.size()) {
+							if(queue.IsEmpty()) {
+								break;
+							}
 						}
 					}
 					const auto currentNodeOpt = queue.Pop();
@@ -116,20 +122,20 @@ std::optional<typename TPBFS<T>::AVisitorMap> TPBFS<T>::PredecessorNodesImpl() c
 					const auto& currentNode = currentNodeOpt.value();
 					for(const auto& neighbour : this->m_refGraph.at(currentNode)) {
 						const auto neighbourIt = visitorMap.find(neighbour);
-						if(neighbourIt->second.first.test_and_set(std::memory_order_relaxed)) continue;
+						if(neighbourIt->second.first.test_and_set()) continue;
 						neighbourIt->second.second = currentNode;
 						if(neighbour == this->m_refEnd) {
-							isFoundEndNode.test_and_set(std::memory_order_relaxed);
+							totalEnqueuedNum.store(-1);
 							break;
 						}
-						totalEnqueuedNum.fetch_add(1, std::memory_order_relaxed);
 						queue.Push(neighbour);
+						totalEnqueuedNum.fetch_add(1);
 					}
 				}
 			});
 		}
 	}
-	if(not isFoundEndNode.test(std::memory_order_relaxed)) return std::nullopt;
+	if(totalEnqueuedNum.load() != -1) return std::nullopt;
 	return visitorMap;
 }
 
