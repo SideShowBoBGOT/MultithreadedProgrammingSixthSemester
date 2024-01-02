@@ -72,11 +72,6 @@ class TPBFS : public TBaseBFS<T, TPBFS<T>> {
 	AVisitorMap CreateVisitorMap() const;
 
 	protected:
-	struct SInfo {
-
-	};
-
-	protected:
 	const unsigned m_uThreadsNum = 0;
 };
 
