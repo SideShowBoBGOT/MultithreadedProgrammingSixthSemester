@@ -100,21 +100,17 @@ std::optional<typename TPBFS<T>::AVisitorMap> TPBFS<T>::PredecessorNodesImpl() c
 	auto queue = TAtomicQueue<T>();
 	queue.Push(this->m_refStart);
 	auto visitorMap = CreateVisitorMap();
-	auto totalEnqueuedNum = std::atomic_int64_t{0};
+	auto isEndNodeFound = std::atomic_flag{false};
+	auto totalEnqueuedNum = std::atomic_size_t{0};
 	{
 		auto threads = std::vector<std::jthread>();
 		threads.reserve(m_uThreadsNum);
 		for(auto i = 0u; i < m_uThreadsNum; ++i) {
-			threads.emplace_back([this, &queue, &visitorMap, &totalEnqueuedNum]() {
-				while(true) {
-					{
-						const auto totalEnqueuedNumValue = totalEnqueuedNum.load();
-						if(totalEnqueuedNumValue == -1) {
+			threads.emplace_back([this, &queue, &visitorMap, &totalEnqueuedNum, &isEndNodeFound]() {
+				while(not isEndNodeFound.test()) {
+					if(totalEnqueuedNum.load() >= this->m_refGraph.size()) {
+						if(queue.IsEmpty()) {
 							break;
-						} else if(totalEnqueuedNumValue >= this->m_refGraph.size()) {
-							if(queue.IsEmpty()) {
-								break;
-							}
 						}
 					}
 					const auto currentNodeOpt = queue.Pop();
@@ -125,8 +121,8 @@ std::optional<typename TPBFS<T>::AVisitorMap> TPBFS<T>::PredecessorNodesImpl() c
 						if(neighbourIt->second.first.test_and_set()) continue;
 						neighbourIt->second.second = currentNode;
 						if(neighbour == this->m_refEnd) {
-							totalEnqueuedNum.store(-1);
-							break;
+							isEndNodeFound.test_and_set();
+							return;
 						}
 						queue.Push(neighbour);
 						totalEnqueuedNum.fetch_add(1);
@@ -135,7 +131,7 @@ std::optional<typename TPBFS<T>::AVisitorMap> TPBFS<T>::PredecessorNodesImpl() c
 			});
 		}
 	}
-	if(totalEnqueuedNum.load() != -1) return std::nullopt;
+	if(not isEndNodeFound.test()) return std::nullopt;
 	return visitorMap;
 }
 
