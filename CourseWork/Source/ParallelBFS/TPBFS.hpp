@@ -17,9 +17,7 @@ class TAtomicQueue {
 	public:
 	template<typename U>
 	void Push(U&& value);
-
 	std::optional<T> Pop();
-	bool IsEmpty() const;
 
 	protected:
 	mutable std::atomic_flag m_xFlag;
@@ -46,14 +44,6 @@ std::optional<T> TAtomicQueue<T>::Pop() {
 	m_qQueue.pop();
 	m_xFlag.clear();
 	return popped;
-}
-
-template<typename T>
-bool TAtomicQueue<T>::IsEmpty() const {
-	while(m_xFlag.test_and_set());
-	const auto res = m_qQueue.empty();
-	m_xFlag.clear();
-	return res;
 }
 
 template<CBFSUsable T>
@@ -94,7 +84,7 @@ std::optional<typename TPBFS<T>::AVisitorMap> TPBFS<T>::PredecessorNodesImpl() c
 	auto queue = TAtomicQueue<T>();
 	queue.Push(this->m_refStart);
 	auto visitorMap = CreateVisitorMap();
-	auto isEndNodeFound = std::atomic_flag{false};
+	auto& isEndNodeFound = visitorMap.find(this->m_refEnd)->second.first;
 	auto totalEnqueuedNum = std::atomic_size_t{0};
 	{
 		auto threads = std::vector<std::jthread>();
@@ -102,11 +92,7 @@ std::optional<typename TPBFS<T>::AVisitorMap> TPBFS<T>::PredecessorNodesImpl() c
 		for(auto i = 0u; i < m_uThreadsNum; ++i) {
 			threads.emplace_back([this, &queue, &visitorMap, &totalEnqueuedNum, &isEndNodeFound]() {
 				while(not isEndNodeFound.test()) {
-					if(totalEnqueuedNum.load() >= this->m_refGraph.size()) {
-						if(queue.IsEmpty()) {
-							break;
-						}
-					}
+					if(totalEnqueuedNum.load() >= this->m_refGraph.size()) return;
 					const auto currentNodeOpt = queue.Pop();
 					if(not currentNodeOpt) continue;
 					const auto& currentNode = currentNodeOpt.value();
@@ -114,12 +100,9 @@ std::optional<typename TPBFS<T>::AVisitorMap> TPBFS<T>::PredecessorNodesImpl() c
 						const auto neighbourIt = visitorMap.find(neighbour);
 						if(neighbourIt->second.first.test_and_set()) continue;
 						neighbourIt->second.second = currentNode;
-						if(neighbour == this->m_refEnd) {
-							isEndNodeFound.test_and_set();
-							return;
-						}
-						queue.Push(neighbour);
+						if(neighbour == this->m_refEnd) return;
 						totalEnqueuedNum.fetch_add(1);
+						queue.Push(neighbour);
 					}
 				}
 			});

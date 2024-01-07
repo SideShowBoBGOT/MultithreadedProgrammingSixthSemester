@@ -5,9 +5,15 @@
 #include <ParallelBFS/TSequentialBFS.hpp>
 #include <ParallelBFS/TPBFS.hpp>
 
-class TTestBFSFixture : public ::testing::Test {};
+class TTestBFSFixture : public ::testing::Test {
+	protected:
+	static std::unordered_map<unsigned, std::vector<unsigned>> Create2DGrid(const unsigned int size);
+	static bool IsPathValid(const std::vector<unsigned int>& path, const bfs::AGraph<unsigned int>& graph);
+	static unsigned GetLastIndex(const unsigned size);
+	static void WriteToReport(const std::string& str);
+};
 
-std::unordered_map<unsigned, std::vector<unsigned>> Create2DGrid(const unsigned int size) {
+std::unordered_map<unsigned, std::vector<unsigned>> TTestBFSFixture::Create2DGrid(const unsigned int size) {
 	auto grid = std::unordered_map<unsigned , std::vector<unsigned>>();
 	const auto totalSize = size * size;
 	grid.reserve(totalSize);
@@ -33,7 +39,7 @@ std::unordered_map<unsigned, std::vector<unsigned>> Create2DGrid(const unsigned 
 	return grid;
 }
 
-bool IsPathValid(const std::vector<unsigned int>& path, const bfs::AGraph<unsigned int>& graph) {
+bool TTestBFSFixture::IsPathValid(const std::vector<unsigned int>& path, const bfs::AGraph<unsigned int>& graph) {
 	for(const auto& [start, end] : path | std::views::pairwise) {
 		const auto it = graph.find(start);
 		if(it == graph.end()) {
@@ -47,35 +53,39 @@ bool IsPathValid(const std::vector<unsigned int>& path, const bfs::AGraph<unsign
 	return true;
 }
 
-unsigned GetLastIndex(const unsigned size) {
+unsigned TTestBFSFixture::GetLastIndex(const unsigned size) {
 	return (size - 1) * size + size - 1;
 }
 
+void TTestBFSFixture::WriteToReport(const std::string& str) {
+	std::ofstream("Benchmark.txt", std::ios::app) << str << std::endl;
+}
+
 TEST_F(TTestBFSFixture, Test) {
-	//auto outputFile = std::ofstream("Benchmark.txt", std::ios::app);
 	constexpr auto totalRepeats = 5u;
 	const auto sizes = std::vector<unsigned>{2750, 2875, 3000, 3125, 3250, 3500, 3635, 3750, 3875, 4000};
-	const auto queueSizes = {100, 250, 500, 750, 1000, 1250, 2000};
 	const auto threadsNums = std::vector<unsigned>{3, 4, 5};
 	for(const auto size : sizes) {
 		const auto grid = Create2DGrid(size);
 		const auto lastIndex = GetLastIndex(size);
 		for(auto i = 0u; i < totalRepeats; ++i) {
-			{
+			const auto sequentialMillis = static_cast<double>([&grid, &lastIndex, &size]() {
 				const auto start = std::chrono::system_clock::now();
 				const auto result = bfs::TSequentialBFS<unsigned>::Do(grid, 0, lastIndex);
 				const auto delay = std::chrono::system_clock::now() - start;
 				const auto millis = std::chrono::duration_cast<std::chrono::milliseconds>(delay).count();
 				EXPECT_TRUE(IsPathValid(result.value(), grid));
-				std::ofstream("Benchmark.txt", std::ios::app) << std::format("{{ name: {}, size: {}, milliseconds: {} }}", "Sequential", size, millis) << std::endl;
-			}
+				WriteToReport(std::format("{{ name: {}, size: {}, milliseconds: {} }}", "Sequential", size, millis));
+				return millis;
+			}());
 			for(const auto threadsNum : threadsNums) {
 				const auto start = std::chrono::system_clock::now();
 				const auto result = bfs::TPBFS<unsigned>::Do(grid, 0, lastIndex, threadsNum);
 				const auto delay = std::chrono::system_clock::now() - start;
 				const auto millis = std::chrono::duration_cast<std::chrono::milliseconds>(delay).count();
 				EXPECT_TRUE(IsPathValid(result.value(), grid));
-				std::ofstream("Benchmark.txt", std::ios::app) << std::format("{{ name: {}, size: {}, threadsNum: {}, milliseconds: {} }}", "Parallel", size, threadsNum, millis) << std::endl;
+				WriteToReport(std::format("{{ name: {}, size: {}, threadsNum: {}, milliseconds: {}, acceleration: {} }}",
+					"Parallel", size, threadsNum, millis, sequentialMillis / static_cast<double>(millis)));
 			}
 		}
 	}
