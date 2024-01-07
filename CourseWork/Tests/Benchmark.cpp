@@ -5,68 +5,9 @@
 #include <ParallelBFS/TSequentialBFS.hpp>
 #include <ParallelBFS/TPBFS.hpp>
 
-// GridMap takes much time to be created. If its resources are
-// contained inside global static variable, I will get a timeout error
-// from googletest. So the solution is to delay the construction of this
-// resource and only have one instance of it. Therefore, Singleton is
-// the best way to do this.
+class TTestBFSFixture : public ::testing::Test {};
 
-// Also this class is used for other things to be done only once, such as:
-// creation of benchmark file
-class TTestBenchmarkSetUpper {
-	public:
-	static const TTestBenchmarkSetUpper* GetInstance();
-	const std::unordered_map<unsigned, bfs::AGraph<unsigned>>& GridMap() const;
-	const std::filesystem::path& OutputFilePath() const;
-
-	protected:
-	TTestBenchmarkSetUpper();
-
-	protected:
-	template<typename... Sizes> requires (std::same_as<int, Sizes> && ...)
-	void Init(Sizes... args);
-
-	protected:
-	static std::unordered_map<unsigned, std::vector<unsigned>> Create2DGrid(const unsigned int size);
-
-	template<typename... Args> requires (std::same_as<int, Args> && ...)
-	std::unordered_map<unsigned, bfs::AGraph<unsigned>> CreateGridMap(Args... args);
-
-	protected:
-	std::unordered_map<unsigned, bfs::AGraph<unsigned>> m_vGridMap;
-	std::filesystem::path m_sOutputFilePath;
-
-	protected:
-	static std::unique_ptr<TTestBenchmarkSetUpper> s_pInstance;
-};
-
-std::unique_ptr<TTestBenchmarkSetUpper> TTestBenchmarkSetUpper::s_pInstance = nullptr;
-
-const TTestBenchmarkSetUpper* TTestBenchmarkSetUpper::GetInstance() {
-	// Enable make_unique use protected constructor of TTestBenchmarkSetUpper;
-	struct TEnableMaker : public TTestBenchmarkSetUpper { using TTestBenchmarkSetUpper::TTestBenchmarkSetUpper; };
-	if(not s_pInstance) {
-		s_pInstance = std::make_unique<TEnableMaker>();
-	}
-	return s_pInstance.get();
-}
-
-const std::unordered_map<unsigned, bfs::AGraph<unsigned>>& TTestBenchmarkSetUpper::GridMap() const {
-	return m_vGridMap;
-}
-
-const std::filesystem::path& TTestBenchmarkSetUpper::OutputFilePath() const {
-	return m_sOutputFilePath;
-}
-
-template<typename... Sizes> requires (std::same_as<int, Sizes> && ...)
-void TTestBenchmarkSetUpper::Init(Sizes... args) {
-	m_vGridMap = TTestBenchmarkSetUpper::CreateGridMap(args...);
-	m_sOutputFilePath = "Benchmark.txt";
-	std::filesystem::remove(m_sOutputFilePath);
-}
-
-std::unordered_map<unsigned, std::vector<unsigned>> TTestBenchmarkSetUpper::Create2DGrid(const unsigned int size) {
+std::unordered_map<unsigned, std::vector<unsigned>> Create2DGrid(const unsigned int size) {
 	auto grid = std::unordered_map<unsigned , std::vector<unsigned>>();
 	const auto totalSize = size * size;
 	grid.reserve(totalSize);
@@ -92,56 +33,7 @@ std::unordered_map<unsigned, std::vector<unsigned>> TTestBenchmarkSetUpper::Crea
 	return grid;
 }
 
-template<typename... Args> requires (std::same_as<int, Args> && ...)
-std::unordered_map<unsigned, bfs::AGraph<unsigned>> TTestBenchmarkSetUpper::CreateGridMap(Args... args) {
-	auto gridMap = std::unordered_map<unsigned, bfs::AGraph<unsigned>>();
-	for(const auto size : {args...}) {
-		const auto sizeUnsigned = static_cast<unsigned>(size);
-		gridMap.insert_or_assign(sizeUnsigned, TTestBenchmarkSetUpper::Create2DGrid(sizeUnsigned));
-	}
-	return gridMap;
-}
-
-class TTestBFSGeneral : public testing::Test {
-	protected:
-	virtual void TearDown() override;
-
-	protected:
-	static void SetUpTestSuite();
-	static void TearDownTestSuite();
-
-	protected:
-	virtual std::string GenerateReport(const long millis) const=0;
-
-	protected:
-	static unsigned GetLastIndex(const unsigned size);
-	static bool IsPathValid(const std::vector<unsigned>& path, const bfs::AGraph<unsigned>& graph);
-
-	protected:
-	std::chrono::time_point<std::chrono::system_clock> m_xStart;
-	std::chrono::time_point<std::chrono::system_clock> m_xEnd;
-};
-
-void TTestBFSGeneral::TearDown() {
-	Test::TearDown();
-	const auto delay = std::chrono::system_clock::now() - m_xStart;
-	const auto millis = std::chrono::duration_cast<std::chrono::milliseconds>(delay).count();
-	auto file = std::ofstream(TTestBenchmarkSetUpper::GetInstance()->OutputFilePath(), std::ios::app);
-	file << GenerateReport(millis) << std::endl;
-}
-
-void TTestBFSGeneral::SetUpTestSuite() {
-	// Create instance of TTestBenchmarkSetUpper
-	TTestBenchmarkSetUpper::GetInstance();
-}
-
-void TTestBFSGeneral::TearDownTestSuite() {}
-
-unsigned TTestBFSGeneral::GetLastIndex(const unsigned int size) {
-	return (size - 1) * size + size - 1;
-}
-
-bool TTestBFSGeneral::IsPathValid(const std::vector<unsigned int>& path, const bfs::AGraph<unsigned int>& graph) {
+bool IsPathValid(const std::vector<unsigned int>& path, const bfs::AGraph<unsigned int>& graph) {
 	for(const auto& [start, end] : path | std::views::pairwise) {
 		const auto it = graph.find(start);
 		if(it == graph.end()) {
@@ -155,71 +47,36 @@ bool TTestBFSGeneral::IsPathValid(const std::vector<unsigned int>& path, const b
 	return true;
 }
 
-template <typename T>
-class TestBFSMixin : public TTestBFSGeneral, public testing::WithParamInterface<T> {};
-
-class TSequentialBFSTest : public TestBFSMixin<unsigned> {
-	protected:
-	virtual std::string GenerateReport(const long millis) const override;
-};
-
-std::string TSequentialBFSTest::GenerateReport(const long millis) const {
-	return std::format("{{ name: {}, size: {}, milliseconds: {} }}",
-		"TSequentialBFSTest", GetParam(), millis);
+unsigned GetLastIndex(const unsigned size) {
+	return (size - 1) * size + size - 1;
 }
 
-class TPBFSTest : public TestBFSMixin<std::tuple<unsigned, unsigned>> {
-	protected:
-	virtual std::string GenerateReport(const long millis) const override;
-};
-
-std::string TPBFSTest::GenerateReport(const long millis) const {
-	return std::format("{{ name: {}, size: {}, threadsNum: {}, milliseconds: {} }}", "TPBFSTest",
-		std::get<1>(GetParam()), std::get<0>(GetParam()), millis);
+TEST_F(TTestBFSFixture, Test) {
+	//auto outputFile = std::ofstream("Benchmark.txt", std::ios::app);
+	constexpr auto totalRepeats = 5u;
+	const auto sizes = std::vector<unsigned>{2750, 2875, 3000, 3125, 3250, 3500, 3635, 3750, 3875, 4000};
+	const auto queueSizes = {100, 250, 500, 750, 1000, 1250, 2000};
+	const auto threadsNums = std::vector<unsigned>{3, 4, 5};
+	for(const auto size : sizes) {
+		const auto grid = Create2DGrid(size);
+		const auto lastIndex = GetLastIndex(size);
+		for(auto i = 0u; i < totalRepeats; ++i) {
+			{
+				const auto start = std::chrono::system_clock::now();
+				const auto result = bfs::TSequentialBFS<unsigned>::Do(grid, 0, lastIndex);
+				const auto delay = std::chrono::system_clock::now() - start;
+				const auto millis = std::chrono::duration_cast<std::chrono::milliseconds>(delay).count();
+				EXPECT_TRUE(IsPathValid(result.value(), grid));
+				std::ofstream("Benchmark.txt", std::ios::app) << std::format("{{ name: {}, size: {}, milliseconds: {} }}", "Sequential", size, millis) << std::endl;
+			}
+			for(const auto threadsNum : threadsNums) {
+				const auto start = std::chrono::system_clock::now();
+				const auto result = bfs::TPBFS<unsigned>::Do(grid, 0, lastIndex, threadsNum);
+				const auto delay = std::chrono::system_clock::now() - start;
+				const auto millis = std::chrono::duration_cast<std::chrono::milliseconds>(delay).count();
+				EXPECT_TRUE(IsPathValid(result.value(), grid));
+				std::ofstream("Benchmark.txt", std::ios::app) << std::format("{{ name: {}, size: {}, threadsNum: {}, milliseconds: {} }}", "Parallel", size, threadsNum, millis) << std::endl;
+			}
+		}
+	}
 }
-
-TEST_P(TSequentialBFSTest, Benchmark) {
-	m_xStart = std::chrono::system_clock::now();
-	const auto size = GetParam();
-	const auto lastIndex = GetLastIndex(size);
-	const auto& grid = TTestBenchmarkSetUpper::GetInstance()->GridMap().at(size);
-	const auto result = bfs::TSequentialBFS<unsigned>::Do(grid, 0, lastIndex);
-	m_xEnd = std::chrono::system_clock::now();
-	EXPECT_TRUE(result.has_value());
-	const auto isValid = IsPathValid(result.value(), grid);
-	EXPECT_TRUE(isValid);
-}
-
-TEST_P(TPBFSTest, Benchmark) {
-	m_xStart = std::chrono::system_clock::now();
-	const auto threadsNum = std::get<0>(GetParam());
-	const auto size = std::get<1>(GetParam());
-	const auto lastIndex = GetLastIndex(size);
-	const auto& grid = TTestBenchmarkSetUpper::GetInstance()->GridMap().at(size);
-	const auto result = bfs::TPBFS<unsigned>::Do(grid, 0, lastIndex, threadsNum);
-	m_xEnd = std::chrono::system_clock::now();
-	EXPECT_TRUE(result.has_value());
-	const auto isValid = IsPathValid(result.value(), grid);
-	EXPECT_TRUE(isValid);
-}
-
-#define INSTANTIATE_TEST_BFS(...) \
-    TTestBenchmarkSetUpper::TTestBenchmarkSetUpper() {\
-		Init(__VA_ARGS__);\
-	}\
-	INSTANTIATE_TEST_SUITE_P(Benchmark, TSequentialBFSTest, testing::Values(__VA_ARGS__)); \
-	INSTANTIATE_TEST_SUITE_P(Benchmark, TPBFSTest,\
-		testing::Combine(\
-			testing::Values(2, 3, 4, 5),\
-			testing::Values(__VA_ARGS__)\
-		)\
-	);
-
-INSTANTIATE_TEST_BFS(1500, 1750, 2000, 2250, 2500)
-#undef INSTANTIATE_TEST_BFS
-
-
-
-
-
-
