@@ -1,4 +1,5 @@
 #include <format>
+#include <ranges>
 #include <fstream>
 #include <filesystem>
 #include <gtest/gtest.h>

@@ -6,8 +6,6 @@
 
 namespace bfs {
 
-namespace pipes {
-
 template<std::semiregular T>
 class TPipeReader;
 
@@ -137,8 +135,6 @@ TPipeChannel<T> TPipeChannel<T>::New() {
 template<std::semiregular T>
 TPipeChannel<T>::TPipeChannel(TPipeWriter<T>&& writer, TPipeReader<T>&& reader)
 	: Writer{std::move(writer)}, Reader{std::move(reader)} {}
-
-}
 
 }
 

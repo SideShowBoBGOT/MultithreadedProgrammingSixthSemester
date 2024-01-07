@@ -3,7 +3,7 @@
 #include <ParallelBFS/TPipes.hpp>
 
 int main() {
-	auto [w, r] = bfs::pipes::TPipeChannel<int>::New();
+	auto [w, r] = bfs::TPipeChannel<int>::New();
 
 	auto sender = std::jthread([ww=std::move(w)]() {
 		using namespace std::chrono_literals;

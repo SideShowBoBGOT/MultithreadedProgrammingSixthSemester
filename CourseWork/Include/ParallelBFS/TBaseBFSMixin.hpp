@@ -9,8 +9,7 @@
 namespace bfs {
 
 template<typename T>
-concept CBFSUsable = std::equality_comparable<T> and std::copyable<T>
-	and requires(T value) { {std::hash<T>{}(value)} -> std::same_as<std::size_t>; };
+concept CBFSUsable = std::semiregular<T> and requires(T value) { {std::hash<T>{}(value)} -> std::same_as<std::size_t>; };
 
 template<CBFSUsable T>
 using AGraph = std::unordered_map<T, std::vector<T>>;
