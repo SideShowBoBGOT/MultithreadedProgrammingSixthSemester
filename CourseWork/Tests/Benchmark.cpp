@@ -3,7 +3,7 @@
 #include <filesystem>
 #include <gtest/gtest.h>
 #include <ParallelBFS/TSequentialBFS.hpp>
-#include <ParallelBFS/TPBFS.hpp>
+#include <ParallelBFS/TSharedBFS.hpp>
 
 class TTestBFSFixture : public ::testing::Test {
 	protected:
@@ -80,12 +80,12 @@ TEST_F(TTestBFSFixture, Test) {
 			}());
 			for(const auto threadsNum : threadsNums) {
 				const auto start = std::chrono::system_clock::now();
-				const auto result = bfs::TPBFS<unsigned>::Do(grid, 0, lastIndex, threadsNum);
+				const auto result = bfs::TSharedBFS<unsigned>::Do(grid, 0, lastIndex, threadsNum);
 				const auto delay = std::chrono::system_clock::now() - start;
 				const auto millis = std::chrono::duration_cast<std::chrono::milliseconds>(delay).count();
 				EXPECT_TRUE(IsPathValid(result.value(), grid));
 				WriteToReport(std::format("{{ name: {}, size: {}, threadsNum: {}, milliseconds: {}, acceleration: {} }}",
-					"Parallel", size, threadsNum, millis, sequentialMillis / static_cast<double>(millis)));
+					"Shared", size, threadsNum, millis, sequentialMillis / static_cast<double>(millis)));
 			}
 		}
 	}

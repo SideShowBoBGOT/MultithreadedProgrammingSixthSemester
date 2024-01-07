@@ -7,3 +7,6 @@ target_link_libraries(Benchmark PRIVATE GTest::gtest_main)
 
 include(GoogleTest)
 gtest_discover_tests(Benchmark)
+
+add_executable(Pipes Pipes.cpp)
+target_link_libraries(Pipes PRIVATE ${PROJECT_NAME})

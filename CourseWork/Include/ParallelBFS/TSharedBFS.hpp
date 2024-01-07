@@ -1,11 +1,11 @@
-#ifndef PARALLELBFS_TPBFS_HPP
-#define PARALLELBFS_TPBFS_HPP
+#ifndef PARALLELBFS_TSHAREDBFS_HPP
+#define PARALLELBFS_TSHAREDBFS_HPP
 
 #include <queue>
 #include <thread>
 #include <unordered_set>
 #include <ranges>
-#include <ParallelBFS/TBaseBFS.hpp>
+#include <ParallelBFS/TParallelBFSMixin.hpp>
 
 namespace bfs {
 
@@ -47,49 +47,32 @@ std::optional<T> TAtomicQueue<T>::Pop() {
 }
 
 template<CBFSUsable T>
-class TPBFS : public TBaseBFS<T, TPBFS<T>> {
-	friend class TBaseBFS<T, TPBFS<T>>;
+class TSharedBFS : public TParallelBFSMixin<T, TSharedBFS<T>> {
+	protected:
+	friend class TBaseBFSMixin<T, TSharedBFS<T>>;
 
 	protected:
-	TPBFS(const AGraph<T>& graph, const T& start, const T& end, const unsigned threadsNum);
+	TSharedBFS(const AGraph<T>& graph, const T& start, const T& end, const unsigned threadsNum);
 
 	protected:
-	using AVisitorMap = std::unordered_map<T, std::pair<std::atomic_flag, T>>;
-	std::optional<AVisitorMap> PredecessorNodesImpl() const;
-
-	protected:
-	AVisitorMap CreateVisitorMap() const;
-
-	protected:
-	const unsigned m_uThreadsNum = 0;
+	std::optional<typename TSharedBFS<T>::AVisitorMap> PredecessorNodesImpl() const;
 };
 
 template<CBFSUsable T>
-std::unordered_map<T, std::pair<std::atomic_flag, T>> TPBFS<T>::CreateVisitorMap() const {
-	auto visitorMap = std::unordered_map<T, std::pair<std::atomic_flag, T>>();
-	visitorMap.reserve(this->m_refGraph.size());
-	for(const auto& [key, _] : this->m_refGraph) {
-		visitorMap.emplace(std::piecewise_construct, std::forward_as_tuple(key), std::forward_as_tuple());
-	}
-	return visitorMap;
-}
+TSharedBFS<T>::TSharedBFS(const AGraph<T>& graph, const T& start, const T& end, const unsigned threadsNum)
+	: TParallelBFSMixin<T, TSharedBFS>(graph, start, end, threadsNum) {}
 
 template<CBFSUsable T>
-TPBFS<T>::TPBFS(const AGraph<T>& graph, const T& start, const T& end, const unsigned threadsNum)
-	: m_uThreadsNum{std::min(threadsNum, std::jthread::hardware_concurrency())},
-	  TBaseBFS<T, TPBFS>(graph, start, end) {}
-
-template<CBFSUsable T>
-std::optional<typename TPBFS<T>::AVisitorMap> TPBFS<T>::PredecessorNodesImpl() const {
+std::optional<typename TSharedBFS<T>::AVisitorMap> TSharedBFS<T>::PredecessorNodesImpl() const {
 	auto queue = TAtomicQueue<T>();
 	queue.Push(this->m_refStart);
-	auto visitorMap = CreateVisitorMap();
+	auto visitorMap = this->CreateVisitorMap();
 	auto& isEndNodeFound = visitorMap.find(this->m_refEnd)->second.first;
 	auto totalEnqueuedNum = std::atomic_size_t{0};
 	{
 		auto threads = std::vector<std::jthread>();
-		threads.reserve(m_uThreadsNum);
-		for(auto i = 0u; i < m_uThreadsNum; ++i) {
+		threads.reserve(this->m_uThreadsNum);
+		for(auto i = 0u; i < this->m_uThreadsNum; ++i) {
 			threads.emplace_back([this, &queue, &visitorMap, &totalEnqueuedNum, &isEndNodeFound]() {
 				while(not isEndNodeFound.test()) {
 					if(totalEnqueuedNum.load() >= this->m_refGraph.size()) return;
@@ -114,4 +97,4 @@ std::optional<typename TPBFS<T>::AVisitorMap> TPBFS<T>::PredecessorNodesImpl() c
 
 }
 
-#endif //PARALLELBFS_TPBFS_HPP
+#endif //PARALLELBFS_TSHAREDBFS_HPP
