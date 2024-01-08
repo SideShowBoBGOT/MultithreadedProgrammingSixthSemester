@@ -37,7 +37,6 @@ TCommunicationBFS<T>::TCommunicationBFS(const AGraph<T>& graph, const T& start, 
 template<CBFSUsable T>
 std::optional<typename TCommunicationBFS<T>::AVisitorMap> TCommunicationBFS<T>::PredecessorNodesImpl() const {
 	auto visitorMap = this->CreateVisitorMap();
-	auto totalEnqueuedNum = 0;
 	auto threads = std::vector<std::jthread>();
 	auto senders = std::vector<TPipeWriter<AParentMessage>>();
 	auto listeners = std::vector<TPipeReader<AChildrenMessage>>();
@@ -51,11 +50,11 @@ std::optional<typename TCommunicationBFS<T>::AVisitorMap> TCommunicationBFS<T>::
 			while(true) {
 				auto parentMessage = listener.Read();
 				switch(parentMessage.index()) {
-					case VariantIndex<SEndNodeFound>():
-					case VariantIndex<SAllNodesEnqueued>(): return;
-					case VariantIndex<SQueueView>(): {
+					case VariantIndex<AParentMessage, SEndNodeFound>():
+					case VariantIndex<AParentMessage, SAllNodesEnqueued>(): return;
+					case VariantIndex<AParentMessage, SQueueView>(): {
 						auto frontier = std::vector<T>();
-						const auto [begin, end] = std::get<SQueueView>();
+						const auto [begin, end] = std::get<SQueueView>(parentMessage);
 						for(auto it = begin; it != end; ++it) {
 							const auto& node = *it;
 							for(const auto& neighbour : this->m_refGraph.at(node)) {
@@ -75,12 +74,64 @@ std::optional<typename TCommunicationBFS<T>::AVisitorMap> TCommunicationBFS<T>::
 			}
 		});
 	}
+	auto totalEnqueuedNum = std::size_t(0);
+	auto deque = TDeque<T>();
+	deque.push_back({this->m_refStart});
 	while(true) {
-
+		{
+			const auto dequeSize = deque.size();
+			if(dequeSize < this->m_uThreadsNum) {
+				auto i = std::size_t(0);
+				{
+					auto begin = deque.begin();
+					for(;i < dequeSize; ++i) {
+						senders[i].Write(SQueueView{begin, ++begin});
+					}
+				}
+				const auto endIt = deque.end();
+				for(;i < this->m_uThreadsNum; ++i) {
+					senders[i].Write(SQueueView{endIt, endIt});
+				}
+			} else {
+				const auto step = dequeSize / this->m_uThreadsNum;
+				auto begin = deque.begin();
+				auto i = std::size_t(0);
+				for(; i < this->m_uThreadsNum - 1; ++i) {
+					const auto next = begin + step;
+					senders[i].Write(SQueueView{begin, next});
+					begin = next;
+				}
+				senders[i].Write(SQueueView{begin, deque.end()});
+			}
+		}
+		auto newDeque = TDeque<T>();
+		for(auto& l : listeners) {
+			auto message = l.Read();
+			switch(message.index()) {
+				case VariantIndex<AChildrenMessage, SEndNodeFound>(): {
+					for(auto& s : senders) {
+						s.Write(SEndNodeFound());
+					}
+					return visitorMap;
+				}
+				case VariantIndex<AChildrenMessage, std::vector<T>>(): {
+					auto frontier = std::get<std::vector<T>>(message);
+					totalEnqueuedNum += frontier.size();
+					if(not frontier.empty()) {
+						newDeque.push_back(std::move(frontier));
+					}
+				}
+			}
+		}
+		deque = std::move(newDeque);
+		if(totalEnqueuedNum >= this->m_refGraph.size()) {
+			for(auto& s : senders) {
+				s.Write(SAllNodesEnqueued());
+			}
+			return std::nullopt;
+		}
 	}
-
-	if(not isEndNodeFound.test()) return std::nullopt;
-	return visitorMap;
+	return std::nullopt;
 }
 
 }

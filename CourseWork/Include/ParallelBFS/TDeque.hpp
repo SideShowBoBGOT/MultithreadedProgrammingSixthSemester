@@ -19,6 +19,10 @@ class TDequeIterator {
 	T const*& operator->() const noexcept;
 	T& operator*() const noexcept;
 	auto operator<=>(const TDequeIterator&) const = default;
+	TDequeIterator operator+(std::size_t value) const noexcept;
+
+	protected:
+	void StepToNextVector();
 
 	protected:
 	std::vector<std::vector<T>>::iterator m_xOuterEnd;
@@ -43,12 +47,7 @@ TDequeIterator<T>& TDequeIterator<T>::operator++() {
 		return inner == m_xOuter->end();
 	}();
 	if(isReachedLocalEnd) {
-		++m_xOuter;
-		if(m_xOuter == m_xOuterEnd) {
-			m_xInner.reset();
-		} else {
-			m_xInner = m_xOuter->begin();
-		}
+		StepToNextVector();
 	}
 	return *this;
 }
@@ -71,6 +70,29 @@ T& TDequeIterator<T>::operator*() const noexcept {
 }
 
 template<typename T>
+TDequeIterator<T> TDequeIterator<T>::operator+(std::size_t value) const noexcept {
+	auto it = *this;
+	auto diff = static_cast<std::size_t>(it.m_xOuter->end() - it.m_xInner.value());
+	while(value >= diff) {
+		value -= diff;
+		it.StepToNextVector();
+		diff = static_cast<std::size_t>(it.m_xOuter->end() - it.m_xInner.value());
+	}
+	it.m_xInner.value() += value;
+	return it;
+}
+
+template<typename T>
+void TDequeIterator<T>::StepToNextVector() {
+	++m_xOuter;
+	if(m_xOuter == m_xOuterEnd) {
+		m_xInner.reset();
+	} else {
+		m_xInner = m_xOuter->begin();
+	}
+}
+
+template<typename T>
 class TDeque {
 	public:
 	TDeque()=default;
@@ -79,6 +101,7 @@ class TDeque {
 	public:
 	void push_back(const std::vector<T>& value);
 	void push_back(std::vector<T>&& value);
+	std::size_t size() const noexcept;
 
 	public:
 	TDequeIterator<T> begin();
@@ -96,6 +119,15 @@ void TDeque<T>::push_back(const std::vector<T>& value) {
 template<typename T>
 void TDeque<T>::push_back(std::vector<T>&& value) {
 	m_vData.push_back(std::move(value));
+}
+
+template<typename T>
+std::size_t TDeque<T>::size() const noexcept {
+	auto size = std::size_t(0);
+	for(const auto& v : m_vData) {
+		size += v.size();
+	}
+	return size;
 }
 
 template<typename T>
