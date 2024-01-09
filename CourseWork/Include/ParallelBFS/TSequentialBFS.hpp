@@ -3,13 +3,13 @@
 
 #include <queue>
 #include <unordered_set>
-#include <ParallelBFS/TBaseBFS.hpp>
+#include <ParallelBFS/TBaseBFSMixin.hpp>
 
 namespace bfs {
 
 template<CBFSUsable T>
-class TSequentialBFS : public TBaseBFS<T, TSequentialBFS<T>> {
-	friend class TBaseBFS<T, TSequentialBFS<T>>;
+class TSequentialBFS : public TBaseBFSMixin<T, TSequentialBFS<T>> {
+	friend class TBaseBFSMixin<T, TSequentialBFS<T>>;
 
 	protected:
 	TSequentialBFS(const AGraph<T>& graph, const T& start, const T& end);
@@ -24,7 +24,7 @@ class TSequentialBFS : public TBaseBFS<T, TSequentialBFS<T>> {
 
 template<CBFSUsable T>
 TSequentialBFS<T>::TSequentialBFS(const AGraph<T>& graph, const T& start, const T& end)
-	: TBaseBFS<T, TSequentialBFS>(graph, start, end) {}
+	: TBaseBFSMixin<T, TSequentialBFS>(graph, start, end) {}
 
 template<CBFSUsable T>
 std::optional<typename TSequentialBFS<T>::AVisitorMap> TSequentialBFS<T>::PredecessorNodesImpl() const {

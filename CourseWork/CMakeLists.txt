@@ -6,6 +6,6 @@ set(CMAKE_CXX_STANDARD 23)
 add_subdirectory(External)
 
 add_library(${PROJECT_NAME} INTERFACE)
-target_include_directories(${PROJECT_NAME} INTERFACE Source)
+target_include_directories(${PROJECT_NAME} INTERFACE Include)
 
 add_subdirectory(Tests)

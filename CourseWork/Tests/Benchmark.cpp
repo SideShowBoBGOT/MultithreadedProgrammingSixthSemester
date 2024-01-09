@@ -1,9 +1,11 @@
 #include <format>
+#include <ranges>
 #include <fstream>
 #include <filesystem>
 #include <gtest/gtest.h>
 #include <ParallelBFS/TSequentialBFS.hpp>
-#include <ParallelBFS/TPBFS.hpp>
+#include <ParallelBFS/TSharedBFS.hpp>
+#include <ParallelBFS/TCommunicationBFS.hpp>
 
 class TTestBFSFixture : public ::testing::Test {
 	protected:
@@ -64,7 +66,8 @@ void TTestBFSFixture::WriteToReport(const std::string& str) {
 TEST_F(TTestBFSFixture, Test) {
 	constexpr auto totalRepeats = 5u;
 	const auto sizes = std::vector<unsigned>{2750, 2875, 3000, 3125, 3250, 3500, 3635, 3750, 3875, 4000};
-	const auto threadsNums = std::vector<unsigned>{3, 4, 5};
+	//const auto sizes = std::vector<unsigned>{100, 200, 300, 400, 500, 600, 700};
+	const auto threadsNums = std::vector<unsigned>{3, 4, 5, 6, 7, 8, 9};
 	for(const auto size : sizes) {
 		const auto grid = Create2DGrid(size);
 		const auto lastIndex = GetLastIndex(size);
@@ -80,12 +83,21 @@ TEST_F(TTestBFSFixture, Test) {
 			}());
 			for(const auto threadsNum : threadsNums) {
 				const auto start = std::chrono::system_clock::now();
-				const auto result = bfs::TPBFS<unsigned>::Do(grid, 0, lastIndex, threadsNum);
+				const auto result = bfs::TSharedBFS<unsigned>::Do(grid, 0, lastIndex, threadsNum);
 				const auto delay = std::chrono::system_clock::now() - start;
 				const auto millis = std::chrono::duration_cast<std::chrono::milliseconds>(delay).count();
 				EXPECT_TRUE(IsPathValid(result.value(), grid));
 				WriteToReport(std::format("{{ name: {}, size: {}, threadsNum: {}, milliseconds: {}, acceleration: {} }}",
-					"Parallel", size, threadsNum, millis, sequentialMillis / static_cast<double>(millis)));
+					"Shared", size, threadsNum, millis, sequentialMillis / static_cast<double>(millis)));
+			}
+			for(const auto threadsNum : threadsNums) {
+				const auto start = std::chrono::system_clock::now();
+				const auto result = bfs::TCommunicationBFS<unsigned>::Do(grid, 0, lastIndex, threadsNum);
+				const auto delay = std::chrono::system_clock::now() - start;
+				const auto millis = std::chrono::duration_cast<std::chrono::milliseconds>(delay).count();
+				EXPECT_TRUE(IsPathValid(result.value(), grid));
+				WriteToReport(std::format("{{ name: {}, size: {}, threadsNum: {}, milliseconds: {}, acceleration: {} }}",
+					"Communication", size, threadsNum, millis, sequentialMillis / static_cast<double>(millis)));
 			}
 		}
 	}
