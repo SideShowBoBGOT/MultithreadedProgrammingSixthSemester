@@ -24,8 +24,9 @@ class TCommunicationBFS : public TParallelBFSMixin<T, TCommunicationBFS<T>> {
 		struct SEndNodeFound {};
 		struct SAllNodesEnqueued {};
 		struct SQueueView {
-			TDequeIterator<T> Begin;
-			TDequeIterator<T> End;
+			const TDeque<T>* Deque;
+			size_t Begin;
+			size_t End;
 		};
 		struct SFrontier {
 			std::vector<T> Data;
@@ -145,20 +146,23 @@ void TCommunicationBFS<T>::TCommunicationTask::operator()() {
 		auto parentMessage = m_xListener.Read();
 		if(not std::holds_alternative<typename NMessage::SQueueView>(parentMessage)) return;
 		auto frontier = typename NMessage::SFrontier();
-		const auto [begin, end] = std::get<typename NMessage::SQueueView>(parentMessage);
-		for(auto it = begin; it != end; ++it) {
-			const auto& node = *it;
+		const auto [deque, begin, end] = std::get<typename NMessage::SQueueView>(parentMessage);
+		auto isEndNodeFound = false;
+		deque->Loop(begin, end, [this, &frontier, &isEndNodeFound](const T& node) {
 			for(const auto& neighbour : this->m_refGraph.at(node)) {
 				const auto neighbourIt = m_refVisitorMap.find(neighbour);
-				if(neighbourIt->second.first.test_and_set()) continue;
+				if(neighbourIt->second.first.test_and_set())
+					continue;
 				neighbourIt->second.second = node;
 				if(neighbour == this->m_refEnd) {
 					m_xSender.Write(typename NMessage::SEndNodeFound{});
+					isEndNodeFound = true;
 					return;
 				}
 				frontier.Data.push_back(neighbour);
 			}
-		}
+		});
+		if(isEndNodeFound) return;
 		m_xSender.Write(std::move(frontier));
 	}
 }
@@ -170,8 +174,8 @@ TCommunicationBFS<T>::TCommunicationCenter::TCommunicationCenter(
 	std::vector<TPipeWriter<AParentMessage>>&& senders,
 	std::vector<TPipeReader<AChildrenMessage>>&& listeners)
 	: m_uGraphSize{graphSize}, m_vSenders{std::move(senders)}, m_vListeners{std::move(listeners)} {
-		m_vDeque.push_back({start});
-	}
+	m_vDeque.Push({start});
+}
 
 template<CBFSUsable T>
 TCommunicationBFS<T>::TCommunicationCenter::ACommunicationResult
@@ -181,10 +185,10 @@ TCommunicationBFS<T>::TCommunicationCenter::Communicate() {
 		const auto result = ListenResults();
 		switch(result.index()) {
 			case VariantIndex<AListenResult, typename NMessage::SEndNodeFound>(): {
-				return std::get<typename NMessage::SEndNodeFound>(result);
+				return typename NMessage::SEndNodeFound();
 			}
 			case VariantIndex<AListenResult, typename NMessage::SAllNodesEnqueued>(): {
-				return std::get<typename NMessage::SAllNodesEnqueued>(result);
+				return typename NMessage::SAllNodesEnqueued();
 			}
 			case VariantIndex<AListenResult, SContinueSeeking>(): {
 				break;
@@ -196,30 +200,24 @@ TCommunicationBFS<T>::TCommunicationCenter::Communicate() {
 
 template<CBFSUsable T>
 void TCommunicationBFS<T>::TCommunicationCenter::SendTasks() {
-	const auto dequeSize = m_vDeque.size();
+	const auto dequeSize = m_vDeque.Size();
 	const auto threadsNum = m_vSenders.size();
-	if(dequeSize < threadsNum) {
-		auto i = std::size_t(0);
-		{
-			auto begin = m_vDeque.begin();
-			for(;i < dequeSize; ++i) {
-				m_vSenders[i].Write(typename NMessage::SQueueView{begin, ++begin});
-			}
-		}
-		const auto endIt = m_vDeque.end();
+	const auto end = m_vDeque.Size();
+	auto begin = size_t(0);
+	auto i = std::size_t(0);
+	const auto step = std::max(size_t(1), dequeSize / threadsNum);
+	const auto stepsNum = std::min(dequeSize, threadsNum - 1);
+	for(;i < stepsNum; ++i) {
+		const auto next = begin + step;
+		m_vSenders[i].Write(typename NMessage::SQueueView{&m_vDeque, begin, next});
+		begin = next;
+	}
+	if(stepsNum == dequeSize) {
 		for(;i < threadsNum; ++i) {
-			m_vSenders[i].Write(typename NMessage::SQueueView{endIt, endIt});
+			m_vSenders[i].Write(typename NMessage::SQueueView{&m_vDeque, end, end});
 		}
 	} else {
-		const auto step = dequeSize / threadsNum;
-		auto begin = m_vDeque.begin();
-		auto i = std::size_t(0);
-		for(; i < threadsNum - 1; ++i) {
-			const auto next = begin + step;
-			m_vSenders[i].Write(typename NMessage::SQueueView{begin, next});
-			begin = next;
-		}
-		m_vSenders[i].Write(typename NMessage::SQueueView{begin, m_vDeque.end()});
+		m_vSenders[i].Write(typename NMessage::SQueueView{&m_vDeque, begin, end});
 	}
 }
 
@@ -246,7 +244,7 @@ TCommunicationBFS<T>::TCommunicationCenter::AListenResult TCommunicationBFS<T>::
 				auto frontier = std::get<typename NMessage::SFrontier>(message);
 				m_uTotalEnqueuedNum += frontier.Data.size();
 				if(not frontier.Data.empty()) {
-					newDeque.push_back(std::move(frontier.Data));
+					newDeque.Push(std::move(frontier.Data));
 				}
 			}
 		}
