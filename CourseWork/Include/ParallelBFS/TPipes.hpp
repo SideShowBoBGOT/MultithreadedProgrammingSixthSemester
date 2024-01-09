@@ -73,8 +73,7 @@ class TPipeWriter {
 	TPipeWriter& operator=(TPipeWriter&& other);
 
 	public:
-	template<typename U>
-	void Write(U&& value) const;
+	void Write(T&& value) const;
 
 	protected:
 	TPipeWriter()=default;
@@ -104,10 +103,9 @@ TPipeWriter<T>& TPipeWriter<T>::operator=(TPipeWriter&& other) {
 }
 
 template<std::semiregular T>
-template<typename U>
-void TPipeWriter<T>::Write(U&& value) const {
+void TPipeWriter<T>::Write(T&& value) const {
 	m_pData->second.wait(true);
-	m_pData->first = std::forward<U>(value);
+	m_pData->first = std::move(value);
 	m_pData->second.test_and_set();
 	m_pData->second.notify_one();
 }

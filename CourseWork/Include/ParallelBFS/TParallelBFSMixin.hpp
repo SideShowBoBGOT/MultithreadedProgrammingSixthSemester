@@ -37,7 +37,6 @@ TParallelBFSMixin<T, Derived>::TParallelBFSMixin(const AGraph<T>& graph, const T
 	: m_uThreadsNum{std::min(threadsNum, std::jthread::hardware_concurrency())},
 	TBaseBFSMixin<T, Derived>(graph, start, end) {}
 
-
 }
 
 #endif //PARALLELBFS_TPARALLELBFSMIXIN_HPP

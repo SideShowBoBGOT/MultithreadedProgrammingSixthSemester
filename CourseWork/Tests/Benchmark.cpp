@@ -67,7 +67,7 @@ TEST_F(TTestBFSFixture, Test) {
 	constexpr auto totalRepeats = 5u;
 	//const auto sizes = std::vector<unsigned>{2750, 2875, 3000, 3125, 3250, 3500, 3635, 3750, 3875, 4000};
 	const auto sizes = std::vector<unsigned>{100, 200, 300, 400, 500, 600, 700};
-	const auto threadsNums = std::vector<unsigned>{3, 4, 5};
+	const auto threadsNums = std::vector<unsigned>{3, 4, 5, 6, 7, 8, 9};
 	for(const auto size : sizes) {
 		const auto grid = Create2DGrid(size);
 		const auto lastIndex = GetLastIndex(size);
