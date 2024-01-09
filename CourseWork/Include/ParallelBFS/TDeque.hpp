@@ -6,6 +6,8 @@
 
 namespace bfs {
 
+// I do not like TDeque. It does its work, but needs refactoring.
+
 template<typename T>
 class TDequeIterator {
 	public:

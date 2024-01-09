@@ -53,6 +53,7 @@ TBaseBFSMixin<T, Derived>::TBaseBFSMixin(const AGraph<T>& graph, const T& start,
 
 template<CBFSUsable T, typename Derived>
 std::optional<std::vector<T>> TBaseBFSMixin<T, Derived>::Execute() {
+	if(m_refStart == m_refEnd) return {m_refStart, m_refEnd};
 	const auto result = self()->PredecessorNodesImpl();
 	if(not result) return std::nullopt;
 	return DeterminePath(result.value());

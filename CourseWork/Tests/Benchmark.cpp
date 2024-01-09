@@ -81,15 +81,15 @@ TEST_F(TTestBFSFixture, Test) {
 				WriteToReport(std::format("{{ name: {}, size: {}, milliseconds: {} }}", "Sequential", size, millis));
 				return millis;
 			}());
-//			for(const auto threadsNum : threadsNums) {
-//				const auto start = std::chrono::system_clock::now();
-//				const auto result = bfs::TSharedBFS<unsigned>::Do(grid, 0, lastIndex, threadsNum);
-//				const auto delay = std::chrono::system_clock::now() - start;
-//				const auto millis = std::chrono::duration_cast<std::chrono::milliseconds>(delay).count();
-//				EXPECT_TRUE(IsPathValid(result.value(), grid));
-//				WriteToReport(std::format("{{ name: {}, size: {}, threadsNum: {}, milliseconds: {}, acceleration: {} }}",
-//					"Shared", size, threadsNum, millis, sequentialMillis / static_cast<double>(millis)));
-//			}
+			for(const auto threadsNum : threadsNums) {
+				const auto start = std::chrono::system_clock::now();
+				const auto result = bfs::TSharedBFS<unsigned>::Do(grid, 0, lastIndex, threadsNum);
+				const auto delay = std::chrono::system_clock::now() - start;
+				const auto millis = std::chrono::duration_cast<std::chrono::milliseconds>(delay).count();
+				EXPECT_TRUE(IsPathValid(result.value(), grid));
+				WriteToReport(std::format("{{ name: {}, size: {}, threadsNum: {}, milliseconds: {}, acceleration: {} }}",
+					"Shared", size, threadsNum, millis, sequentialMillis / static_cast<double>(millis)));
+			}
 			for(const auto threadsNum : threadsNums) {
 				const auto start = std::chrono::system_clock::now();
 				const auto result = bfs::TCommunicationBFS<unsigned>::Do(grid, 0, lastIndex, threadsNum);
