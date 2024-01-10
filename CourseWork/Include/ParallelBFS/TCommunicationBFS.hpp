@@ -112,8 +112,8 @@ std::optional<typename TCommunicationBFS<T>::AVisitorMap> TCommunicationBFS<T>::
 	auto senders = std::vector<TPipeWriter<AParentMessage>>();
 	auto listeners = std::vector<TPipeReader<AChildrenMessage>>();
 	for(auto i = 0u; i < this->m_uThreadsNum; ++i) {
-		auto [parentSender, parentListener] = TPipeChannel<AParentMessage>::New();
-		auto [childrenSender, childrenListener] = TPipeChannel<AChildrenMessage>::New();
+		auto [parentSender, parentListener] = TPipeChannel<AParentMessage>();
+		auto [childrenSender, childrenListener] = TPipeChannel<AChildrenMessage>();
 		senders.push_back(std::move(parentSender));
 		listeners.push_back(std::move(childrenListener));
 		threads.emplace_back(TCommunicationTask(this->m_refGraph, this->m_refEnd,

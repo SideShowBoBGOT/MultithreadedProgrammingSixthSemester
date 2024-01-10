@@ -21,17 +21,22 @@ class TPipeReader {
 
 	public:
 	~TPipeReader();
+
 	TPipeReader(TPipeReader&& other) noexcept;
+
 	TPipeReader& operator=(TPipeReader&& other);
 
 	public:
 	T Read() const;
 
 	protected:
-	TPipeReader()=default;
+	TPipeReader() = default;
+
 	TPipeReader(const std::shared_ptr<std::pair<T, std::atomic_flag>>& data);
-	TPipeReader(const TPipeReader&)=delete;
-	TPipeReader& operator=(const TPipeReader&)=delete;
+
+	TPipeReader(const TPipeReader&) = delete;
+
+	TPipeReader& operator=(const TPipeReader&) = delete;
 
 	protected:
 	std::shared_ptr<std::pair<T, std::atomic_flag>> m_pData = nullptr;
@@ -39,14 +44,17 @@ class TPipeReader {
 
 template<std::semiregular T>
 TPipeReader<T>::TPipeReader(const std::shared_ptr<std::pair<T, std::atomic_flag>>& data)
-	: m_pData{data} {}
+	: m_pData{data} {
+}
 
 template<std::semiregular T>
-TPipeReader<T>::~TPipeReader() {}
+TPipeReader<T>::~TPipeReader() {
+}
 
 template<std::semiregular T>
 TPipeReader<T>::TPipeReader(TPipeReader&& other) noexcept
-	: m_pData{std::move(other.m_pData)} {}
+	: m_pData{std::move(other.m_pData)} {
+}
 
 template<std::semiregular T>
 TPipeReader<T>& TPipeReader<T>::operator=(TPipeReader&& other) {
@@ -69,17 +77,22 @@ class TPipeWriter {
 
 	public:
 	~TPipeWriter();
+
 	TPipeWriter(TPipeWriter&& other) noexcept;
+
 	TPipeWriter& operator=(TPipeWriter&& other);
 
 	public:
 	void Write(T&& value) const;
 
 	protected:
-	TPipeWriter()=default;
+	TPipeWriter() = default;
+
 	TPipeWriter(const std::shared_ptr<std::pair<T, std::atomic_flag>>& data);
-	TPipeWriter(const TPipeWriter&)=delete;
-	TPipeWriter operator=(const TPipeWriter&)=delete;
+
+	TPipeWriter(const TPipeWriter&) = delete;
+
+	TPipeWriter operator=(const TPipeWriter&) = delete;
 
 	protected:
 	std::shared_ptr<std::pair<T, std::atomic_flag>> m_pData = nullptr;
@@ -87,14 +100,17 @@ class TPipeWriter {
 
 template<std::semiregular T>
 TPipeWriter<T>::TPipeWriter(const std::shared_ptr<std::pair<T, std::atomic_flag>>& data)
-	: m_pData{data} {}
+	: m_pData{data} {
+}
 
 template<std::semiregular T>
-TPipeWriter<T>::~TPipeWriter() {}
+TPipeWriter<T>::~TPipeWriter() {
+}
 
 template<std::semiregular T>
 TPipeWriter<T>::TPipeWriter(TPipeWriter&& other) noexcept
-	: m_pData{std::move(other.m_pData)} {}
+	: m_pData{std::move(other.m_pData)} {
+}
 
 template<std::semiregular T>
 TPipeWriter<T>& TPipeWriter<T>::operator=(TPipeWriter&& other) {
@@ -113,26 +129,19 @@ void TPipeWriter<T>::Write(T&& value) const {
 template<std::semiregular T>
 class TPipeChannel {
 	public:
-	static TPipeChannel New();
+	TPipeChannel();
 
 	public:
 	TPipeWriter<T> Writer;
 	TPipeReader<T> Reader;
-
-	protected:
-	TPipeChannel()=default;
-	TPipeChannel(TPipeWriter<T>&& writer, TPipeReader<T>&& reader);
 };
 
 template<std::semiregular T>
-TPipeChannel<T> TPipeChannel<T>::New() {
-	const auto data = std::make_shared<std::pair<T, std::atomic_flag>>();
-	return TPipeChannel<T>(TPipeWriter(data), TPipeReader(data));
+TPipeChannel<T>::TPipeChannel() {
+	auto data = std::make_shared<std::pair<T, std::atomic_flag>>();
+	Writer = TPipeWriter(data);
+	Reader = TPipeReader(std::move(data));
 }
-
-template<std::semiregular T>
-TPipeChannel<T>::TPipeChannel(TPipeWriter<T>&& writer, TPipeReader<T>&& reader)
-	: Writer{std::move(writer)}, Reader{std::move(reader)} {}
 
 }
 
