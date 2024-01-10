@@ -10,7 +10,8 @@ namespace bfs {
 template<CBFSUsable T, typename Derived>
 class TParallelBFSMixin : public TBaseBFSMixin<T, Derived> {
 	protected:
-	TParallelBFSMixin(const AGraph<T>& graph, const T& start, const T& end, const unsigned threadsNum);
+	TParallelBFSMixin(const AGraph<T>& graph, const T& start,
+		const T& end, const unsigned threadsNum);
 
 	protected:
 	using AVisitorMap = std::unordered_map<T, std::pair<std::atomic_flag, T>>;
@@ -23,17 +24,20 @@ class TParallelBFSMixin : public TBaseBFSMixin<T, Derived> {
 };
 
 template<CBFSUsable T, typename Derived>
-std::unordered_map<T, std::pair<std::atomic_flag, T>> TParallelBFSMixin<T, Derived>::CreateVisitorMap() const {
+std::unordered_map<T, std::pair<std::atomic_flag, T>>
+    TParallelBFSMixin<T, Derived>::CreateVisitorMap() const {
 	auto visitorMap = std::unordered_map<T, std::pair<std::atomic_flag, T>>();
 	visitorMap.reserve(this->m_refGraph.size());
 	for(const auto& [key, _] : this->m_refGraph) {
-		visitorMap.emplace(std::piecewise_construct, std::forward_as_tuple(key), std::forward_as_tuple());
+		visitorMap.emplace(std::piecewise_construct,
+			std::forward_as_tuple(key), std::forward_as_tuple());
 	}
 	return visitorMap;
 }
 
 template<CBFSUsable T, typename Derived>
-TParallelBFSMixin<T, Derived>::TParallelBFSMixin(const AGraph<T>& graph, const T& start, const T& end, const unsigned threadsNum)
+TParallelBFSMixin<T, Derived>::TParallelBFSMixin(const AGraph<T>& graph, const T& start,
+	const T& end, const unsigned threadsNum)
 	: m_uThreadsNum{std::min(threadsNum, std::jthread::hardware_concurrency())},
 	TBaseBFSMixin<T, Derived>(graph, start, end) {}
 

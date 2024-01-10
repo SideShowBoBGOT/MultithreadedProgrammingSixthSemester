@@ -11,7 +11,7 @@ def main() -> None:
     shared = data[data.name == 'Shared'][['size', 'threadsNum', 'milliseconds', 'acceleration']].groupby(['size', 'threadsNum']).mean()
     communication = data[data.name == 'Communication'][['size', 'threadsNum', 'milliseconds', 'acceleration']].groupby(['size', 'threadsNum']).mean()
     os.environ["XDG_SESSION_TYPE"] = "xcb"
-    sequential.plot().get_figure().savefig("Sequential.png")
+    communication.plot().get_figure().savefig("Sequential.png")
     print(sequential)
 
 if __name__ == '__main__':

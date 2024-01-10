@@ -18,7 +18,7 @@ class TAtomicQueue {
 	std::optional<T> Pop();
 
 	protected:
-	mutable std::atomic_flag m_xFlag;
+	std::atomic_flag m_xFlag;
 	std::queue<T> m_qQueue;
 };
 
@@ -32,7 +32,6 @@ void TAtomicQueue<T>::Push(U&& value) {
 
 template<typename T>
 std::optional<T> TAtomicQueue<T>::Pop() {
-	// Atomic flag should work based on RAII, but I am lazy
 	while(m_xFlag.test_and_set());
 	if(m_qQueue.empty()) {
 		m_xFlag.clear();
