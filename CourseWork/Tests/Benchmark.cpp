@@ -15,8 +15,9 @@ class TTestBFSFixture : public ::testing::Test {
 	static void WriteToReport(const std::string& str);
 };
 
-std::unordered_map<unsigned, std::vector<unsigned>> TTestBFSFixture::Create2DGrid(const unsigned int size) {
-	auto grid = std::unordered_map<unsigned , std::vector<unsigned>>();
+std::unordered_map<unsigned, std::vector<unsigned>>
+TTestBFSFixture::Create2DGrid(const unsigned int size) {
+	auto grid = std::unordered_map<unsigned, std::vector<unsigned>>();
 	const auto totalSize = size * size;
 	grid.reserve(totalSize);
 	for(auto index = 0u; index < totalSize; ++index) {
@@ -26,12 +27,12 @@ std::unordered_map<unsigned, std::vector<unsigned>> TTestBFSFixture::Create2DGri
 		auto neighbourIndexes = std::vector<unsigned>();
 		for(auto deltaY = -1; deltaY <= 1; ++deltaY) {
 			const auto newY = y + deltaY;
-			if(newY < 0 || newY > utmost) continue;
+			if(newY < 0 or newY > utmost) continue;
 			const auto base = static_cast<unsigned>(newY) * size;
 			for(auto deltaX = -1; deltaX <= 1; ++deltaX) {
 				if(deltaY == 0 && deltaX == 0) continue;
 				const auto newX = x + deltaX;
-				if(newX < 0 || newX > utmost) continue;
+				if(newX < 0 or newX > utmost) continue;
 				const auto offset = static_cast<unsigned>(newX);
 				neighbourIndexes.push_back(base + offset);
 			}
@@ -41,7 +42,9 @@ std::unordered_map<unsigned, std::vector<unsigned>> TTestBFSFixture::Create2DGri
 	return grid;
 }
 
-bool TTestBFSFixture::IsPathValid(const std::vector<unsigned int>& path, const bfs::AGraph<unsigned int>& graph) {
+bool TTestBFSFixture::IsPathValid(
+	const std::vector<unsigned int>& path,
+	const bfs::AGraph<unsigned int>& graph) {
 	for(const auto& [start, end] : path | std::views::pairwise) {
 		const auto it = graph.find(start);
 		if(it == graph.end()) {

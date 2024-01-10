@@ -9,7 +9,9 @@
 namespace bfs {
 
 template<typename T>
-concept CBFSUsable = std::semiregular<T> and requires(T value) { {std::hash<T>{}(value)} -> std::same_as<std::size_t>; };
+concept CBFSUsable = std::regular<T> and requires(T value) {
+		{std::hash<T>{}(value)} -> std::same_as<std::size_t>;
+	};
 
 template<CBFSUsable T>
 using AGraph = std::unordered_map<T, std::vector<T>>;
@@ -71,7 +73,8 @@ Derived* TBaseBFSMixin<T, Derived>::self() {
 
 template<CBFSUsable T, typename Derived>
 template<typename ValueType>
-std::vector<T> TBaseBFSMixin<T, Derived>::DeterminePath(const std::unordered_map<T, ValueType>& predecessorNodes) const {
+std::vector<T> TBaseBFSMixin<T, Derived>::DeterminePath(
+	const std::unordered_map<T, ValueType>& predecessorNodes) const {
 	auto path = std::vector<T>{this->m_refEnd};
 	auto currentNode = path.front();
 	while(currentNode != this->m_refStart) {

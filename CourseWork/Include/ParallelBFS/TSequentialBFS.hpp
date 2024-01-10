@@ -27,7 +27,8 @@ TSequentialBFS<T>::TSequentialBFS(const AGraph<T>& graph, const T& start, const 
 	: TBaseBFSMixin<T, TSequentialBFS>(graph, start, end) {}
 
 template<CBFSUsable T>
-std::optional<typename TSequentialBFS<T>::AVisitorMap> TSequentialBFS<T>::PredecessorNodesImpl() const {
+std::optional<typename TSequentialBFS<T>::AVisitorMap>
+    TSequentialBFS<T>::PredecessorNodesImpl() const {
 	auto queue = std::queue<T>({this->m_refStart});
 	auto visitorMap = CreateVisitorMap();
 	auto isFoundEndNode = false;
