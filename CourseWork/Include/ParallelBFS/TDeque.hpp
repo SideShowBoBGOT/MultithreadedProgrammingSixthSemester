@@ -14,7 +14,8 @@ class TDeque {
 	public:
 	void Push(std::vector<T>&& value);
 	std::size_t Size() const noexcept;
-	void Loop(const size_t begin, const size_t end, const std::function<void(const T& el)>& func) const;
+	void Loop(const size_t begin, const size_t end,
+		const std::function<void(const T& el)>& func) const;
 
 	protected:
 	std::vector<std::vector<T>> m_vData;
@@ -35,7 +36,8 @@ std::size_t TDeque<T>::Size() const noexcept {
 }
 
 template<typename T>
-void TDeque<T>::Loop(const size_t begin, const size_t end, const std::function<void(const T&)>& func) const {
+void TDeque<T>::Loop(const size_t begin, const size_t end,
+	const std::function<void(const T&)>& func) const {
 	if(begin == end) return;
 	auto vectorIt = m_vData.begin();
 	auto elIt = m_vData.begin()->begin();

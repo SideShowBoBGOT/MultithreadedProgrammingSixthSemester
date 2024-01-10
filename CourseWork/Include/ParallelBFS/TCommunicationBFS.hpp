@@ -77,20 +77,10 @@ class TCommunicationBFS : public TParallelBFSMixin<T, TCommunicationBFS<T>> {
 		ACommunicationResult Communicate();
 
 		protected:
-		struct SContinueSeeking {};
-
-		using AListenResult = std::variant<
-			typename NMessage::SEndNodeFound,
-			typename NMessage::SAllNodesEnqueued,
-			SContinueSeeking>;
-
-		protected:
 		void SendTasks();
 
 		template<typename MessageType>
 		MessageType SendMessageToAll();
-
-		AListenResult ListenResults();
 
 		protected:
 		const size_t m_uGraphSize;
@@ -182,17 +172,25 @@ TCommunicationBFS<T>::TCommunicationCenter::ACommunicationResult
 TCommunicationBFS<T>::TCommunicationCenter::Communicate() {
 	while(true) {
 		SendTasks();
-		const auto result = ListenResults();
-		switch(result.index()) {
-			case VariantIndex<AListenResult, typename NMessage::SEndNodeFound>(): {
-				return typename NMessage::SEndNodeFound();
+		auto newDeque = TDeque<T>();
+		for(auto& l : m_vListeners) {
+			auto message = l.Read();
+			switch(message.index()) {
+				case VariantIndex<AChildrenMessage, typename NMessage::SEndNodeFound>(): {
+					return SendMessageToAll<typename NMessage::SEndNodeFound>();
+				}
+				case VariantIndex<AChildrenMessage, typename NMessage::SFrontier>(): {
+					auto frontier = std::get<typename NMessage::SFrontier>(message);
+					m_uTotalEnqueuedNum += frontier.Data.size();
+					if(not frontier.Data.empty()) {
+						newDeque.Push(std::move(frontier.Data));
+					}
+				}
 			}
-			case VariantIndex<AListenResult, typename NMessage::SAllNodesEnqueued>(): {
-				return typename NMessage::SAllNodesEnqueued();
-			}
-			case VariantIndex<AListenResult, SContinueSeeking>(): {
-				break;
-			}
+		}
+		m_vDeque = std::move(newDeque);
+		if(m_uTotalEnqueuedNum >= m_uGraphSize) {
+			return SendMessageToAll<typename NMessage::SAllNodesEnqueued>();
 		}
 	}
 	return typename NMessage::SAllNodesEnqueued{};
@@ -229,31 +227,6 @@ MessageType TCommunicationBFS<T>::TCommunicationCenter::SendMessageToAll() {
 		s.Write(message);
 	}
 	return message;
-}
-
-template<CBFSUsable T>
-TCommunicationBFS<T>::TCommunicationCenter::AListenResult TCommunicationBFS<T>::TCommunicationCenter::ListenResults() {
-	auto newDeque = TDeque<T>();
-	for(auto& l : m_vListeners) {
-		auto message = l.Read();
-		switch(message.index()) {
-			case VariantIndex<AChildrenMessage, typename NMessage::SEndNodeFound>(): {
-				return SendMessageToAll<typename NMessage::SEndNodeFound>();
-			}
-			case VariantIndex<AChildrenMessage, typename NMessage::SFrontier>(): {
-				auto frontier = std::get<typename NMessage::SFrontier>(message);
-				m_uTotalEnqueuedNum += frontier.Data.size();
-				if(not frontier.Data.empty()) {
-					newDeque.Push(std::move(frontier.Data));
-				}
-			}
-		}
-	}
-	m_vDeque = std::move(newDeque);
-	if(m_uTotalEnqueuedNum >= m_uGraphSize) {
-		return SendMessageToAll<typename NMessage::SAllNodesEnqueued>();
-	}
-	return SContinueSeeking{};
 }
 
 }

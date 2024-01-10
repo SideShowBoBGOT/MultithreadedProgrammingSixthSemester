@@ -6,63 +6,57 @@
 
 namespace bfs {
 
-template<std::semiregular T>
+template<typename T>
+concept CPipeUsable = std::default_initializable<T> and std::movable<T>;
+
+template<CPipeUsable T>
 class TPipeReader;
 
-template<std::semiregular T>
+template<CPipeUsable T>
 class TPipeWriter;
 
-template<std::semiregular T>
+template<CPipeUsable T>
 class TPipeChannel;
 
-template<std::semiregular T>
+template<CPipeUsable T>
 class TPipeReader {
 	friend class TPipeChannel<T>;
 
 	public:
-	~TPipeReader();
-
+	~TPipeReader()=default;
 	TPipeReader(TPipeReader&& other) noexcept;
-
-	TPipeReader& operator=(TPipeReader&& other);
+	TPipeReader& operator=(TPipeReader&& other) noexcept;
 
 	public:
 	T Read() const;
 
 	protected:
 	TPipeReader() = default;
-
 	TPipeReader(const std::shared_ptr<std::pair<T, std::atomic_flag>>& data);
-
 	TPipeReader(const TPipeReader&) = delete;
-
 	TPipeReader& operator=(const TPipeReader&) = delete;
 
 	protected:
 	std::shared_ptr<std::pair<T, std::atomic_flag>> m_pData = nullptr;
 };
 
-template<std::semiregular T>
+template<CPipeUsable T>
 TPipeReader<T>::TPipeReader(const std::shared_ptr<std::pair<T, std::atomic_flag>>& data)
 	: m_pData{data} {
 }
 
-template<std::semiregular T>
-TPipeReader<T>::~TPipeReader() {
-}
-
-template<std::semiregular T>
+template<CPipeUsable T>
 TPipeReader<T>::TPipeReader(TPipeReader&& other) noexcept
 	: m_pData{std::move(other.m_pData)} {
 }
 
-template<std::semiregular T>
-TPipeReader<T>& TPipeReader<T>::operator=(TPipeReader&& other) {
-	*this = std::move(other);
+template<CPipeUsable T>
+TPipeReader<T>& TPipeReader<T>::operator=(TPipeReader&& other) noexcept {
+	this->m_pData = std::move(other.m_pData);
 	return *this;
 }
 
-template<std::semiregular T>
+template<CPipeUsable T>
 T TPipeReader<T>::Read() const {
 	m_pData->second.wait(false);
 	auto inner = std::move(m_pData->first);
@@ -71,54 +65,45 @@ T TPipeReader<T>::Read() const {
 	return inner;
 }
 
-template<std::semiregular T>
+template<CPipeUsable T>
 class TPipeWriter {
 	friend class TPipeChannel<T>;
 
 	public:
-	~TPipeWriter();
-
+	~TPipeWriter()=default;
 	TPipeWriter(TPipeWriter&& other) noexcept;
-
-	TPipeWriter& operator=(TPipeWriter&& other);
+	TPipeWriter& operator=(TPipeWriter&& other) noexcept;
 
 	public:
 	void Write(T&& value) const;
 
 	protected:
 	TPipeWriter() = default;
-
 	TPipeWriter(const std::shared_ptr<std::pair<T, std::atomic_flag>>& data);
-
 	TPipeWriter(const TPipeWriter&) = delete;
-
 	TPipeWriter operator=(const TPipeWriter&) = delete;
 
 	protected:
 	std::shared_ptr<std::pair<T, std::atomic_flag>> m_pData = nullptr;
 };
 
-template<std::semiregular T>
+template<CPipeUsable T>
 TPipeWriter<T>::TPipeWriter(const std::shared_ptr<std::pair<T, std::atomic_flag>>& data)
 	: m_pData{data} {
 }
 
-template<std::semiregular T>
-TPipeWriter<T>::~TPipeWriter() {
-}
-
-template<std::semiregular T>
+template<CPipeUsable T>
 TPipeWriter<T>::TPipeWriter(TPipeWriter&& other) noexcept
 	: m_pData{std::move(other.m_pData)} {
 }
 
-template<std::semiregular T>
-TPipeWriter<T>& TPipeWriter<T>::operator=(TPipeWriter&& other) {
-	*this = std::move(other);
+template<CPipeUsable T>
+TPipeWriter<T>& TPipeWriter<T>::operator=(TPipeWriter&& other) noexcept {
+	this->m_pData = std::move(other.m_pData);
 	return *this;
 }
 
-template<std::semiregular T>
+template<CPipeUsable T>
 void TPipeWriter<T>::Write(T&& value) const {
 	m_pData->second.wait(true);
 	m_pData->first = std::move(value);
@@ -126,7 +111,7 @@ void TPipeWriter<T>::Write(T&& value) const {
 	m_pData->second.notify_one();
 }
 
-template<std::semiregular T>
+template<CPipeUsable T>
 class TPipeChannel {
 	public:
 	TPipeChannel();
@@ -136,7 +121,7 @@ class TPipeChannel {
 	TPipeReader<T> Reader;
 };
 
-template<std::semiregular T>
+template<CPipeUsable T>
 TPipeChannel<T>::TPipeChannel() {
 	auto data = std::make_shared<std::pair<T, std::atomic_flag>>();
 	Writer = TPipeWriter(data);
