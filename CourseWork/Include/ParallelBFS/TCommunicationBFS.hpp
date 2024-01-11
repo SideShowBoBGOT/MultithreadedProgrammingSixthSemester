@@ -96,7 +96,8 @@ TCommunicationBFS<T>::TCommunicationBFS(const AGraph<T>& graph, const T& start, 
 	: TParallelBFSMixin<T, TCommunicationBFS>(graph, start, end, threadsNum) {}
 
 template<CBFSUsable T>
-std::optional<typename TCommunicationBFS<T>::AVisitorMap> TCommunicationBFS<T>::PredecessorNodesImpl() const {
+std::optional<typename TCommunicationBFS<T>::AVisitorMap>
+    TCommunicationBFS<T>::PredecessorNodesImpl() const {
 	auto visitorMap = this->CreateVisitorMap();
 	auto threads = std::vector<std::jthread>();
 	auto senders = std::vector<TPipeWriter<AParentMessage>>();
@@ -109,7 +110,9 @@ std::optional<typename TCommunicationBFS<T>::AVisitorMap> TCommunicationBFS<T>::
 		threads.emplace_back(TCommunicationTask(this->m_refGraph, this->m_refEnd,
 			std::move(childrenSender), std::move(parentListener), visitorMap));
 	}
-	auto communicationCenter = TCommunicationCenter(this->m_refGraph.size(), this->m_refStart, std::move(senders), std::move(listeners));
+	auto communicationCenter = TCommunicationCenter(
+		this->m_refGraph.size(), this->m_refStart,
+		std::move(senders), std::move(listeners));
 	const auto communicationResult = communicationCenter.Communicate();
 	if(std::holds_alternative<typename NMessage::SEndNodeFound>(communicationResult)) {
 		return visitorMap;

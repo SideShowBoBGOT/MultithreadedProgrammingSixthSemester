@@ -1,8 +1,8 @@
 #include <thread>
-#include <iostream>
+#include <gtest/gtest.h>
 #include <ParallelBFS/TPipes.hpp>
 
-int main() {
+TEST(Pipes, Transfer) {
 	auto [w, r] = bfs::TPipeChannel<int>();
 
 	auto sender = std::jthread([ww=std::move(w)]() {
@@ -12,6 +12,6 @@ int main() {
 	});
 
 	auto listener = std::jthread([rr=std::move(r)]() {
-		std::cout << rr.Read() << std::endl;
+		EXPECT_EQ(rr.Read(), 10);
 	});
 }

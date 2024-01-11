@@ -1,28 +1,29 @@
 #include <gtest/gtest.h>
 #include <ParallelBFS/TDeque.hpp>
 
-TEST(Deque, Loop) {
-	auto deque = bfs::TDeque<int>();
-	deque.Push({0, 1, 2, 3, 4});
-	deque.Push({5, 6, 7, 8, 9});
-	deque.Push({10, 11, 12, 13, 14});
+class TDequeTest
+	: public testing::TestWithParam<std::array<int, 2>> {
+	protected:
+	static void SetUpTestSuite();
+	static bfs::TDeque<int> s_vDeque;
+};
 
-	{
-		auto begin = 0;
-		deque.Loop(begin, 15, [&begin](const auto& el) {
-			EXPECT_EQ(el, begin);
-			++begin;
-		});
-		EXPECT_EQ(begin, 15);
-	}
+void TDequeTest::SetUpTestSuite() {
+	s_vDeque.Push({0, 1, 2, 3, 4});
+	s_vDeque.Push({5, 6, 7, 8, 9});
+	s_vDeque.Push({10, 11, 12, 13, 14});
+}
 
-	{
-		auto begin = 3;
-		deque.Loop(begin, 12, [&begin](const auto& el) {
-			EXPECT_EQ(el, begin);
-			++begin;
-		});
-		EXPECT_EQ(begin, 12);
-	}
+bfs::TDeque<int> TDequeTest::s_vDeque = bfs::TDeque<int>();
 
+INSTANTIATE_TEST_SUITE_P(Loop, TDequeTest,
+	testing::Values(std::array{0, 15}, std::array{3, 12}));
+
+TEST_P(TDequeTest, Loop) {
+	auto [beginIt, endIt] = GetParam();
+	s_vDeque.Loop(beginIt, endIt, [&beginIt](const auto& el) {
+		EXPECT_EQ(el, beginIt);
+		++beginIt;
+	});
+	EXPECT_EQ(beginIt, endIt);
 }
