@@ -5,16 +5,41 @@ import matplotlib.pyplot as plt
 
 def main() -> None:
     os.chdir('../DocumentationUA')
+
     with open('Benchmark.txt', 'r') as file:
         data = list(map(lambda line: ast.literal_eval(line), file))
+
     data = pd.DataFrame(data)
-    data.milliseconds = data.milliseconds.astype('float64')
+
     sequential = data[data.name == 'Sequential'][['size', 'milliseconds']].groupby(['size']).mean()
     shared = data[data.name == 'Shared'][['size', 'threadsNum', 'milliseconds', 'acceleration']].groupby(['size', 'threadsNum']).mean()
     communication = data[data.name == 'Communication'][['size', 'threadsNum', 'milliseconds', 'acceleration']].groupby(['size', 'threadsNum']).mean()
-    os.environ["XDG_SESSION_TYPE"] = "xcb"
-    communication.plot().get_figure().savefig("Sequential.png")
-    print(communication.to_string())
+
+    rows = 4
+    cols = 2
+
+    for param in ['milliseconds', 'acceleration']:
+        figure, axis = plt.subplots(rows, cols, figsize=(10, 10))
+        for index in range(0, 8):
+            threads_num = index + 2
+            row = int(index / cols)
+            col = index % cols
+            ax = axis[row, col]
+            sizes = sequential.index.values
+            if param == 'milliseconds':
+                ax.plot(sizes, sequential[param].values, label='Послідовний BFS')
+            else:
+                ax.axhline(y=1.2, color='r', linestyle='-', label='Прийнятна межа')
+            for (df, name) in [(shared, 'BFS зі спільною чергою'), (communication, 'BFS з повідомленнями')]:
+                ax.plot(sizes, df[df.index.get_level_values(1) == threads_num][param], label=name)
+            ax.set_title(f'Потоки {threads_num}')
+            ax.set_xlabel('Розмір графа')
+            ax.set_ylabel('Час, мс')
+            ax.set_ylim(ymin=0)
+        handles, labels = axis[0, 0].get_legend_handles_labels()
+        figure.legend(handles, labels, loc='upper center')
+        figure.tight_layout(rect=(0, 0, 1, 0.9))
+        figure.savefig(f"{param}.png")
 
 if __name__ == '__main__':
     main()
