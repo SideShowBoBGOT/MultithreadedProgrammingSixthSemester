@@ -20,3 +20,9 @@ impl<T> AtomicQueue<T> {
         return popped;
     }
 }
+
+impl<T> Default for AtomicQueue<T> {
+    fn default() -> Self {
+        AtomicQueue { queue: Vec::default(), flag: AtomicBool::default() }
+    }
+}
