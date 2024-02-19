@@ -1,3 +1,0 @@
-/home/sideshowbobgot/university/MultithreadedProgrammingSixthSemester/Lab6/cmake-build-release/CMakeFiles/Lab6.dir
-/home/sideshowbobgot/university/MultithreadedProgrammingSixthSemester/Lab6/cmake-build-release/CMakeFiles/edit_cache.dir
-/home/sideshowbobgot/university/MultithreadedProgrammingSixthSemester/Lab6/cmake-build-release/CMakeFiles/rebuild_cache.dir
