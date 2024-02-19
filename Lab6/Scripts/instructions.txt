@@ -1,0 +1,4 @@
+1) install openmpi
+2) bash export_openmpi.sh
+3) cmake -S . -B build
+4) cmake --build build

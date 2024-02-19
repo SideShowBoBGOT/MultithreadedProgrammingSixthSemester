@@ -2,7 +2,7 @@ import matplotlib.pyplot as plt
 import pandas as pd
 
 vals = []
-with open('log.log', 'r') as file:
+with open('../log.log', 'r') as file:
     for line in file.readlines():
         vals.append(line.split('\t'))
 

@@ -14,8 +14,8 @@
 #include <boost/log/sources/severity_logger.hpp>
 #include <boost/log/sources/record_ostream.hpp>
 
-#include "MatrixFactory.h"
-#include "Matrix.h"
+#include <Lab6/MatrixFactory.h>
+#include <Lab6/Matrix.h>
 
 namespace mpi = boost::mpi;
 namespace logging = boost::log;
@@ -26,8 +26,6 @@ static constexpr auto MIN_VAL = 0;
 static constexpr auto MAX_VAL = 1;
 
 static const std::string NUMBER_OF_TASK_LE_ZERO = "Number of tasks is less or equal zero";
-static const std::string MAIN_THREAD_TIME = "Main thread time: ";
-static const std::string MILLIS = "ms";
 
 static const std::string LOG_FILE = "log.log";
 static const std::string LOG_FORMAT = "%Message%";
@@ -37,34 +35,43 @@ static const std::string BLOCKING = "blocking";
 
 static constexpr char TAB = '\t';
 
-void init();
+void init() {
+	logging::add_file_log(
+		LOG_FILE,
+		logging::keywords::open_mode = LOG_OPEN_MODE,
+		logging::keywords::format = LOG_FORMAT
+	);
+	logging::core::get()->set_filter(
+		logging::trivial::severity >= logging::trivial::info
+	);
+}
 
 int main(int argc, char* argv[]) {
 	init();
 
-	auto size = static_cast<unsigned>(std::stoi(argv[1]));
-	auto blockType = std::string(argv[2]);
-	auto isBlocking = blockType == BLOCKING;
+	const auto size = static_cast<unsigned>(std::stoi(argv[1]));
+	const auto blockType = std::string(argv[2]);
+	const auto isBlocking = blockType == BLOCKING;
 
-	auto env = mpi::environment();
+	auto env = mpi::environment(argc, argv);
+
 	auto world = mpi::communicator();
-	
-	auto tasksNum = world.size() - 1;
+
+	const auto tasksNum = world.size() - 1;
 	if(tasksNum <= 0) {
 		throw std::invalid_argument(NUMBER_OF_TASK_LE_ZERO);
 	}
 
-	auto isRowsLess = size < tasksNum;
-	auto workingTasksNum = isRowsLess ? size : tasksNum;
-	auto step = isRowsLess ? 1 : tasksNum;
-	auto rank = world.rank();
+	const auto isRowsLess = size < tasksNum;
+	const auto workingTasksNum = isRowsLess ? size : tasksNum;
+	const auto rank = world.rank();
 
-	if(rank == 0) {		
+	if(rank == 0) {
 		auto factory = MatrixFactory();
 		auto first = factory.GenerateMatrix(size, size, MIN_VAL, MAX_VAL);
 		auto second = factory.GenerateMatrix(size, size, MIN_VAL, MAX_VAL);
 		auto result = Matrix(size, size);
-	
+
 		auto start = std::chrono::high_resolution_clock::now();
 
 		if(isBlocking) {
@@ -93,15 +100,17 @@ int main(int argc, char* argv[]) {
 
 		auto end = std::chrono::high_resolution_clock::now();
 		auto millis = std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count();
-		
+
 		BOOST_LOG_TRIVIAL(info) << blockType << TAB << size
 			<< TAB << world.size() << TAB << millis;
-		
+
 	} else if(rank <= workingTasksNum) {
+		const auto step = isRowsLess ? 1 : tasksNum;
+
 		auto first = Matrix();
 		auto second = Matrix();
 		auto result = Matrix(size, size);
-		
+
 		if(isBlocking) {
 			world.recv(0, FROM_MAIN_THREAD_TAG, first);
 			world.recv(0, FROM_MAIN_THREAD_TAG, second);
@@ -112,9 +121,9 @@ int main(int argc, char* argv[]) {
 			};
 			mpi::wait_all(received.begin(), received.end());
 		}
-		
+
 		auto curRow = rank - 1;
-		
+
         while(curRow < size) {
             for(auto j = 0; j < size; ++j) {
                 auto value = 0.0;
@@ -126,7 +135,7 @@ int main(int argc, char* argv[]) {
             }
             curRow += step;
         }
-		
+
 		if(isBlocking) {
 			world.send(0, FROM_TASK_THREAD_TAG, result);
 		} else {
@@ -135,15 +144,4 @@ int main(int argc, char* argv[]) {
 	}
 
 	return 0;
-}
-
-void init() {
-	logging::add_file_log(
-		LOG_FILE,
-		logging::keywords::open_mode = LOG_OPEN_MODE,
-		logging::keywords::format = LOG_FORMAT
-	);
-    logging::core::get()->set_filter(
-        logging::trivial::severity >= logging::trivial::info
-    );
 }

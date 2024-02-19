@@ -6,4 +6,4 @@ typesBlock = ['blocking', 'nonblocking']
 for s in sizes:
     for t in threads:
         for tb in typesBlock:
-            os.system(f'mpirun -np {t} bin {s} {tb}')
+            os.system(f'mpirun -np {t} ../cmake-build-debug/Lab6 {s} {tb}')

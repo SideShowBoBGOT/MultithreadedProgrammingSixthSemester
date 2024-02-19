@@ -1,25 +1,24 @@
-#include "Matrix.h"
+#include <Lab6/Matrix.h>
 #include <iostream>
 
-static constexpr char COMMA_SYMBOL = ',';
 static constexpr char OPEN_BRACKETS_SYMBOL = '{';
 static constexpr char CLOSING_BRACKETS_SYMBOL = '}';
 static constexpr char SPACE_SYMBOL = ' ';
 
-const std::string Matrix::MATRICES_NOT_THE_SAME_SIZE = "Matrices are not the same size";
+static const std::string MATRICES_NOT_THE_SAME_SIZE = "Matrices are not the same size";
 
-Matrix::Matrix(unsigned int rows, unsigned int cols) {
+Matrix::Matrix(const unsigned int rows, const unsigned int cols) {
 	mat.resize(rows);
 	for(auto& row : mat) {
 		row.assign(cols, 0);
 	}
 }
 
-std::vector<double>& Matrix::operator[](unsigned index) {
+std::vector<double>& Matrix::operator[](const unsigned index) {
 	return mat[index];
 }
 
-const std::vector<double>& Matrix::operator[](unsigned index) const {
+const std::vector<double>& Matrix::operator[](const unsigned index) const {
 	return mat[index];
 }
 

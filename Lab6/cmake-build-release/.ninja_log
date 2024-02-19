@@ -1,0 +1,5 @@
+# ninja log v5
+3	1858	1708343231270640080	CMakeFiles/Lab6.dir/main.cpp.o	28f2d46af95f6cb9
+4	634	1708340441643207084	CMakeFiles/Lab6.dir/Source/Lab6/Matrix.cpp.o	6fba44e091705a70
+1858	1954	1708343231366639382	Lab6	171c63a5dc3ccdfe
+4	667	1708340441675207642	CMakeFiles/Lab6.dir/Source/Lab6/MatrixFactory.cpp.o	3153e750290bdd13

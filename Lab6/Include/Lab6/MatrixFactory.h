@@ -1,19 +1,16 @@
 #ifndef LAB6_MATRIXFACTORY_H
 #define LAB6_MATRIXFACTORY_H
 
-#include <vector>
+#include <Lab6/Matrix.h>
 #include <random>
-
-class Matrix;
 
 class MatrixFactory {
 	public:
 	MatrixFactory()=default;
-	virtual ~MatrixFactory()=default;
-	
+
 	public:
-	virtual Matrix GenerateMatrix(unsigned rows, unsigned cols,
-								  double minVal, double maxVal);
+	Matrix GenerateMatrix(unsigned rows, unsigned cols,
+		double minVal, double maxVal);
 	
 	protected:
 	std::random_device rd;
