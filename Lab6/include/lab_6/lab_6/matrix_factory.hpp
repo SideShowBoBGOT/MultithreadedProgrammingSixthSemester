@@ -1,7 +1,7 @@
 #ifndef LAB6_MATRIXFACTORY_H
 #define LAB6_MATRIXFACTORY_H
 
-#include <Lab6/Matrix.h>
+#include <lab_6/matrix.hpp>
 #include <random>
 
 class MatrixFactory {
@@ -9,13 +9,13 @@ class MatrixFactory {
 	MatrixFactory()=default;
 
 	public:
-	Matrix GenerateMatrix(unsigned rows, unsigned cols,
+	Matrix generate(unsigned rows, unsigned cols,
 		double minVal, double maxVal);
 	
 	protected:
-	std::random_device rd;
-	std::mt19937 rng = std::mt19937(rd());
-	std::uniform_real_distribution<double> uni =
+	std::random_device rd_;
+	std::mt19937 rng_ = std::mt19937(rd_());
+	std::uniform_real_distribution<double> uni_ =
 		std::uniform_real_distribution<double>(0, 1);
 };
 

@@ -1,9 +1,5 @@
-#include <Lab6/Matrix.h>
+#include <lab_6/matrix.hpp>
 #include <iostream>
-
-static constexpr char OPEN_BRACKETS_SYMBOL = '{';
-static constexpr char CLOSING_BRACKETS_SYMBOL = '}';
-static constexpr char SPACE_SYMBOL = ' ';
 
 static const std::string MATRICES_NOT_THE_SAME_SIZE = "Matrices are not the same size";
 
@@ -22,10 +18,6 @@ const std::vector<double>& Matrix::operator[](const unsigned index) const {
 	return mat[index];
 }
 
-const Matrix::InnerMat& Matrix::innerMat() const {
-	return mat;
-}
-
 unsigned Matrix::rows() const {
 	return mat.size();
 }
@@ -35,15 +27,15 @@ unsigned Matrix::cols() const {
 }
 
 std::ostream& operator<<(std::ostream& out, const Matrix& matrix) {
-	out << OPEN_BRACKETS_SYMBOL << SPACE_SYMBOL;
+	out << "{" << " ";
 	for(auto i = 0u; i < matrix.rows(); ++i) {
-		out << OPEN_BRACKETS_SYMBOL << SPACE_SYMBOL;
+		out << "{" << " ";
 		for(auto j = 0u; j < matrix.cols(); ++j) {
-			out << matrix[i][j] << SPACE_SYMBOL;
+			out << matrix[i][j] << " ";
 		}
-		out << CLOSING_BRACKETS_SYMBOL << SPACE_SYMBOL;
+		out << "}" << " ";
 	}
-	out << CLOSING_BRACKETS_SYMBOL << SPACE_SYMBOL;
+	out << "}" << " ";
 	return out;
 }
 
@@ -52,10 +44,29 @@ void Matrix::sum(const Matrix& other) {
 		throw std::invalid_argument(MATRICES_NOT_THE_SAME_SIZE);
 	}
 	
-	const auto& otherInnerMat = other.innerMat();
 	for(auto i = 0u; i < rows(); ++i){
 		for(auto j = 0u; j < cols(); ++j) {
-			mat[i][j] += otherInnerMat[i][j];
+			mat[i][j] += other.mat[i][j];
 		}
 	}
+}
+
+Matrix Matrix::mul(const Matrix& other) const {
+	if(not cols() == other.rows()) {
+		throw std::logic_error("Cols and rows are not equal");
+	}
+
+	auto result = Matrix(rows(), cols());
+
+	for(auto i = 0; i < rows(); ++i) {
+		for(auto j = 0; j < other.cols(); ++j) {
+			auto value = 0.0;
+			for(auto k = 0; k < cols(); ++k) {
+				value += mat[i][k] * other.mat[k][j];
+			}
+			result.mat[i][j] = value;
+		}
+	}
+
+	return result;
 }
