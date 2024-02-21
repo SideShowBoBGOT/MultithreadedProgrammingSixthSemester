@@ -1,3 +1,9 @@
 [submodule "CourseWork/External/googletest"]
 	path = CourseWork/External/googletest
 	url = https://github.com/google/googletest
+[submodule "Lab6/external/CLI11"]
+	path = Lab6/external/CLI11
+	url = https://github.com/CLIUtils/CLI11
+[submodule "Lab6/external/magic_enum"]
+	path = Lab6/external/magic_enum
+	url = https://github.com/Neargye/magic_enum
