@@ -1,7 +1,9 @@
 #include <lab_6/matrix.hpp>
+#include <lab_6/log_error.hpp>
+
 #include <iostream>
 
-static const std::string MATRICES_NOT_THE_SAME_SIZE = "Matrices are not the same size";
+Matrix::Matrix()=default;
 
 Matrix::Matrix(const unsigned int rows, const unsigned int cols) {
 	mat.resize(rows);
@@ -18,50 +20,38 @@ const std::vector<double>& Matrix::operator[](const unsigned index) const {
 	return mat[index];
 }
 
-unsigned Matrix::rows() const {
+unsigned Matrix::get_rows() const {
 	return mat.size();
 }
 
-unsigned Matrix::cols() const {
-	return mat.front().size();
+unsigned Matrix::get_cols() const {
+	return mat.empty() ? 0 : mat.front().size();
 }
 
-std::ostream& operator<<(std::ostream& out, const Matrix& matrix) {
-	out << "{" << " ";
-	for(auto i = 0u; i < matrix.rows(); ++i) {
-		out << "{" << " ";
-		for(auto j = 0u; j < matrix.cols(); ++j) {
-			out << matrix[i][j] << " ";
-		}
-		out << "}" << " ";
+Matrix& Matrix::operator+=(const Matrix& other) {
+	if(get_rows() != other.get_rows() || get_cols() != other.get_cols()) {
+		ERROR("Matrices are not the same size");
 	}
-	out << "}" << " ";
-	return out;
-}
-
-void Matrix::sum(const Matrix& other) {
-	if(rows() != other.rows() || cols() != other.cols()) {
-		throw std::invalid_argument(MATRICES_NOT_THE_SAME_SIZE);
-	}
-	
-	for(auto i = 0u; i < rows(); ++i){
-		for(auto j = 0u; j < cols(); ++j) {
+	for(auto i = 0u; i < get_rows(); ++i){
+		for(auto j = 0u; j < get_cols(); ++j) {
 			mat[i][j] += other.mat[i][j];
 		}
 	}
+	return *this;
 }
 
-Matrix Matrix::mul(const Matrix& other) const {
-	if(not cols() == other.rows()) {
-		throw std::logic_error("Cols and rows are not equal");
+Matrix Matrix::operator*(const Matrix& other) const {
+	if(not get_cols() == other.get_rows()) {
+		ERROR("Number of columns of the first matrix is not"
+		 "the same as number of rows of the second");
 	}
 
-	auto result = Matrix(rows(), cols());
+	auto result = Matrix(get_rows(), get_cols());
 
-	for(auto i = 0; i < rows(); ++i) {
-		for(auto j = 0; j < other.cols(); ++j) {
+	for(auto i = 0; i < get_rows(); ++i) {
+		for(auto j = 0; j < other.get_cols(); ++j) {
 			auto value = 0.0;
-			for(auto k = 0; k < cols(); ++k) {
+			for(auto k = 0; k < get_cols(); ++k) {
 				value += mat[i][k] * other.mat[k][j];
 			}
 			result.mat[i][j] = value;
@@ -69,4 +59,21 @@ Matrix Matrix::mul(const Matrix& other) const {
 	}
 
 	return result;
+}
+
+bool Matrix::operator==(const Matrix& other) const {
+	return mat == other.mat;
+}
+
+std::ostream& operator<<(std::ostream& out, const Matrix& matrix) {
+	out << "{" << " ";
+	for(auto i = 0u; i < matrix.get_rows(); ++i) {
+		out << "{" << " ";
+		for(auto j = 0u; j < matrix.get_cols(); ++j) {
+			out << matrix[i][j] << " ";
+		}
+		out << "}" << " ";
+	}
+	out << "}" << " ";
+	return out;
 }

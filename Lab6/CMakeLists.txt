@@ -25,7 +25,5 @@ target_link_libraries(${PROJECT_NAME}
         boost_thread
         boost_mpi
         boost_serialization
-        boost_log
-        boost_log_setup
         pthread
 )

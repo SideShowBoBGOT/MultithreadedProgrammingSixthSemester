@@ -1,11 +1,11 @@
 #include <lab_6/main_rank.hpp>
 #include <lab_6/child_rank.hpp>
+#include <lab_6/log_error.hpp>
 
 #include <boost/mpi.hpp>
 
 #include <chrono>
 
-static const std::string NUMBER_OF_TASK_LE_ZERO = "Number of tasks is less or equal zero";
 static const std::string BLOCKING = "blocking";
 
 int main(int argc, char* argv[]) {
@@ -16,7 +16,7 @@ int main(int argc, char* argv[]) {
 	const auto world = boost::mpi::communicator();
 	const auto child_procs = world.size() - 1;
 	if(child_procs <= 0) {
-		throw std::invalid_argument(NUMBER_OF_TASK_LE_ZERO);
+		ERROR("Number of tasks is less or equal zero");
 	}
 	const auto tasks_num = std::min(size, static_cast<unsigned>(child_procs));
 	if(world.rank() == 0) {

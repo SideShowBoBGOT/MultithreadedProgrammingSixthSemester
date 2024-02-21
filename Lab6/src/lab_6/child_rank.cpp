@@ -4,23 +4,22 @@
 
 #include <boost/mpi.hpp>
 
+using MatrixPair = std::array<Matrix, 2>;
+
 auto receive_matrices(
 	const boost::mpi::communicator& world,
 	const bool is_blocking
-) -> std::tuple<Matrix, Matrix> {
-	auto first = Matrix();
-	auto second = Matrix();
+) -> MatrixPair {
+	auto matrix_pair = MatrixPair{};
 	if(is_blocking) {
-		world.recv(0, FROM_MAIN_THREAD_TAG, first);
-		world.recv(0, FROM_MAIN_THREAD_TAG, second);
+		world.recv(0, FROM_MAIN_THREAD_TAG, matrix_pair);
 	} else {
-		auto received = std::vector<boost::mpi::request> {
-			world.irecv(0, FROM_MAIN_THREAD_TAG, first),
-			world.irecv(0, FROM_MAIN_THREAD_TAG, second)
+		auto received = std::vector {
+			world.irecv(0, FROM_MAIN_THREAD_TAG, matrix_pair),
 		};
 		boost::mpi::wait_all(received.begin(), received.end());
 	}
-	return std::make_tuple(std::move(first), std::move(second));
+	return matrix_pair;
 }
 
 auto child_rank(
@@ -30,7 +29,7 @@ auto child_rank(
 	const bool is_blocking
 ) -> void {
 	const auto rank = static_cast<unsigned>(world.rank());
-	if(rank <= tasks_num) {
+	if(rank > tasks_num) {
 		return;
 	}
 	const auto [first, second] = receive_matrices(world, is_blocking);
