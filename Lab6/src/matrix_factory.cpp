@@ -5,8 +5,8 @@ auto MatrixFactory::generate(
 	const unsigned cols,
 	const double minVal,
 	const double maxVal
-) -> Matrix {
-	auto matrix = Matrix(rows, cols);
+) -> mpi_mul::Matrix {
+	auto matrix = mpi_mul::Matrix(rows, cols);
 	for(auto i = 0u; i < rows;++i) {
 		for(auto& el : matrix[i]) {
 			el = (maxVal - minVal) * uni_(rng_) + minVal;

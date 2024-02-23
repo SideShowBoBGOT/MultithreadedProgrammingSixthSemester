@@ -1,7 +1,7 @@
 #ifndef LAB6_MATRIXFACTORY_H
 #define LAB6_MATRIXFACTORY_H
 
-#include <lab_6/matrix.hpp>
+#include <mpi_mul/matrix.hpp>
 #include <random>
 
 class MatrixFactory {
@@ -9,7 +9,7 @@ class MatrixFactory {
 	MatrixFactory()=default;
 
 	public:
-	Matrix generate(unsigned rows, unsigned cols,
+	mpi_mul::Matrix generate(unsigned rows, unsigned cols,
 		double minVal, double maxVal);
 	
 	protected:
