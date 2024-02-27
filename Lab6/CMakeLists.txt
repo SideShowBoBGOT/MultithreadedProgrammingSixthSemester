@@ -8,9 +8,10 @@ include_directories(/usr/lib/x86_64-linux-gnu/openmpi/include/openmpi)
 link_directories(/usr/lib/x86_64-linux-gnu/openmpi/lib)
 
 add_executable(${PROJECT_NAME} main.cpp
-    src/matrix_factory.cpp
-    src/cli_app.cpp
+        src/cli_app.cpp
+        src/matrix.cpp
 )
+# target_compile_options(${PROJECT_NAME} PUBLIC -O3 -ffast-math -funroll-loops)
 target_include_directories(${PROJECT_NAME} PRIVATE include)
 
 add_subdirectory(external)
@@ -20,8 +21,15 @@ target_link_libraries(${PROJECT_NAME}
         magic_enum::magic_enum
 )
 
-add_subdirectory(mpi_mul)
 target_link_libraries(${PROJECT_NAME}
-        PRIVATE
-        mpi_mul
+        PUBLIC
+        stdc++
+        m
+        mpi_cxx
+        mpi
+        boost_system
+        boost_thread
+        boost_mpi
+        boost_serialization
+        pthread
 )

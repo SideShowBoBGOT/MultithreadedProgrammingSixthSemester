@@ -21,5 +21,4 @@
 		std::terminate();\
 	} while(false)
 
-
 #endif //ERROR_HPP

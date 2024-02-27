@@ -1,7 +1,7 @@
 #ifndef CLI_HPP
 #define CLI_HPP
 
-#include <mpi_mul/alg_type.hpp>
+#include <lab_6/alg_type.hpp>
 
 #include <CLI/CLI.hpp>
 
@@ -9,8 +9,8 @@ class CliApp : public CLI::App {
 	public:
 	CliApp();
 
-	protected:
-	mpi_mul::AlgorithmType algorithm_type;
+	public:
+	AlgorithmType alg_type;
 	unsigned size;
 };
 
