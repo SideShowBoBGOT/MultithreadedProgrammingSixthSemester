@@ -396,4 +396,3 @@ CliApp::CliApp() : CLI::App("lab_6") {
 		}
 	});
 }
-

@@ -9,6 +9,11 @@ link_directories(/usr/lib/x86_64-linux-gnu/openmpi/lib)
 
 add_executable(${PROJECT_NAME} main.cpp
         src/cli_app.cpp
+        include/lab_6/cli_app.hpp
+        include/lab_6/constants.hpp
+        include/lab_6/log_error.hpp
+        include/lab_6/alg_type.hpp
+        include/lab_6/matrix.hpp
         src/matrix.cpp
 )
 # target_compile_options(${PROJECT_NAME} PUBLIC -O3 -ffast-math -funroll-loops)
