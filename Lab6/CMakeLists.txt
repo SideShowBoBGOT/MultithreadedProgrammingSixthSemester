@@ -16,7 +16,6 @@ add_executable(${PROJECT_NAME} main.cpp
         include/lab_6/matrix.hpp
         src/matrix.cpp
 )
-# target_compile_options(${PROJECT_NAME} PUBLIC -O3 -ffast-math -funroll-loops)
 target_include_directories(${PROJECT_NAME} PRIVATE include)
 
 add_subdirectory(external)
