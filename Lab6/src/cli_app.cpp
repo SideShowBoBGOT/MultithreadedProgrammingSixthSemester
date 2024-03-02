@@ -32,15 +32,15 @@ static const std::string CHILD_SHARED_MEMORY_NAME = "fdogsdniubu43769223ndsosdfi
 static constexpr auto MINIMUM_ALLOC_SIZE = 224 * 2;
 
 static auto get_steps(
-	const unsigned child_rank,
+	const unsigned rank,
 	const unsigned first_rows,
 	const unsigned step_length
 ) -> unsigned {
-	const auto len = static_cast<double>(first_rows - child_rank + 1);
+	const auto len = static_cast<double>(first_rows - rank);
 	return static_cast<unsigned>(std::ceil(len / step_length));
 }
 
-static auto get_child_memory_name(
+static auto get_task_memory_name(
 	const unsigned child_rank
 ) -> std::string {
 	return CHILD_SHARED_MEMORY_NAME + std::to_string(child_rank);
@@ -70,6 +70,37 @@ struct AlgStatistic {
 	std::chrono::system_clock::duration mpi_dur;
 	std::chrono::system_clock::duration single_dur;
 };
+
+static auto calculate_partial_result(
+		const boost::mpi::communicator& world,
+		const unsigned step_length,
+		const MatSizes& sizes,
+		const MatrixSpan& first,
+		const MatrixSpan& second
+	) -> inter::managed_shared_memory::handle_t {
+		const auto rank = static_cast<unsigned>(world.rank());
+		const auto steps = get_steps(rank, sizes.first_rows, step_length);
+		const auto alloc_memory = sizeof(double) * steps * sizes.second_cols;
+		const auto memory_name = get_task_memory_name(rank);
+		inter::shared_memory_object::remove(memory_name.data());
+		auto child_memory = inter::managed_shared_memory(inter::create_only, memory_name.data(), alloc_memory + MINIMUM_ALLOC_SIZE, nullptr);
+		const auto ptr = child_memory.allocate(alloc_memory);
+		const auto child_handle = child_memory.get_handle_from_address(ptr);
+		const auto child_result = MatrixSpan(steps, sizes.second_cols, static_cast<double*>(ptr));
+		for(auto row_index = rank, i = 0u;
+			i < steps; row_index += step_length, ++i) {
+			// LOG_INFO("STEP: " << i);
+			auto row = child_result.get_at(i);
+			for(auto j = 0; j < sizes.second_cols; ++j) {
+				auto value = 0.0;
+				for(auto k = 0; k < sizes.first_cols; ++k) {
+					value += first.get_at(row_index, k) * second.get_at(k, j);
+				}
+				row[j] = value;
+			}
+			}
+		return child_handle;
+}
 
 namespace main_rank {
 
@@ -144,20 +175,43 @@ namespace main_rank {
 	) -> void {
 		switch(alg_type) {
 			case AlgorithmType::Blocking: {
-				for(auto i = 0; i < tasks_num; ++i) {
-					world.send(i + 1, FROM_MAIN_THREAD_TAG, handle);
+				for(auto i = 1; i < tasks_num; ++i) {
+					world.send(i, FROM_MAIN_THREAD_TAG, handle);
 				}
 				break;
 			}
 			case AlgorithmType::NonBlocking: {
 				std::vector<boost::mpi::request> sent;
-				for(auto i = 0; i < tasks_num; ++i) {
-					sent.push_back(world.isend(i + 1, FROM_MAIN_THREAD_TAG, handle));
+				for(auto i = 1; i < tasks_num; ++i) {
+					sent.push_back(world.isend(i, FROM_MAIN_THREAD_TAG, handle));
 				}
 				boost::mpi::wait_all(sent.begin(), sent.end());
 				break;
 			}
 		}
+	}
+
+	static auto parse_result(
+		const unsigned first_rows,
+		const unsigned second_cols,
+		const unsigned step_length,
+		const unsigned task_rank,
+		const inter::managed_shared_memory::handle_t task_handle,
+		std::vector<inter::managed_shared_memory>& tasks_memories,
+		std::vector<SharedMemoryRemover>& tasks_removers,
+		std::vector<std::span<double>>& result
+	) -> void {
+		const auto steps = get_steps(task_rank, first_rows, step_length);
+		auto memory_name = get_task_memory_name(task_rank);
+		auto child_memory = inter::managed_shared_memory(inter::open_only, memory_name.data());
+		tasks_removers.emplace_back(std::move(memory_name));
+		const auto ptr = child_memory.get_address_from_handle(task_handle);
+		const auto partial_result = MatrixSpan(steps, second_cols, static_cast<double*>(ptr));
+		const auto initial_index = task_rank;
+		for(auto i = 0u; i < steps; ++i) {
+			result[initial_index + i * step_length] = partial_result.get_at(i);
+		}
+		tasks_memories.emplace_back(std::move(child_memory));
 	}
 
 	static auto collect_results(
@@ -166,42 +220,37 @@ namespace main_rank {
 		const unsigned tasks_num,
 		const unsigned step_length,
 		const unsigned first_rows,
-		const unsigned second_cols
+		const unsigned second_cols,
+		const inter::managed_shared_memory::handle_t main_task_handle
 	) -> std::tuple<
 		std::vector<inter::managed_shared_memory>,
 		std::vector<SharedMemoryRemover>,
 		RectSpan
 	> {
-		auto child_memories = std::vector<inter::managed_shared_memory>();
-		auto child_removers = std::vector<SharedMemoryRemover>();
-		child_memories.reserve(tasks_num);
-		child_removers.reserve(tasks_num);
+
+		auto tasks_memories = std::vector<inter::managed_shared_memory>();
+		auto tasks_removers = std::vector<SharedMemoryRemover>();
+		tasks_memories.reserve(tasks_num);
+		tasks_removers.reserve(tasks_num);
 		auto result = std::vector<std::span<double>>(first_rows);
-		for(auto child_rank = 1u; child_rank <= tasks_num; ++child_rank) {
+
+		parse_result(first_rows, second_cols, step_length, 0, main_task_handle, tasks_memories, tasks_removers, result);
+
+		for(auto task_rank = 1u; task_rank < tasks_num; ++task_rank) {
 			auto child_handle = inter::managed_shared_memory::handle_t();
 			switch(alg_type) {
 				case AlgorithmType::Blocking: {
-					world.recv(static_cast<int>(child_rank), FROM_TASK_THREAD_TAG, child_handle);
+					world.recv(static_cast<int>(task_rank), FROM_TASK_THREAD_TAG, child_handle);
 					break;
 				}
 				case AlgorithmType::NonBlocking: {
-					world.irecv(static_cast<int>(child_rank), FROM_TASK_THREAD_TAG, child_handle).wait();
+					world.irecv(static_cast<int>(task_rank), FROM_TASK_THREAD_TAG, child_handle).wait();
 					break;
 				}
 			}
-			const auto steps = get_steps(child_rank, first_rows, step_length);
-			auto memory_name = get_child_memory_name(child_rank);
-			auto child_memory = inter::managed_shared_memory(inter::open_only, memory_name.data());
-			child_removers.emplace_back(std::move(memory_name));
-			const auto ptr = child_memory.get_address_from_handle(child_handle);
-			const auto partial_result = MatrixSpan(steps, second_cols, static_cast<double*>(ptr));
-			const auto initial_index = child_rank - 1;
-			for(auto i = 0u; i < steps; ++i) {
-				result[initial_index + i * step_length] = partial_result.get_at(i);
-			}
-			child_memories.emplace_back(std::move(child_memory));
+			parse_result(first_rows, second_cols, step_length, task_rank, child_handle, tasks_memories, tasks_removers, result);
 		}
-		return std::make_tuple(std::move(child_memories), std::move(child_removers), RectSpan{std::move(result)});
+		return std::make_tuple(std::move(tasks_memories), std::move(tasks_removers), RectSpan{std::move(result)});
 	}
 
 	static auto check_results(
@@ -227,6 +276,17 @@ namespace main_rank {
 		}
 	}
 
+	static auto main_calc_partial(
+		const boost::mpi::communicator& world,
+		const unsigned step_length,
+		const MatSizes& sizes,
+		const inter::managed_shared_memory::handle_t main_handle
+	) -> inter::managed_shared_memory::handle_t {
+		const auto main_shared_memory = inter::managed_shared_memory(inter::open_only, MAIN_SHARED_MEMORY_NAME.data());
+		const auto [first, second] = get_main_matrices(main_shared_memory, main_handle, sizes);
+		return calculate_partial_result(world, step_length, sizes, first, second);
+	}
+
 	auto execute(
 		const boost::mpi::communicator& world,
 		const AlgorithmType& alg_type,
@@ -235,12 +295,15 @@ namespace main_rank {
 		const MatSizes& sizes
 	) -> AlgStatistic {
 		const auto guard = main_rank::MainMemoryGuard();
-		const auto [single_stats, handle] = main_rank::init_matrices_and_single_stats(sizes);
+		const auto [single_stats, main_handle] = main_rank::init_matrices_and_single_stats(sizes);
 		const auto mpi_start_time = std::chrono::system_clock::now();
 
-		main_rank::send_info(world, alg_type, tasks_num, handle);
+		main_rank::send_info(world, alg_type, tasks_num, main_handle);
+
+		const auto task_handle = main_calc_partial(world, step_length, sizes, main_handle);
+
 		const auto [child_memories, child_memory_removers, mpi_result] = main_rank::collect_results(
-			world, alg_type, tasks_num, step_length, sizes.first_rows, sizes.second_cols);
+			world, alg_type, tasks_num, step_length, sizes.first_rows, sizes.second_cols, task_handle);
 		// LOG_INFO("RECEIVED RESULTS");
 		const auto mpi_dur = std::chrono::system_clock::now() - mpi_start_time;
 		main_rank::check_results(single_stats.result, mpi_result);
@@ -288,37 +351,6 @@ namespace child_rank {
 		}
 	}
 
-	static auto calculate_partial_result(
-		const boost::mpi::communicator& world,
-		const unsigned step_length,
-		const MatSizes& sizes,
-		const MatrixSpan& first,
-		const MatrixSpan& second
-	) -> inter::managed_shared_memory::handle_t {
-		const auto rank = static_cast<unsigned>(world.rank());
-		const auto steps = get_steps(rank, sizes.first_rows, step_length);
-		const auto alloc_memory = sizeof(double) * steps * sizes.second_cols;
-		const auto memory_name = get_child_memory_name(rank);
-		inter::shared_memory_object::remove(memory_name.data());
-		auto child_memory = inter::managed_shared_memory(inter::create_only, memory_name.data(), alloc_memory + MINIMUM_ALLOC_SIZE, nullptr);
-		const auto ptr = child_memory.allocate(alloc_memory);
-		const auto child_handle = child_memory.get_handle_from_address(ptr);
-		const auto child_result = MatrixSpan(steps, sizes.second_cols, static_cast<double*>(ptr));
-		for(auto row_index = rank - 1, i = 0u;
-			i < steps; row_index += step_length, ++i) {
-			// LOG_INFO("STEP: " << i);
-			auto row = child_result.get_at(i);
-			for(auto j = 0; j < sizes.second_cols; ++j) {
-				auto value = 0.0;
-				for(auto k = 0; k < sizes.first_cols; ++k) {
-					value += first.get_at(row_index, k) * second.get_at(k, j);
-				}
-				row[j] = value;
-			}
-		}
-		return child_handle;
-	}
-
 	static auto execute(
 		const boost::mpi::communicator& world,
 		const AlgorithmType& alg_type,
@@ -334,8 +366,6 @@ namespace child_rank {
 
 }
 
-
-
 auto main_logic(
 	const MatSizes& sizes,
 	const AlgorithmType& alg_type
@@ -349,7 +379,7 @@ auto main_logic(
 	const auto world = boost::mpi::communicator();
 
 	const auto subprocs_num = [&world] {
-		const auto subprocs_num = world.size() - 1;
+		const auto subprocs_num = world.size();
 		if(subprocs_num <= 0) {
 			ERROR("Number of tasks is less or equal zero");
 		}
