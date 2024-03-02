@@ -70,8 +70,16 @@ CliApp::CliApp() : CLI::App("lab_6") {
 			if(not log_file.is_open()) {
 				ERROR("Error opening log file");
 			}
-			log_file << std::format("{}\t{}\t{}\t{}\t{}\t{}\n", statistic.world_size, size,
-			magic_enum::enum_name(alg_type), nano_mpi, nano_single, efficiency);
+			log_file << std::format("{{"
+						   "\"procs\": {}, "
+						   "\"size\": {}, "
+						   "\"type\": \"{}\", "
+						   "\"mpi_nanos\": {}, "
+						   "\"single_nanos\": {}, "
+						   "\"efficiency\": {} "
+						   "}}", statistic.world_size, size,
+			magic_enum::enum_name(alg_type), nano_mpi, nano_single, efficiency)
+			<< std::endl;
 		}
 	});
 }

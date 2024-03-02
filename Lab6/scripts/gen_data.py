@@ -1,7 +1,7 @@
 import os
 
 processes = [2, 3, 4, 5, 6]
-sizes = [i for i in range(250, 2250, 250)]
+sizes = [i for i in range(250, 2500, 250)]
 types_block = ['blocking', 'nonblocking']
 for _ in range(10):
     for t in processes:
