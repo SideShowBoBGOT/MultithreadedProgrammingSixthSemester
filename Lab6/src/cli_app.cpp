@@ -4,7 +4,6 @@
 #include <lab_6/log_error.hpp>
 
 #include <boost/mpi.hpp>
-#include <boost/serialization/utility.hpp>
 #include <boost/interprocess/managed_shared_memory.hpp>
 #include <magic_enum.hpp>
 
@@ -52,29 +51,6 @@ struct MatSizes {
 	unsigned first_cols = 0;
 	unsigned second_rows = 0;
 	unsigned second_cols = 0;
-
-	private:
-	friend class boost::serialization::access;
-	template<class Archive>
-		void serialize(Archive& ar, const unsigned int version) {
-		ar & first_rows;
-		ar & first_cols;
-		ar & second_rows;
-		ar & second_cols;
-	}
-};
-
-struct ChildPayload {
-	MatSizes sizes;
-	long handle = 0;
-
-	private:
-	friend class boost::serialization::access;
-	template<class Archive>
-		void serialize(Archive& ar, const unsigned int version) {
-		ar & sizes;
-		ar & handle;
-	}
 };
 
 static auto get_main_matrices(
@@ -128,7 +104,7 @@ namespace main_rank {
 
 	struct InitStats {
 		SingleStats single_stats;
-		long handle = 0;
+		inter::managed_shared_memory::handle_t handle = 0;
 	};
 
 	static auto init_matrices_and_single_stats(
@@ -158,19 +134,19 @@ namespace main_rank {
 		const boost::mpi::communicator& world,
 		const AlgorithmType& alg_type,
 		const unsigned tasks_num,
-		const ChildPayload& payload
+		const inter::managed_shared_memory::handle_t handle
 	) -> void {
 		switch(alg_type) {
 			case AlgorithmType::Blocking: {
 				for(auto i = 0; i < tasks_num; ++i) {
-					world.send(i + 1, FROM_MAIN_THREAD_TAG, payload);
+					world.send(i + 1, FROM_MAIN_THREAD_TAG, handle);
 				}
 				break;
 			}
 			case AlgorithmType::NonBlocking: {
 				std::vector<boost::mpi::request> sent;
 				for(auto i = 0; i < tasks_num; ++i) {
-					sent.push_back(world.isend(i + 1, FROM_MAIN_THREAD_TAG, payload));
+					sent.push_back(world.isend(i + 1, FROM_MAIN_THREAD_TAG, handle));
 				}
 				boost::mpi::wait_all(sent.begin(), sent.end());
 				break;
@@ -251,8 +227,8 @@ namespace child_rank {
 	static auto read_payload(
 		const boost::mpi::communicator& world,
 		const AlgorithmType& alg_type
-	) -> ChildPayload {
-		auto payload = ChildPayload();
+	) -> inter::managed_shared_memory::handle_t {
+		auto payload = inter::managed_shared_memory::handle_t();
 		switch(alg_type) {
 			case AlgorithmType::Blocking: {
 				world.recv(0, FROM_MAIN_THREAD_TAG, payload);
@@ -289,9 +265,10 @@ namespace child_rank {
 	static auto execute(
 		const boost::mpi::communicator& world,
 		const AlgorithmType& alg_type,
-		const unsigned step_length
+		const unsigned step_length,
+		const MatSizes& sizes
 	) -> void {
-		const auto [sizes, main_handle] = read_payload(world, alg_type);
+		const auto main_handle = read_payload(world, alg_type);
 		const auto main_shared_memory = inter::managed_shared_memory(inter::open_only, MAIN_SHARED_MEMORY_NAME.data());
 		const auto [first, second] = get_main_matrices(main_shared_memory, main_handle, sizes);
 		const auto rank = static_cast<unsigned>(world.rank());
@@ -356,10 +333,10 @@ auto main_logic(
 	const auto rank = world.rank();
 	if(rank == 0) {
 		const auto guard = main_rank::MainMemoryGuard();
-		const auto [single_stats, offset] = main_rank::init_matrices_and_single_stats(sizes);
+		const auto [single_stats, handle] = main_rank::init_matrices_and_single_stats(sizes);
 		const auto mpi_start_time = std::chrono::system_clock::now();
 
-		main_rank::send_info(world, alg_type, tasks_num, {sizes, offset});
+		main_rank::send_info(world, alg_type, tasks_num, handle);
 		const auto [child_memories, child_memory_removers, mpi_result] = main_rank::collect_results(
 			world, alg_type, tasks_num, step_length, sizes.first_rows, sizes.second_cols);
 		// LOG_INFO("RECEIVED RESULTS");
@@ -367,7 +344,7 @@ auto main_logic(
 		main_rank::check_results(single_stats.result, mpi_result);
 		return AlgStatistic{world.size(), mpi_dur, single_stats.duration};
 	} else if(rank <= tasks_num) {
-		child_rank::execute(world, alg_type, step_length);
+		child_rank::execute(world, alg_type, step_length, sizes);
 	}
 	return std::nullopt;
 }
