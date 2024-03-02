@@ -65,6 +65,12 @@ static auto get_main_matrices(
 	return std::make_tuple(first_mat, second_mat);
 }
 
+struct AlgStatistic {
+	int world_size = 0;
+	std::chrono::system_clock::duration mpi_dur;
+	std::chrono::system_clock::duration single_dur;
+};
+
 namespace main_rank {
 
 	struct MainMemoryGuard {
@@ -220,6 +226,26 @@ namespace main_rank {
 			}
 		}
 	}
+
+	auto execute(
+		const boost::mpi::communicator& world,
+		const AlgorithmType& alg_type,
+		const unsigned step_length,
+		const unsigned tasks_num,
+		const MatSizes& sizes
+	) -> AlgStatistic {
+		const auto guard = main_rank::MainMemoryGuard();
+		const auto [single_stats, handle] = main_rank::init_matrices_and_single_stats(sizes);
+		const auto mpi_start_time = std::chrono::system_clock::now();
+
+		main_rank::send_info(world, alg_type, tasks_num, handle);
+		const auto [child_memories, child_memory_removers, mpi_result] = main_rank::collect_results(
+			world, alg_type, tasks_num, step_length, sizes.first_rows, sizes.second_cols);
+		// LOG_INFO("RECEIVED RESULTS");
+		const auto mpi_dur = std::chrono::system_clock::now() - mpi_start_time;
+		main_rank::check_results(single_stats.result, mpi_result);
+		return AlgStatistic{world.size(), mpi_dur, single_stats.duration};
+	}
 }
 
 namespace child_rank {
@@ -297,11 +323,7 @@ namespace child_rank {
 
 }
 
-struct AlgStatistic {
-	int world_size = 0;
-	std::chrono::system_clock::duration mpi_dur;
-	std::chrono::system_clock::duration single_dur;
-};
+
 
 auto main_logic(
 	const MatSizes& sizes,
@@ -332,18 +354,9 @@ auto main_logic(
 
 	const auto rank = world.rank();
 	if(rank == 0) {
-		const auto guard = main_rank::MainMemoryGuard();
-		const auto [single_stats, handle] = main_rank::init_matrices_and_single_stats(sizes);
-		const auto mpi_start_time = std::chrono::system_clock::now();
-
-		main_rank::send_info(world, alg_type, tasks_num, handle);
-		const auto [child_memories, child_memory_removers, mpi_result] = main_rank::collect_results(
-			world, alg_type, tasks_num, step_length, sizes.first_rows, sizes.second_cols);
-		// LOG_INFO("RECEIVED RESULTS");
-		const auto mpi_dur = std::chrono::system_clock::now() - mpi_start_time;
-		main_rank::check_results(single_stats.result, mpi_result);
-		return AlgStatistic{world.size(), mpi_dur, single_stats.duration};
-	} else if(rank <= tasks_num) {
+		return main_rank::execute(world, alg_type, step_length, tasks_num, sizes);
+	}
+	if(rank <= tasks_num) {
 		child_rank::execute(world, alg_type, step_length, sizes);
 	}
 	return std::nullopt;
