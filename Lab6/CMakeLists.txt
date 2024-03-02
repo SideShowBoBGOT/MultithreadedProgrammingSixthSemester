@@ -14,6 +14,7 @@ set(HEADERS
         include/lab_6/alg_type.hpp
         include/lab_6/matrix.hpp
         include/lab_6/common.hpp
+        include/lab_6/mat_sizes.hpp
         include/lab_6/main_rank.hpp
         include/lab_6/child_rank.hpp
 )

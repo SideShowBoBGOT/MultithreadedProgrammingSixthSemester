@@ -1,14 +1,11 @@
 #include <lab_6/cli_app.hpp>
 #include <lab_6/log_error.hpp>
-#include <lab_6/common.hpp>
-
 #include <lab_6/main_rank.hpp>
 #include <lab_6/child_rank.hpp>
+#include <lab_6/mat_sizes.hpp>
 
 #include <boost/mpi.hpp>
 #include <magic_enum.hpp>
-
-namespace inter = boost::interprocess;
 
 static const auto MAPPED_ALG_TYPES = [] {
 	constexpr auto values = magic_enum::enum_values<AlgorithmType>();
@@ -32,13 +29,10 @@ auto main_logic(
 	const auto env = boost::mpi::environment();
 	const auto world = boost::mpi::communicator();
 
-	const auto subprocs_num = [&world] {
-		const auto subprocs_num = world.size();
-		if(subprocs_num <= 0) {
-			ERROR("Number of tasks is less or equal zero");
-		}
-		return static_cast<unsigned>(subprocs_num);
-	}();
+	const auto subprocs_num = static_cast<unsigned>(world.size());
+	if(subprocs_num <= 0) {
+		ERROR("Number of tasks is less or equal zero");
+	}
 
 	const auto [tasks_num, step_length] = [&sizes, &subprocs_num] {
 		const auto is_rows_less = sizes.first_rows < subprocs_num;
