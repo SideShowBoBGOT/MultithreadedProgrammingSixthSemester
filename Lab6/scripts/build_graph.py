@@ -3,6 +3,7 @@ import ast
 import os
 import matplotlib.pyplot as plt
 
+
 def main() -> None:
     with open('log.txt', 'r') as file:
         data = list(map(lambda line: ast.literal_eval(line), file))
@@ -10,35 +11,34 @@ def main() -> None:
     pd.read_csv('log.txt', sep='\t')
     data = pd.DataFrame(data)
 
-    sequential = data[data.name == 'Sequential'][['size', 'milliseconds']].groupby(['size']).mean()
-    shared = data[data.name == 'Shared'][['size', 'threadsNum', 'milliseconds', 'acceleration']].groupby(['size', 'threadsNum']).mean()
-    communication = data[data.name == 'Communication'][['size', 'threadsNum', 'milliseconds', 'acceleration']].groupby(['size', 'threadsNum']).mean()
+    blocking = data[data.alg_type == 'Blocking'][['mat_size', 'procs_num', 'efficiency']].groupby(
+        ['mat_size', 'procs_num']).mean()
+    non_blocking = data[data.alg_type == 'NonBlocking'][['mat_size', 'procs_num', 'efficiency']].groupby(
+        ['mat_size', 'procs_num']).mean()
 
-    rows = 4
+    rows = 2
     cols = 2
 
-    for param in ['milliseconds', 'acceleration']:
-        figure, axis = plt.subplots(rows, cols, figsize=(10, 10))
-        for index in range(0, 8):
-            threads_num = index + 2
-            row = int(index / cols)
-            col = index % cols
-            ax = axis[row, col]
-            sizes = sequential.index.values
-            if param == 'milliseconds':
-                ax.plot(sizes, sequential[param].values, label='Послідовний BFS')
-            else:
-                ax.axhline(y=1.2, color='r', linestyle='-', label='Прийнятна межа')
-            for (df, name) in [(shared, 'BFS зі спільною чергою'), (communication, 'BFS з повідомленнями')]:
-                ax.plot(sizes, df[df.index.get_level_values(1) == threads_num][param], label=name)
-            ax.set_title(f'Потоки {threads_num}')
-            ax.set_xlabel('Розмір графа')
-            ax.set_ylabel('Час, мс')
-            ax.set_ylim(ymin=0)
-        handles, labels = axis[0, 0].get_legend_handles_labels()
-        figure.legend(handles, labels, loc='upper center')
-        figure.tight_layout(rect=(0, 0, 1, 0.9))
-        figure.savefig(f"{param}.png")
+    figure, axis = plt.subplots(rows, cols, figsize=(10, 10))
+    for index in range(0, rows * cols):
+        threads_num = index + 3
+        row = int(index / cols)
+        col = index % cols
+        ax = axis[row, col]
+        ax.axhline(y=1, color='r', linestyle='-', label='Прийнятна межа')
+        for (df, name) in [(blocking, 'Blocking'), (non_blocking, 'NonBlocking')]:
+            dd = df[df.index.get_level_values(1) == threads_num]
+            sizes = dd.index.get_level_values(0).values
+            ax.plot(sizes, dd.values, label=name)
+        ax.set_title(f'Процеси {threads_num}')
+        ax.set_xlabel('Розмір матриці')
+        ax.set_ylabel('Рази')
+        ax.set_ylim(ymin=0)
+    handles, labels = axis[0, 0].get_legend_handles_labels()
+    figure.legend(handles, labels, loc='upper center')
+    #figure.tight_layout(rect=(0, 0, 1, 0.9))
+    figure.savefig(f"efficiency.png")
+
 
 if __name__ == '__main__':
     main()

@@ -71,9 +71,9 @@ CliApp::CliApp() : CLI::App("lab_6") {
 				ERROR("Error opening log file");
 			}
 			log_file << std::format("{{"
-						   "\"procs\": {}, "
-						   "\"size\": {}, "
-						   "\"type\": \"{}\", "
+						   "\"procs_num\": {}, "
+						   "\"mat_size\": {}, "
+						   "\"alg_type\": \"{}\", "
 						   "\"mpi_nanos\": {}, "
 						   "\"single_nanos\": {}, "
 						   "\"efficiency\": {} "
