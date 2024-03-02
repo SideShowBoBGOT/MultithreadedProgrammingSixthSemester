@@ -178,7 +178,7 @@ namespace main_rank {
 		child_removers.reserve(tasks_num);
 		auto result = std::vector<std::span<double>>(first_rows);
 		for(auto child_rank = 1u; child_rank <= tasks_num; ++child_rank) {
-			long child_handle = 0;
+			auto child_handle = inter::managed_shared_memory::handle_t();
 			switch(alg_type) {
 				case AlgorithmType::Blocking: {
 					world.recv(static_cast<int>(child_rank), FROM_TASK_THREAD_TAG, child_handle);
@@ -288,15 +288,13 @@ namespace child_rank {
 		}
 	}
 
-	static auto execute(
+	static auto calculate_partial_result(
 		const boost::mpi::communicator& world,
-		const AlgorithmType& alg_type,
 		const unsigned step_length,
-		const MatSizes& sizes
-	) -> void {
-		const auto main_handle = read_payload(world, alg_type);
-		const auto main_shared_memory = inter::managed_shared_memory(inter::open_only, MAIN_SHARED_MEMORY_NAME.data());
-		const auto [first, second] = get_main_matrices(main_shared_memory, main_handle, sizes);
+		const MatSizes& sizes,
+		const MatrixSpan& first,
+		const MatrixSpan& second
+	) -> inter::managed_shared_memory::handle_t {
 		const auto rank = static_cast<unsigned>(world.rank());
 		const auto steps = get_steps(rank, sizes.first_rows, step_length);
 		const auto alloc_memory = sizeof(double) * steps * sizes.second_cols;
@@ -318,6 +316,19 @@ namespace child_rank {
 				row[j] = value;
 			}
 		}
+		return child_handle;
+	}
+
+	static auto execute(
+		const boost::mpi::communicator& world,
+		const AlgorithmType& alg_type,
+		const unsigned step_length,
+		const MatSizes& sizes
+	) -> void {
+		const auto main_handle = read_payload(world, alg_type);
+		const auto main_shared_memory = inter::managed_shared_memory(inter::open_only, MAIN_SHARED_MEMORY_NAME.data());
+		const auto [first, second] = get_main_matrices(main_shared_memory, main_handle, sizes);
+		const auto child_handle = calculate_partial_result(world, step_length, sizes, first, second);
 		notify_main(world, alg_type, child_handle);
 	}
 
