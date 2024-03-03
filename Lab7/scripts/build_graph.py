@@ -11,9 +11,11 @@ def main() -> None:
     pd.read_csv('log.txt', sep='\t')
     data = pd.DataFrame(data)
 
-    blocking = data[data.alg_type == 'Blocking'][['mat_size', 'procs_num', 'efficiency']].groupby(
+    one_to_many = data[data.alg_type == 'OneToMany'][['mat_size', 'procs_num', 'efficiency']].groupby(
         ['mat_size', 'procs_num']).mean()
-    non_blocking = data[data.alg_type == 'NonBlocking'][['mat_size', 'procs_num', 'efficiency']].groupby(
+    many_to_one = data[data.alg_type == 'ManyToOne'][['mat_size', 'procs_num', 'efficiency']].groupby(
+        ['mat_size', 'procs_num']).mean()
+    many_to_many = data[data.alg_type == 'ManyToMany'][['mat_size', 'procs_num', 'efficiency']].groupby(
         ['mat_size', 'procs_num']).mean()
 
     rows = 2
@@ -26,7 +28,7 @@ def main() -> None:
         col = index % cols
         ax = axis[row, col]
         ax.axhline(y=1, color='r', linestyle='-', label='Прийнятна межа')
-        for (df, name) in [(blocking, 'Blocking'), (non_blocking, 'NonBlocking')]:
+        for (df, name) in [(one_to_many, 'OneToMany'), (many_to_one, 'ManyToOne'), (many_to_many, 'ManyToMany')]:
             dd = df[df.index.get_level_values(1) == threads_num]
             sizes = dd.index.get_level_values(0).values
             ax.plot(sizes, dd.values, label=name)
