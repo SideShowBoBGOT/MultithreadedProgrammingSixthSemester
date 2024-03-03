@@ -1,7 +1,8 @@
-#include <lab_6/child_rank.hpp>
-#include <lab_6/common.hpp>
-#include <lab_6/alg_type.hpp>
-#include <lab_6/constants.hpp>
+#include <lab_7/child_rank.hpp>
+#include <lab_7/common.hpp>
+#include <lab_7/alg_type.hpp>
+#include <lab_7/constants.hpp>
+#include <lab_7/log_error.hpp>
 
 namespace child_rank {
 
@@ -12,7 +13,19 @@ namespace child_rank {
 		auto payload = inter::managed_shared_memory::handle_t();
 		switch(alg_type) {
 			case AlgorithmType::OneToMany: {
-				boost::mpi::broadcast(world, payload, FROM_MAIN_THREAD_TAG);
+				boost::mpi::broadcast(world, payload, MAIN_PROC_RANK);
+				break;
+			}
+			case AlgorithmType::ManyToOne: {
+				for(auto task_rank = 1; task_rank < world.size(); ++task_rank) {
+					if(task_rank == world.rank()) {
+						auto payloads = std::vector<inter::managed_shared_memory::handle_t>();
+						boost::mpi::gather(world, payload, payloads, task_rank);
+						payload = payloads[MAIN_PROC_RANK];
+					} else {
+						boost::mpi::gather(world, payload, task_rank);
+					}
+				}
 				break;
 			}
 		}
@@ -29,6 +42,17 @@ namespace child_rank {
 				for(auto task_rank = 1; task_rank < world.size(); ++task_rank) {
 					auto handle_copy = handle;
 					boost::mpi::broadcast(world, handle_copy, task_rank);
+				}
+				break;
+			}
+			case AlgorithmType::ManyToOne: {
+				for(auto task_rank = 0; task_rank < world.size(); ++task_rank) {
+					if(task_rank == world.rank()) {
+						auto payloads = std::vector<inter::managed_shared_memory::handle_t>();
+						boost::mpi::gather(world, handle, payloads, task_rank);
+					} else {
+						boost::mpi::gather(world, handle, task_rank);
+					}
 				}
 				break;
 			}

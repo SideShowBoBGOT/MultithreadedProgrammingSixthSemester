@@ -1,8 +1,8 @@
-#include <lab_6/cli_app.hpp>
-#include <lab_6/log_error.hpp>
-#include <lab_6/main_rank.hpp>
-#include <lab_6/child_rank.hpp>
-#include <lab_6/mat_sizes.hpp>
+#include <lab_7/cli_app.hpp>
+#include <lab_7/log_error.hpp>
+#include <lab_7/main_rank.hpp>
+#include <lab_7/child_rank.hpp>
+#include <lab_7/mat_sizes.hpp>
 
 #include <boost/mpi.hpp>
 #include <magic_enum.hpp>

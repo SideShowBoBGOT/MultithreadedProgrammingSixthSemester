@@ -1,4 +1,4 @@
-#include <lab_6/cli_app.hpp>
+#include <lab_7/cli_app.hpp>
 
 int main(int argc, char *argv[]) {
 	auto cli = CliApp();

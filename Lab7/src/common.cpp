@@ -1,6 +1,6 @@
-#include <lab_6/common.hpp>
-#include <lab_6/constants.hpp>
-#include <lab_6/mat_sizes.hpp>
+#include <lab_7/common.hpp>
+#include <lab_7/constants.hpp>
+#include <lab_7/mat_sizes.hpp>
 
 namespace common {
 

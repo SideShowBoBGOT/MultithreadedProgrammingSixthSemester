@@ -1,10 +1,10 @@
-#include <lab_6/main_rank.hpp>
-#include <lab_6/matrix.hpp>
-#include <lab_6/common.hpp>
-#include <lab_6/constants.hpp>
-#include <lab_6/log_error.hpp>
-#include <lab_6/alg_type.hpp>
-#include <lab_6/mat_sizes.hpp>
+#include <lab_7/main_rank.hpp>
+#include <lab_7/matrix.hpp>
+#include <lab_7/common.hpp>
+#include <lab_7/constants.hpp>
+#include <lab_7/log_error.hpp>
+#include <lab_7/alg_type.hpp>
+#include <lab_7/mat_sizes.hpp>
 
 #include <boost/interprocess/managed_shared_memory.hpp>
 
@@ -75,7 +75,13 @@ namespace main_rank {
 		switch(alg_type) {
 			case AlgorithmType::OneToMany: {
 				auto handle_copy = handle;
-				boost::mpi::broadcast(world, handle_copy, FROM_MAIN_THREAD_TAG);
+				boost::mpi::broadcast(world, handle_copy, MAIN_PROC_RANK);
+				break;
+			}
+			case AlgorithmType::ManyToOne: {
+				for(auto task_rank = 1; task_rank < world.size(); ++task_rank) {
+					boost::mpi::gather(world, handle, task_rank);
+				}
 				break;
 			}
 		}
@@ -124,14 +130,23 @@ namespace main_rank {
 		tasks_removers.reserve(tasks_num);
 		auto result = std::vector<std::span<double>>(first_rows);
 
-		add_partial_result(first_rows, second_cols, step_length, world.rank(), main_task_handle, tasks_memories, tasks_removers, result);
+		add_partial_result(first_rows, second_cols, step_length, MAIN_PROC_RANK, main_task_handle, tasks_memories, tasks_removers, result);
 
 		switch(alg_type) {
 			case AlgorithmType::OneToMany: {
-				for(auto task_rank = 1u; task_rank < tasks_num; ++task_rank) {
+				for(auto task_rank = 1; task_rank < tasks_num; ++task_rank) {
 					auto child_handle = inter::managed_shared_memory::handle_t();
-					boost::mpi::broadcast(world, child_handle, static_cast<int>(task_rank));
-					add_partial_result(first_rows, second_cols, step_length, task_rank, main_task_handle, tasks_memories, tasks_removers, result);
+					boost::mpi::broadcast(world, child_handle, task_rank);
+					add_partial_result(first_rows, second_cols, step_length, task_rank, child_handle, tasks_memories, tasks_removers, result);
+				}
+				break;
+			}
+			case AlgorithmType::ManyToOne: {
+				auto child_handles = std::vector<inter::managed_shared_memory::handle_t>();
+				boost::mpi::gather(world, main_task_handle, child_handles, MAIN_PROC_RANK);
+				for(auto task_rank = 1; task_rank < tasks_num; ++task_rank) {
+					boost::mpi::gather(world, main_task_handle, task_rank);
+					add_partial_result(first_rows, second_cols, step_length, task_rank, child_handles[task_rank], tasks_memories, tasks_removers, result);
 				}
 				break;
 			}

@@ -1,4 +1,4 @@
-#include <lab_6/matrix.hpp>
+#include <lab_7/matrix.hpp>
 #include <random>
 
 namespace mmat {

@@ -1,7 +1,7 @@
 #ifndef CLI_HPP
 #define CLI_HPP
 
-#include <lab_6/alg_type.hpp>
+#include <lab_7/alg_type.hpp>
 
 #include <CLI/CLI.hpp>
 

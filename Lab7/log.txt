@@ -3,3 +3,10 @@
 {"procs_num": 6, "mat_size": 700, "alg_type": "OneToMany", "mpi_nanos": 222238583, "single_nanos": 331965945, "efficiency": 1.4937367783702977 }
 {"procs_num": 6, "mat_size": 700, "alg_type": "OneToMany", "mpi_nanos": 181178393, "single_nanos": 308997771, "efficiency": 1.7054890811400452 }
 {"procs_num": 6, "mat_size": 700, "alg_type": "OneToMany", "mpi_nanos": 248339944, "single_nanos": 294793413, "efficiency": 1.1870559695382712 }
+{"procs_num": 6, "mat_size": 700, "alg_type": "OneToMany", "mpi_nanos": 178486816, "single_nanos": 320923986, "efficiency": 1.7980262811119898 }
+{"procs_num": 6, "mat_size": 700, "alg_type": "OneToMany", "mpi_nanos": 179633003, "single_nanos": 301294938, "efficiency": 1.67728052734274 }
+{"procs_num": 6, "mat_size": 700, "alg_type": "ManyToOne", "mpi_nanos": 240199254, "single_nanos": 388028073, "efficiency": 1.6154424567863146 }
+{"procs_num": 6, "mat_size": 700, "alg_type": "ManyToOne", "mpi_nanos": 187003417, "single_nanos": 312949256, "efficiency": 1.6734948538400236 }
+{"procs_num": 6, "mat_size": 700, "alg_type": "ManyToOne", "mpi_nanos": 180947334, "single_nanos": 317189290, "efficiency": 1.7529370728391058 }
+{"procs_num": 6, "mat_size": 700, "alg_type": "OneToMany", "mpi_nanos": 181232839, "single_nanos": 321505954, "efficiency": 1.773993917294426 }
+{"procs_num": 6, "mat_size": 700, "alg_type": "ManyToOne", "mpi_nanos": 181546015, "single_nanos": 303297669, "efficiency": 1.6706379867385137 }

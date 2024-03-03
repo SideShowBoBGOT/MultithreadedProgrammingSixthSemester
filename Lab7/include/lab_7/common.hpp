@@ -1,7 +1,7 @@
 #ifndef COMMON_HPP
 #define COMMON_HPP
 
-#include <lab_6/matrix.hpp>
+#include <lab_7/matrix.hpp>
 
 #include <boost/mpi.hpp>
 #include <boost/interprocess/managed_shared_memory.hpp>
