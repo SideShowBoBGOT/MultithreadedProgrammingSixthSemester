@@ -137,19 +137,29 @@ namespace main_rank {
 
 		add_partial_result(first_rows, second_cols, step_length, world.rank(), main_task_handle, tasks_memories, tasks_removers, result);
 
-		for(auto task_rank = 1u; task_rank < tasks_num; ++task_rank) {
-			auto child_handle = inter::managed_shared_memory::handle_t();
-			switch(alg_type) {
-				case AlgorithmType::Blocking: {
+		switch(alg_type) {
+			case AlgorithmType::Blocking: {
+				for(auto task_rank = 1u; task_rank < tasks_num; ++task_rank) {
+					auto child_handle = inter::managed_shared_memory::handle_t();
 					world.recv(static_cast<int>(task_rank), FROM_TASK_THREAD_TAG, child_handle);
-					break;
+					add_partial_result(first_rows, second_cols, step_length, task_rank, child_handle, tasks_memories, tasks_removers, result);
 				}
-				case AlgorithmType::NonBlocking: {
-					world.irecv(static_cast<int>(task_rank), FROM_TASK_THREAD_TAG, child_handle).wait();
-					break;
-				}
+				break;
 			}
-			add_partial_result(first_rows, second_cols, step_length, task_rank, child_handle, tasks_memories, tasks_removers, result);
+			case AlgorithmType::NonBlocking: {
+				auto handles = std::vector<inter::managed_shared_memory::handle_t>(tasks_num);
+				auto receivers = std::vector<boost::mpi::request>(tasks_num);
+				for(auto task_rank = 1u; task_rank < tasks_num; ++task_rank) {
+					const auto index = task_rank - 1;
+					receivers[index] = world.irecv(static_cast<int>(task_rank), FROM_TASK_THREAD_TAG, handles[index]);
+				}
+				boost::mpi::wait_all(receivers.begin(), receivers.end());
+				for(auto task_rank = 1u; task_rank < tasks_num; ++task_rank) {
+					const auto index = task_rank - 1;
+					add_partial_result(first_rows, second_cols, step_length, task_rank, handles[index], tasks_memories, tasks_removers, result);
+				}
+				break;
+			}
 		}
 		return std::make_tuple(std::move(tasks_memories), std::move(tasks_removers), mmat::RectSpan{std::move(result)});
 	}

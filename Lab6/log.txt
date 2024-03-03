@@ -1,3 +1,12 @@
 {"procs": 6, "size": 700, "type": "Blocking", "mpi_nanos": 179529745, "single_nanos": 318185476, "efficiency": 1.7723273433045872 }
 {"procs": 6, "size": 700, "type": "Blocking", "mpi_nanos": 245748744, "single_nanos": 452178306, "efficiency": 1.8400025108571867 }
 {"procs": 6, "size": 700, "type": "Blocking", "mpi_nanos": 195834370, "single_nanos": 306017120, "efficiency": 1.5626323407888003 }
+{"procs_num": 1, "mat_size": 700, "alg_type": "NonBlocking", "mpi_nanos": 1950523950, "single_nanos": 777079962, "efficiency": 0.39839549880943526 }
+{"procs_num": 6, "mat_size": 700, "alg_type": "Blocking", "mpi_nanos": 456890572, "single_nanos": 556828428, "efficiency": 1.2187347739799717 }
+{"procs_num": 6, "mat_size": 700, "alg_type": "NonBlocking", "mpi_nanos": 456093573, "single_nanos": 625281390, "efficiency": 1.370949794111657 }
+{"procs_num": 6, "mat_size": 100, "alg_type": "NonBlocking", "mpi_nanos": 1583314, "single_nanos": 1145107, "efficiency": 0.7232343047557213 }
+{"procs_num": 6, "mat_size": 100, "alg_type": "NonBlocking", "mpi_nanos": 1243470, "single_nanos": 1141500, "efficiency": 0.9179956090617385 }
+{"procs_num": 6, "mat_size": 100, "alg_type": "NonBlocking", "mpi_nanos": 1668143, "single_nanos": 2574143, "efficiency": 1.5431189052737087 }
+{"procs_num": 6, "mat_size": 100, "alg_type": "NonBlocking", "mpi_nanos": 1738393, "single_nanos": 2554055, "efficiency": 1.4692046044824156 }
+{"procs_num": 6, "mat_size": 100, "alg_type": "NonBlocking", "mpi_nanos": 831051, "single_nanos": 1142311, "efficiency": 1.3745377840830466 }
+{"procs_num": 6, "mat_size": 100, "alg_type": "NonBlocking", "mpi_nanos": 1267154, "single_nanos": 1160265, "efficiency": 0.9156464013056029 }
