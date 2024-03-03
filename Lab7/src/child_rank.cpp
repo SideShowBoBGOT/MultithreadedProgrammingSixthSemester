@@ -11,15 +11,8 @@ namespace child_rank {
 	) -> inter::managed_shared_memory::handle_t {
 		auto payload = inter::managed_shared_memory::handle_t();
 		switch(alg_type) {
-			case AlgorithmType::Blocking: {
-				world.recv(0, FROM_MAIN_THREAD_TAG, payload);
-				break;
-			}
-			case AlgorithmType::NonBlocking: {
-				auto received = std::vector {
-					world.irecv(0, FROM_MAIN_THREAD_TAG, payload),
-				};
-				boost::mpi::wait_all(received.begin(), received.end());
+			case AlgorithmType::OneToMany: {
+				boost::mpi::broadcast(world, payload, FROM_MAIN_THREAD_TAG);
 				break;
 			}
 		}
@@ -32,12 +25,11 @@ namespace child_rank {
 		const inter::managed_shared_memory::handle_t handle
 	) -> void {
 		switch(alg_type) {
-			case AlgorithmType::Blocking: {
-				world.send(0, FROM_TASK_THREAD_TAG, handle);
-				break;
-			}
-			case AlgorithmType::NonBlocking: {
-				world.isend(0, FROM_TASK_THREAD_TAG, handle).wait();
+			case AlgorithmType::OneToMany: {
+				for(auto task_rank = 1; task_rank < world.size(); ++task_rank) {
+					auto handle_copy = handle;
+					boost::mpi::broadcast(world, handle_copy, task_rank);
+				}
 				break;
 			}
 		}
@@ -51,8 +43,8 @@ namespace child_rank {
 	) -> void {
 		const auto main_handle = read_main_handle(world, alg_type);
 		const auto main_shared_memory = inter::managed_shared_memory(inter::open_only, MAIN_SHARED_MEMORY_NAME.data());
-		const auto [first, second] = common::get_main_matrices(main_shared_memory, main_handle, sizes);
-		const auto child_handle = common::calculate_partial_result(world, step_length, sizes, first, second);
+		const auto [first, second] = get_main_matrices(main_shared_memory, main_handle, sizes);
+		const auto child_handle = calculate_partial_result(world, step_length, sizes, first, second);
 		send_child_handle(world, alg_type, child_handle);
 	}
 }

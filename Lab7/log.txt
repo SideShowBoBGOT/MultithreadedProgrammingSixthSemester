@@ -1,0 +1,5 @@
+{"procs_num": 6, "mat_size": 100, "alg_type": "OneToMany", "mpi_nanos": 2087569, "single_nanos": 3118474, "efficiency": 1.493830383570555 }
+{"procs_num": 6, "mat_size": 100, "alg_type": "OneToMany", "mpi_nanos": 1595049, "single_nanos": 2074655, "efficiency": 1.3006841796082753 }
+{"procs_num": 6, "mat_size": 700, "alg_type": "OneToMany", "mpi_nanos": 222238583, "single_nanos": 331965945, "efficiency": 1.4937367783702977 }
+{"procs_num": 6, "mat_size": 700, "alg_type": "OneToMany", "mpi_nanos": 181178393, "single_nanos": 308997771, "efficiency": 1.7054890811400452 }
+{"procs_num": 6, "mat_size": 700, "alg_type": "OneToMany", "mpi_nanos": 248339944, "single_nanos": 294793413, "efficiency": 1.1870559695382712 }

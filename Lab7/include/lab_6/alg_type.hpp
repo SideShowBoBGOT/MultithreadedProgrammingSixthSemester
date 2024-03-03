@@ -2,8 +2,9 @@
 #define ALG_TYPE_HPP
 
 enum class AlgorithmType {
-	Blocking,
-	NonBlocking
+	OneToMany,
+	ManyToOne,
+	ManyToMany
 };
 
 #endif //ALG_TYPE_HPP

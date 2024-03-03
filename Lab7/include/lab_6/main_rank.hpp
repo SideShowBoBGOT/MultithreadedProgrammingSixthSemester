@@ -21,7 +21,6 @@ namespace main_rank {
 		const boost::mpi::communicator& world,
 		const AlgorithmType& alg_type,
 		const unsigned step_length,
-		const unsigned tasks_num,
 		const common::MatSizes& sizes
 	) -> AlgStatistic;
 }

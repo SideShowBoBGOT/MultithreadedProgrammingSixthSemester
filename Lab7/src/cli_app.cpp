@@ -42,12 +42,17 @@ auto main_logic(
 	}();
 
 	const auto rank = world.rank();
+	const auto is_valid = rank <= tasks_num;
+	const auto local = world.split(is_valid ? 0 : 1);
+
+	if(not is_valid) {
+		return std::nullopt;
+	}
+
 	if(rank == 0) {
-		return main_rank::execute(world, alg_type, step_length, tasks_num, sizes);
+		return main_rank::execute(local, alg_type, step_length, sizes);
 	}
-	if(rank <= tasks_num) {
-		child_rank::execute(world, alg_type, step_length, sizes);
-	}
+	child_rank::execute(local, alg_type, step_length, sizes);
 	return std::nullopt;
 }
 

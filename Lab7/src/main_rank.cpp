@@ -70,22 +70,12 @@ namespace main_rank {
 	static auto send_main_handle(
 		const boost::mpi::communicator& world,
 		const AlgorithmType& alg_type,
-		const unsigned tasks_num,
 		const inter::managed_shared_memory::handle_t handle
 	) -> void {
 		switch(alg_type) {
-			case AlgorithmType::Blocking: {
-				for(auto i = 1; i < tasks_num; ++i) {
-					world.send(i, FROM_MAIN_THREAD_TAG, handle);
-				}
-				break;
-			}
-			case AlgorithmType::NonBlocking: {
-				std::vector<boost::mpi::request> sent;
-				for(auto i = 1; i < tasks_num; ++i) {
-					sent.push_back(world.isend(i, FROM_MAIN_THREAD_TAG, handle));
-				}
-				boost::mpi::wait_all(sent.begin(), sent.end());
+			case AlgorithmType::OneToMany: {
+				auto handle_copy = handle;
+				boost::mpi::broadcast(world, handle_copy, FROM_MAIN_THREAD_TAG);
 				break;
 			}
 		}
@@ -118,7 +108,6 @@ namespace main_rank {
 	static auto collect_results(
 		const boost::mpi::communicator& world,
 		const AlgorithmType& alg_type,
-		const unsigned tasks_num,
 		const unsigned step_length,
 		const unsigned first_rows,
 		const unsigned second_cols,
@@ -128,7 +117,7 @@ namespace main_rank {
 			std::vector<SharedMemoryRemover>,
 			mmat::RectSpan
 		> {
-
+		const auto tasks_num = world.size();
 		auto tasks_memories = std::vector<inter::managed_shared_memory>();
 		auto tasks_removers = std::vector<SharedMemoryRemover>();
 		tasks_memories.reserve(tasks_num);
@@ -138,25 +127,11 @@ namespace main_rank {
 		add_partial_result(first_rows, second_cols, step_length, world.rank(), main_task_handle, tasks_memories, tasks_removers, result);
 
 		switch(alg_type) {
-			case AlgorithmType::Blocking: {
+			case AlgorithmType::OneToMany: {
 				for(auto task_rank = 1u; task_rank < tasks_num; ++task_rank) {
 					auto child_handle = inter::managed_shared_memory::handle_t();
-					world.recv(static_cast<int>(task_rank), FROM_TASK_THREAD_TAG, child_handle);
-					add_partial_result(first_rows, second_cols, step_length, task_rank, child_handle, tasks_memories, tasks_removers, result);
-				}
-				break;
-			}
-			case AlgorithmType::NonBlocking: {
-				auto handles = std::vector<inter::managed_shared_memory::handle_t>(tasks_num);
-				auto receivers = std::vector<boost::mpi::request>(tasks_num);
-				for(auto task_rank = 1u; task_rank < tasks_num; ++task_rank) {
-					const auto index = task_rank - 1;
-					receivers[index] = world.irecv(static_cast<int>(task_rank), FROM_TASK_THREAD_TAG, handles[index]);
-				}
-				boost::mpi::wait_all(receivers.begin(), receivers.end());
-				for(auto task_rank = 1u; task_rank < tasks_num; ++task_rank) {
-					const auto index = task_rank - 1;
-					add_partial_result(first_rows, second_cols, step_length, task_rank, handles[index], tasks_memories, tasks_removers, result);
+					boost::mpi::broadcast(world, child_handle, static_cast<int>(task_rank));
+					add_partial_result(first_rows, second_cols, step_length, task_rank, main_task_handle, tasks_memories, tasks_removers, result);
 				}
 				break;
 			}
@@ -189,7 +164,6 @@ namespace main_rank {
 		const boost::mpi::communicator& world,
 		const AlgorithmType& alg_type,
 		const unsigned step_length,
-		const unsigned tasks_num,
 		const common::MatSizes& sizes
 	) -> AlgStatistic {
 
@@ -200,10 +174,10 @@ namespace main_rank {
 
 		const auto mpi_start_time = std::chrono::system_clock::now();
 
-		send_main_handle(world, alg_type, tasks_num, main_handle);
+		send_main_handle(world, alg_type, main_handle);
 		const auto task_handle = calculate_partial_result(world, step_length, sizes, first_mat, second_mat);
 		const auto [child_memories, child_memory_removers, mpi_result] = collect_results(
-			world, alg_type, tasks_num, step_length, sizes.first_rows, sizes.second_cols, task_handle);
+			world, alg_type,  step_length, sizes.first_rows, sizes.second_cols, task_handle);
 
 		const auto mpi_dur = std::chrono::system_clock::now() - mpi_start_time;
 		check_results(single_result, mpi_result);
