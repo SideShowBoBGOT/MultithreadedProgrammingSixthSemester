@@ -7,3 +7,9 @@
 [submodule "Lab6/external/magic_enum"]
 	path = Lab6/external/magic_enum
 	url = https://github.com/Neargye/magic_enum
+[submodule "Lab7/external/CLI11"]
+	path = Lab7/external/CLI11
+	url = https://github.com/CLIUtils/CLI11
+[submodule "Lab7/external/magic_enum"]
+	path = Lab7/external/magic_enum
+	url = https://github.com/Neargye/magic_enum
