@@ -1,7 +1,7 @@
 import os
 
 processes = [3, 4, 5, 6]
-sizes = [i for i in range(500, 2750, 250)]
+sizes = [i for i in range(1000, 2600, 100)]
 types_block = ['OneToMany', 'ManyToOne', 'ManyToMany']
 for _ in range(5):
     for t in processes:
