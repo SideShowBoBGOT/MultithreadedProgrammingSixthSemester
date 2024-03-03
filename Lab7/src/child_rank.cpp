@@ -10,26 +10,32 @@ namespace child_rank {
 		const boost::mpi::communicator& world,
 		const AlgorithmType& alg_type
 	) -> inter::managed_shared_memory::handle_t {
-		auto payload = inter::managed_shared_memory::handle_t();
+		auto main_handle = inter::managed_shared_memory::handle_t();
 		switch(alg_type) {
 			case AlgorithmType::OneToMany: {
-				boost::mpi::broadcast(world, payload, MAIN_PROC_RANK);
+				boost::mpi::broadcast(world, main_handle, MAIN_PROC_RANK);
 				break;
 			}
 			case AlgorithmType::ManyToOne: {
 				for(auto task_rank = 1; task_rank < world.size(); ++task_rank) {
 					if(task_rank == world.rank()) {
-						auto payloads = std::vector<inter::managed_shared_memory::handle_t>();
-						boost::mpi::gather(world, payload, payloads, task_rank);
-						payload = payloads[MAIN_PROC_RANK];
+						auto handles = std::vector<inter::managed_shared_memory::handle_t>();
+						boost::mpi::gather(world, main_handle, handles, task_rank);
+						main_handle = handles[MAIN_PROC_RANK];
 					} else {
-						boost::mpi::gather(world, payload, task_rank);
+						boost::mpi::gather(world, main_handle, task_rank);
 					}
 				}
 				break;
 			}
+			case AlgorithmType::ManyToMany: {
+				auto handles = std::vector<inter::managed_shared_memory::handle_t>();
+				boost::mpi::all_gather(world, main_handle, handles);
+				main_handle = handles[MAIN_PROC_RANK];
+				break;
+			}
 		}
-		return payload;
+		return main_handle;
 	}
 
 	static auto send_child_handle(
@@ -54,6 +60,11 @@ namespace child_rank {
 						boost::mpi::gather(world, handle, task_rank);
 					}
 				}
+				break;
+			}
+			case AlgorithmType::ManyToMany: {
+				auto handles = std::vector<inter::managed_shared_memory::handle_t>();
+				boost::mpi::all_gather(world, handle, handles);
 				break;
 			}
 		}
