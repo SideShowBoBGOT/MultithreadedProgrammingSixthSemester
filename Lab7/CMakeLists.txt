@@ -8,15 +8,15 @@ include_directories(/usr/lib/x86_64-linux-gnu/openmpi/include/openmpi)
 link_directories(/usr/lib/x86_64-linux-gnu/openmpi/lib)
 
 set(HEADERS
-        include/lab_6/cli_app.hpp
-        include/lab_6/constants.hpp
-        include/lab_6/log_error.hpp
-        include/lab_6/alg_type.hpp
-        include/lab_6/matrix.hpp
-        include/lab_6/common.hpp
-        include/lab_6/mat_sizes.hpp
-        include/lab_6/main_rank.hpp
-        include/lab_6/child_rank.hpp
+        include/lab_7/cli_app.hpp
+        include/lab_7/constants.hpp
+        include/lab_7/log_error.hpp
+        include/lab_7/alg_type.hpp
+        include/lab_7/matrix.hpp
+        include/lab_7/common.hpp
+        include/lab_7/mat_sizes.hpp
+        include/lab_7/main_rank.hpp
+        include/lab_7/child_rank.hpp
 )
 
 set(SOURCES
