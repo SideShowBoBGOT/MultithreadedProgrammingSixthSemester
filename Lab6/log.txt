@@ -10,3 +10,4 @@
 {"procs_num": 6, "mat_size": 100, "alg_type": "NonBlocking", "mpi_nanos": 1738393, "single_nanos": 2554055, "efficiency": 1.4692046044824156 }
 {"procs_num": 6, "mat_size": 100, "alg_type": "NonBlocking", "mpi_nanos": 831051, "single_nanos": 1142311, "efficiency": 1.3745377840830466 }
 {"procs_num": 6, "mat_size": 100, "alg_type": "NonBlocking", "mpi_nanos": 1267154, "single_nanos": 1160265, "efficiency": 0.9156464013056029 }
+{"procs_num": 6, "mat_size": 2000, "alg_type": "Blocking", "mpi_nanos": 12265646780, "single_nanos": 19292570509, "efficiency": 1.5728946752696233 }

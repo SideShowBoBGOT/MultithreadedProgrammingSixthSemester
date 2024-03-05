@@ -18,28 +18,22 @@ class TAtomicQueue {
 	std::optional<T> Pop();
 
 	protected:
-	std::atomic_flag m_xFlag;
+	std::mutex m_xMutex;
 	std::queue<T> m_qQueue;
 };
 
 template<typename T>
 template<typename U>
 void TAtomicQueue<T>::Push(U&& value) {
-	while(m_xFlag.test_and_set());
+	const auto lock = std::lock_guard(m_xMutex);
 	m_qQueue.push(std::forward<U>(value));
-	m_xFlag.clear();
 }
 
 template<typename T>
 std::optional<T> TAtomicQueue<T>::Pop() {
-	while(m_xFlag.test_and_set());
-	if(m_qQueue.empty()) {
-		m_xFlag.clear();
-		return std::nullopt;
-	}
+	const auto lock = std::lock_guard(m_xMutex);
 	auto popped = std::move(m_qQueue.front());
 	m_qQueue.pop();
-	m_xFlag.clear();
 	return popped;
 }
 
