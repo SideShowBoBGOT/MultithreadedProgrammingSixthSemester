@@ -204,6 +204,7 @@ void TCommunicationBFS<T>::TCommunicationCenter::SendTasks() {
 	const auto dequeSize = m_vDeque.Size();
 	const auto threadsNum = m_vSenders.size();
 	const auto end = m_vDeque.Size();
+	
 	auto begin = size_t(0);
 	auto i = std::size_t(0);
 	const auto step = std::max(size_t(1), dequeSize / threadsNum);

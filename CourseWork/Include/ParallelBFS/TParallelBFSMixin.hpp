@@ -29,8 +29,9 @@ std::unordered_map<T, std::pair<std::atomic_flag, T>>
 	auto visitorMap = std::unordered_map<T, std::pair<std::atomic_flag, T>>();
 	visitorMap.reserve(this->m_refGraph.size());
 	for(const auto& [key, _] : this->m_refGraph) {
-		visitorMap.emplace(std::piecewise_construct,
+		auto [it, isEnqueued] = visitorMap.emplace(std::piecewise_construct,
 			std::forward_as_tuple(key), std::forward_as_tuple());
+		it->second.first.clear();
 	}
 	return visitorMap;
 }

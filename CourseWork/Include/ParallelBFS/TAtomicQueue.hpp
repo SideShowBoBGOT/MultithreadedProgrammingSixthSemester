@@ -2,7 +2,6 @@
 #define PARALLELBFS_TATOMICQUEUE_HPP
 
 #include <optional>
-#include <atomic>
 #include <queue>
 
 namespace bfs {
@@ -32,6 +31,7 @@ void TAtomicQueue<T>::Push(U&& value) {
 template<typename T>
 std::optional<T> TAtomicQueue<T>::Pop() {
 	const auto lock = std::lock_guard(m_xMutex);
+	if(m_qQueue.empty()) return std::nullopt;
 	auto popped = std::move(m_qQueue.front());
 	m_qQueue.pop();
 	return popped;
