@@ -13,3 +13,6 @@
 [submodule "Lab7/external/magic_enum"]
 	path = Lab7/external/magic_enum
 	url = https://github.com/Neargye/magic_enum
+[submodule "CourseWork/External/magic_enum"]
+	path = CourseWork/External/magic_enum
+	url = https://github.com/Neargye/magic_enum

@@ -19,5 +19,6 @@ add_library(${PROJECT_NAME} STATIC
 )
 
 target_include_directories(${PROJECT_NAME} PUBLIC Include)
+target_link_libraries(${PROJECT_NAME} PUBLIC magic_enum::magic_enum)
 
 add_subdirectory(Tests)

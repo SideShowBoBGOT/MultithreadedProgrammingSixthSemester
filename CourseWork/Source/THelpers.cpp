@@ -1,4 +1,5 @@
 #include <ParallelBFS/THelpers.hpp>
+#include <magic_enum.hpp>
 #include <array>
 #include <iostream>
 #include <chrono>
@@ -15,12 +16,13 @@ namespace lr {
 		auto timestamp = std::array<char, 100>();
 		std::strftime(timestamp.data(), timestamp.size(), "%Y/%m/%d %H:%M:%S", std::localtime(&now));
 
-		std::clog << "[" << timestamp.data() << "] "
-				  << "[" << location.file_name() << "("
-				  << location.line() << ":"
-				  << location.column() << ")] "
-				  << "[" << location.function_name() << "] "
-				  << "[" << message << "]\n";
+		std::clog << "[" << magic_enum::enum_name(level) << "] "
+			<< "[" << timestamp.data() << "] "
+			<< "[" << location.file_name() << "("
+			<< location.line() << ":"
+			<< location.column() << ")] "
+			<< "[" << location.function_name() << "] "
+			<< "[" << message << "]\n";
 	}
 
 	void LogInfo(

@@ -80,7 +80,8 @@ void TSharedBFS<T>::TSharedBFSTask::operator()() {
 }
 
 template<CBFSUsable T>
-TSharedBFS<T>::TSharedBFS(const AGraph<T>& graph, const T& start, const T& end, const unsigned threadsNum)
+TSharedBFS<T>::TSharedBFS(const AGraph<T>& graph,
+	const T& start, const T& end, const unsigned threadsNum)
 	: TParallelBFSMixin<T, TSharedBFS>(graph, start, end, threadsNum) {}
 
 template<CBFSUsable T>
