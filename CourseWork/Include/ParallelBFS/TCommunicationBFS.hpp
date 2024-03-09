@@ -21,6 +21,7 @@ class TCommunicationBFS : public TParallelBFSMixin<T, TCommunicationBFS<T>> {
 
 	protected:
 	// Messages
+	struct SContinueIteration {};
 	struct SEndNodeFound {};
 	struct SAllNodesEnqueued {};
 	struct SQueueView {
@@ -46,7 +47,20 @@ class TCommunicationBFS : public TParallelBFSMixin<T, TCommunicationBFS<T>> {
 		SEndNodeFound
 	>;
 
+	using AIterationResult = std::variant<
+		SEndNodeFound,
+		SContinueIteration
+	>;
+
 	protected:
+	ACommunicationResult Communicate(
+		TDeque<T>& deque,
+		size_t& totalEnqueuedNum,
+		typename TCommunicationBFS::AVisitorMap& visitorMap,
+		std::vector<TPipeWriter<AParentMessage>>& senders,
+		std::vector<TPipeReader<AChildrenMessage>>& listeners
+	) const;
+
 	AChildrenMessage DoPartialWork(
 		const SQueueView& queueView,
 		typename TCommunicationBFS::AVisitorMap& visitorMap) const;
@@ -63,20 +77,24 @@ class TCommunicationBFS : public TParallelBFSMixin<T, TCommunicationBFS<T>> {
 		typename TCommunicationBFS::AVisitorMap& visitorMap
 	) const;
 
-	auto ProcessPartialResult(
+	auto ProcessIterationResult(
 		TDeque<T>& deque,
 		AChildrenMessage&& partialResult,
 		const std::vector<TPipeWriter<AParentMessage>>& senders,
 		size_t& totalEnqueued
-	) const -> std::optional<SEndNodeFound>;
+	) const -> AIterationResult;
 
 	template<typename MessageType>
-	void SendMessageToAll(const std::vector<TPipeWriter<AParentMessage>>& senders) const;
+	MessageType SendMessageToAll(const std::vector<TPipeWriter<AParentMessage>>& senders) const;
 };
 
 template<CBFSUsable T>
-TCommunicationBFS<T>::TCommunicationBFS(const AGraph<T>& graph, const T& start, const T& end, const unsigned threadsNum)
-	: TParallelBFSMixin<T, TCommunicationBFS>(graph, start, end, threadsNum) {}
+TCommunicationBFS<T>::TCommunicationBFS(
+	const AGraph<T>& graph,
+	const T& start,
+	const T& end,
+	const unsigned threadsNum
+) : TParallelBFSMixin<T, TCommunicationBFS>(graph, start, end, threadsNum) {}
 
 template<CBFSUsable T>
 std::optional<typename TCommunicationBFS<T>::AVisitorMap>
@@ -88,6 +106,31 @@ std::optional<typename TCommunicationBFS<T>::AVisitorMap>
 	auto visitorMap = this->CreateVisitorMap();
 	auto senders = std::vector<TPipeWriter<AParentMessage>>();
 	auto listeners = std::vector<TPipeReader<AChildrenMessage>>();
+
+	const auto result = Communicate(deque, totalEnqueuedNum,
+		visitorMap, senders, listeners);
+
+	switch(result.index()) {
+		case VariantIndex<ACommunicationResult, SAllNodesEnqueued>(): {
+			return std::nullopt;
+		}
+		case VariantIndex<ACommunicationResult, SEndNodeFound>(): {
+			return visitorMap;
+		}
+		default: {
+			lr::UnsopportedCaseError();
+		}
+	}
+}
+
+template<CBFSUsable T>
+auto TCommunicationBFS<T>::Communicate(
+		TDeque<T>& deque,
+		size_t& totalEnqueuedNum,
+		typename TCommunicationBFS::AVisitorMap& visitorMap,
+		std::vector<TPipeWriter<AParentMessage>>& senders,
+		std::vector<TPipeReader<AChildrenMessage>>& listeners
+	) const -> ACommunicationResult {
 
 	auto threads = std::vector<std::jthread>();
 	for(auto i = 0u; i < this->m_uThreadsNum - 1; ++i) {
@@ -106,49 +149,39 @@ std::optional<typename TCommunicationBFS<T>::AVisitorMap>
 		auto newDeque = TDeque<T>();
 		{
 			auto partRes = IterateWork(deque, senders, visitorMap);
-			auto endNodeFound = ProcessPartialResult(newDeque,
+			const auto iterResult = ProcessIterationResult(newDeque,
 				std::move(partRes), senders, totalEnqueuedNum);
-			if(endNodeFound) {
-				for(auto& t : threads)t.join();
-
-				return visitorMap;
+			if(std::holds_alternative<SEndNodeFound>(iterResult)) {
+				return SEndNodeFound{};
 			}
 		}
 		for(auto& l : listeners) {
 			auto partRes = l.Read();
-			auto endNodeFound = ProcessPartialResult(newDeque,
+			auto iterResult = ProcessIterationResult(newDeque,
 				std::move(partRes), senders, totalEnqueuedNum);
-			if(endNodeFound) {
-				for(auto& t : threads)t.join();
-
-				return visitorMap;
+			if(std::holds_alternative<SEndNodeFound>(iterResult)) {
+				return SEndNodeFound{};
 			}
 		}
 		deque = std::move(newDeque);
 		if(totalEnqueuedNum >= this->m_refGraph.size()) {
-			SendMessageToAll<SAllNodesEnqueued>(senders);
-			for(auto& t : threads)t.join();
-
-			return std::nullopt;
+			return SendMessageToAll<SAllNodesEnqueued>(senders);
 		}
 	}
 
-	for(auto& t : threads)t.join();
-
-	return std::nullopt;
+	return SAllNodesEnqueued{};
 }
 
 template<CBFSUsable T>
-auto TCommunicationBFS<T>::ProcessPartialResult(
+auto TCommunicationBFS<T>::ProcessIterationResult(
 	TDeque<T>& deque,
 	AChildrenMessage&& partialResult,
 	const std::vector<TPipeWriter<AParentMessage>>& senders,
 	size_t& totalEnqueued
-) const -> std::optional<SEndNodeFound> {
+) const -> AIterationResult {
 	switch(partialResult.index()) {
 		case VariantIndex<AChildrenMessage, SEndNodeFound>(): {
-			SendMessageToAll<SEndNodeFound>(senders);
-			return SEndNodeFound{};
+			return SendMessageToAll<SEndNodeFound>(senders);
 		}
 		case VariantIndex<AChildrenMessage, SFrontier>(): {
 			auto& frontier = std::get<SFrontier>(partialResult);
@@ -156,7 +189,7 @@ auto TCommunicationBFS<T>::ProcessPartialResult(
 			if(not frontier.Data.empty()) {
 				deque.Push(std::move(frontier.Data));
 			}
-			return std::nullopt;
+			return SContinueIteration{};
 		}
 		default: {
 			lr::UnsopportedCaseError();
@@ -249,13 +282,14 @@ auto TCommunicationBFS<T>::IterateWork(
 
 template<CBFSUsable T>
 template<typename MessageType>
-void TCommunicationBFS<T>::SendMessageToAll(
+MessageType TCommunicationBFS<T>::SendMessageToAll(
 	const std::vector<TPipeWriter<AParentMessage>>& senders
 ) const {
 	auto message = MessageType{};
 	for(auto& s : senders) {
 		s.Write(message);
 	}
+	return MessageType{};
 }
 
 }
