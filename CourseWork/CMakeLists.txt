@@ -5,7 +5,7 @@ set(CMAKE_CXX_STANDARD 23)
 
 add_subdirectory(External)
 
-add_library(${PROJECT_NAME} INTERFACE
+add_library(${PROJECT_NAME} STATIC
     Include/${PROJECT_NAME}/TAtomicQueue.hpp
     Include/${PROJECT_NAME}/TBaseBFSMixin.hpp
     Include/${PROJECT_NAME}/TCommunicationBFS.hpp
@@ -15,8 +15,9 @@ add_library(${PROJECT_NAME} INTERFACE
     Include/${PROJECT_NAME}/TPipes.hpp
     Include/${PROJECT_NAME}/TSequentialBFS.hpp
     Include/${PROJECT_NAME}/TSharedBFS.hpp
-
+    Source/THelpers.cpp
 )
-target_include_directories(${PROJECT_NAME} INTERFACE Include)
+
+target_include_directories(${PROJECT_NAME} PUBLIC Include)
 
 add_subdirectory(Tests)

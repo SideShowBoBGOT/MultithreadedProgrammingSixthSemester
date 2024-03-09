@@ -2,6 +2,8 @@
 #define PARALLELBFS_THELPERS_HPP
 
 #include <variant>
+#include <string_view>
+#include <source_location>
 
 namespace bfs {
 
@@ -15,6 +17,45 @@ constexpr std::size_t VariantIndex() {
 	} else {
 		return VariantIndex<VariantType, T, index + 1>();
 	}
+}
+
+namespace lr {
+	enum class NLevel {
+		Info,
+		Warn,
+		Error
+	};
+
+	void Log(
+		const std::string_view message,
+		const NLevel level,
+		std::source_location location = std::source_location::current()
+	);
+
+	void LogInfo(
+		const std::string_view message,
+		std::source_location location = std::source_location::current()
+	);
+
+	void LogWarn(
+		const std::string_view message,
+		std::source_location location = std::source_location::current()
+	);
+
+	void LogError(
+		const std::string_view message,
+		std::source_location location = std::source_location::current()
+	);
+
+	[[noreturn]] void Error(
+		const std::string_view message,
+		std::source_location location = std::source_location::current()
+	);
+
+	[[noreturn]] void UnsopportedCaseError(
+		std::source_location location = std::source_location::current()
+	);
+
 }
 
 }
