@@ -80,7 +80,7 @@ TEST_F(TTestBFSFixture, Test) {
 				const auto delay = std::chrono::system_clock::now() - start;
 				const auto millis = std::chrono::duration_cast<std::chrono::milliseconds>(delay).count();
 				EXPECT_TRUE(IsPathValid(result.value(), grid));
-				WriteToReport(std::format("{{ \"name\": {}, \"size\": {}, \"milliseconds\": {} }}", "Sequential", size, millis));
+				WriteToReport(std::format("{{ \"name\": \"{}\", \"size\": {}, \"milliseconds\": {} }}", "Sequential", size, millis));
 				return std::make_tuple(static_cast<double>(millis), std::move(result.value()));
 			}();
 			for(const auto threadsNum : threadsNums) {

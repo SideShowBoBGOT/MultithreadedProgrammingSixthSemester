@@ -1,12 +1,696 @@
-{ "name": Sequential, "nodes_number": 2500, "milliseconds": 977 }
-{ "name": Sequential, "nodes_number": 2625, "milliseconds": 1162 }
-{ "name": Sequential, "nodes_number": 2750, "milliseconds": 1273 }
-{ "name": Sequential, "nodes_number": 2875, "milliseconds": 1412 }
-{ "name": Sequential, "nodes_number": 3000, "milliseconds": 1534 }
-{ "name": Sequential, "nodes_number": 3125, "milliseconds": 1872 }
-{ "name": Sequential, "nodes_number": 3250, "milliseconds": 2059 }
-{ "name": Sequential, "nodes_number": 3500, "milliseconds": 2653 }
-{ "name": Sequential, "nodes_number": 3635, "milliseconds": 3137 }
-{ "name": Sequential, "nodes_number": 3750, "milliseconds": 3595 }
-{ "name": Sequential, "nodes_number": 3875, "milliseconds": 3410 }
-{ "name": Sequential, "nodes_number": 4000, "milliseconds": 3809 }
+{ "name": "Sequential", "size": 2500, "milliseconds": 998 }
+{ "name": "Communication", "size": 2500, "threadsNum": 2, "milliseconds": 1297, "acceleration": 0.7694680030840401 }
+{ "name": "Communication", "size": 2500, "threadsNum": 3, "milliseconds": 785, "acceleration": 1.2713375796178343 }
+{ "name": "Communication", "size": 2500, "threadsNum": 4, "milliseconds": 764, "acceleration": 1.306282722513089 }
+{ "name": "Communication", "size": 2500, "threadsNum": 5, "milliseconds": 641, "acceleration": 1.5569422776911077 }
+{ "name": "Communication", "size": 2500, "threadsNum": 6, "milliseconds": 635, "acceleration": 1.5716535433070866 }
+{ "name": "Communication", "size": 2500, "threadsNum": 7, "milliseconds": 634, "acceleration": 1.5741324921135647 }
+{ "name": "Communication", "size": 2500, "threadsNum": 8, "milliseconds": 581, "acceleration": 1.7177280550774527 }
+{ "name": "Communication", "size": 2500, "threadsNum": 9, "milliseconds": 583, "acceleration": 1.711835334476844 }
+{ "name": "Communication", "size": 2500, "threadsNum": 10, "milliseconds": 593, "acceleration": 1.6829679595278246 }
+{ "name": "Communication", "size": 2500, "threadsNum": 11, "milliseconds": 539, "acceleration": 1.8515769944341374 }
+{ "name": "Communication", "size": 2500, "threadsNum": 12, "milliseconds": 540, "acceleration": 1.848148148148148 }
+{ "name": "Sequential", "size": 2500, "milliseconds": 1036 }
+{ "name": "Communication", "size": 2500, "threadsNum": 2, "milliseconds": 992, "acceleration": 1.0443548387096775 }
+{ "name": "Communication", "size": 2500, "threadsNum": 3, "milliseconds": 855, "acceleration": 1.2116959064327486 }
+{ "name": "Communication", "size": 2500, "threadsNum": 4, "milliseconds": 760, "acceleration": 1.3631578947368421 }
+{ "name": "Communication", "size": 2500, "threadsNum": 5, "milliseconds": 659, "acceleration": 1.5720789074355084 }
+{ "name": "Communication", "size": 2500, "threadsNum": 6, "milliseconds": 606, "acceleration": 1.7095709570957096 }
+{ "name": "Communication", "size": 2500, "threadsNum": 7, "milliseconds": 581, "acceleration": 1.783132530120482 }
+{ "name": "Communication", "size": 2500, "threadsNum": 8, "milliseconds": 583, "acceleration": 1.777015437392796 }
+{ "name": "Communication", "size": 2500, "threadsNum": 9, "milliseconds": 566, "acceleration": 1.8303886925795052 }
+{ "name": "Communication", "size": 2500, "threadsNum": 10, "milliseconds": 560, "acceleration": 1.85 }
+{ "name": "Communication", "size": 2500, "threadsNum": 11, "milliseconds": 602, "acceleration": 1.7209302325581395 }
+{ "name": "Communication", "size": 2500, "threadsNum": 12, "milliseconds": 676, "acceleration": 1.532544378698225 }
+{ "name": "Sequential", "size": 2500, "milliseconds": 1037 }
+{ "name": "Communication", "size": 2500, "threadsNum": 2, "milliseconds": 1353, "acceleration": 0.7664449371766445 }
+{ "name": "Communication", "size": 2500, "threadsNum": 3, "milliseconds": 858, "acceleration": 1.2086247086247086 }
+{ "name": "Communication", "size": 2500, "threadsNum": 4, "milliseconds": 728, "acceleration": 1.4244505494505495 }
+{ "name": "Communication", "size": 2500, "threadsNum": 5, "milliseconds": 657, "acceleration": 1.578386605783866 }
+{ "name": "Communication", "size": 2500, "threadsNum": 6, "milliseconds": 603, "acceleration": 1.7197346600331676 }
+{ "name": "Communication", "size": 2500, "threadsNum": 7, "milliseconds": 595, "acceleration": 1.7428571428571429 }
+{ "name": "Communication", "size": 2500, "threadsNum": 8, "milliseconds": 571, "acceleration": 1.8161120840630474 }
+{ "name": "Communication", "size": 2500, "threadsNum": 9, "milliseconds": 552, "acceleration": 1.8786231884057971 }
+{ "name": "Communication", "size": 2500, "threadsNum": 10, "milliseconds": 550, "acceleration": 1.8854545454545455 }
+{ "name": "Communication", "size": 2500, "threadsNum": 11, "milliseconds": 553, "acceleration": 1.8752260397830018 }
+{ "name": "Communication", "size": 2500, "threadsNum": 12, "milliseconds": 551, "acceleration": 1.882032667876588 }
+{ "name": "Sequential", "size": 2500, "milliseconds": 1080 }
+{ "name": "Communication", "size": 2500, "threadsNum": 2, "milliseconds": 1061, "acceleration": 1.0179076343072573 }
+{ "name": "Communication", "size": 2500, "threadsNum": 3, "milliseconds": 823, "acceleration": 1.3122721749696233 }
+{ "name": "Communication", "size": 2500, "threadsNum": 4, "milliseconds": 739, "acceleration": 1.4614343707713127 }
+{ "name": "Communication", "size": 2500, "threadsNum": 5, "milliseconds": 720, "acceleration": 1.5 }
+{ "name": "Communication", "size": 2500, "threadsNum": 6, "milliseconds": 634, "acceleration": 1.7034700315457414 }
+{ "name": "Communication", "size": 2500, "threadsNum": 7, "milliseconds": 582, "acceleration": 1.8556701030927836 }
+{ "name": "Communication", "size": 2500, "threadsNum": 8, "milliseconds": 568, "acceleration": 1.9014084507042253 }
+{ "name": "Communication", "size": 2500, "threadsNum": 9, "milliseconds": 588, "acceleration": 1.836734693877551 }
+{ "name": "Communication", "size": 2500, "threadsNum": 10, "milliseconds": 588, "acceleration": 1.836734693877551 }
+{ "name": "Communication", "size": 2500, "threadsNum": 11, "milliseconds": 548, "acceleration": 1.9708029197080292 }
+{ "name": "Communication", "size": 2500, "threadsNum": 12, "milliseconds": 545, "acceleration": 1.981651376146789 }
+{ "name": "Sequential", "size": 2500, "milliseconds": 1125 }
+{ "name": "Communication", "size": 2500, "threadsNum": 2, "milliseconds": 1352, "acceleration": 0.8321005917159763 }
+{ "name": "Communication", "size": 2500, "threadsNum": 3, "milliseconds": 804, "acceleration": 1.3992537313432836 }
+{ "name": "Communication", "size": 2500, "threadsNum": 4, "milliseconds": 744, "acceleration": 1.5120967741935485 }
+{ "name": "Communication", "size": 2500, "threadsNum": 5, "milliseconds": 694, "acceleration": 1.6210374639769451 }
+{ "name": "Communication", "size": 2500, "threadsNum": 6, "milliseconds": 602, "acceleration": 1.8687707641196014 }
+{ "name": "Communication", "size": 2500, "threadsNum": 7, "milliseconds": 648, "acceleration": 1.7361111111111112 }
+{ "name": "Communication", "size": 2500, "threadsNum": 8, "milliseconds": 569, "acceleration": 1.9771528998242531 }
+{ "name": "Communication", "size": 2500, "threadsNum": 9, "milliseconds": 577, "acceleration": 1.949740034662045 }
+{ "name": "Communication", "size": 2500, "threadsNum": 10, "milliseconds": 556, "acceleration": 2.023381294964029 }
+{ "name": "Communication", "size": 2500, "threadsNum": 11, "milliseconds": 537, "acceleration": 2.094972067039106 }
+{ "name": "Communication", "size": 2500, "threadsNum": 12, "milliseconds": 570, "acceleration": 1.9736842105263157 }
+{ "name": "Sequential", "size": 2625, "milliseconds": 1238 }
+{ "name": "Communication", "size": 2625, "threadsNum": 2, "milliseconds": 1329, "acceleration": 0.9315274642588413 }
+{ "name": "Communication", "size": 2625, "threadsNum": 3, "milliseconds": 898, "acceleration": 1.378619153674833 }
+{ "name": "Communication", "size": 2625, "threadsNum": 4, "milliseconds": 829, "acceleration": 1.4933655006031363 }
+{ "name": "Communication", "size": 2625, "threadsNum": 5, "milliseconds": 732, "acceleration": 1.6912568306010929 }
+{ "name": "Communication", "size": 2625, "threadsNum": 6, "milliseconds": 692, "acceleration": 1.7890173410404624 }
+{ "name": "Communication", "size": 2625, "threadsNum": 7, "milliseconds": 679, "acceleration": 1.8232695139911634 }
+{ "name": "Communication", "size": 2625, "threadsNum": 8, "milliseconds": 669, "acceleration": 1.850523168908819 }
+{ "name": "Communication", "size": 2625, "threadsNum": 9, "milliseconds": 646, "acceleration": 1.91640866873065 }
+{ "name": "Communication", "size": 2625, "threadsNum": 10, "milliseconds": 657, "acceleration": 1.8843226788432268 }
+{ "name": "Communication", "size": 2625, "threadsNum": 11, "milliseconds": 625, "acceleration": 1.9808 }
+{ "name": "Communication", "size": 2625, "threadsNum": 12, "milliseconds": 604, "acceleration": 2.0496688741721854 }
+{ "name": "Sequential", "size": 2625, "milliseconds": 1186 }
+{ "name": "Communication", "size": 2625, "threadsNum": 2, "milliseconds": 1530, "acceleration": 0.7751633986928105 }
+{ "name": "Communication", "size": 2625, "threadsNum": 3, "milliseconds": 907, "acceleration": 1.3076074972436604 }
+{ "name": "Communication", "size": 2625, "threadsNum": 4, "milliseconds": 790, "acceleration": 1.5012658227848101 }
+{ "name": "Communication", "size": 2625, "threadsNum": 5, "milliseconds": 802, "acceleration": 1.4788029925187032 }
+{ "name": "Communication", "size": 2625, "threadsNum": 6, "milliseconds": 710, "acceleration": 1.6704225352112676 }
+{ "name": "Communication", "size": 2625, "threadsNum": 7, "milliseconds": 661, "acceleration": 1.794251134644478 }
+{ "name": "Communication", "size": 2625, "threadsNum": 8, "milliseconds": 646, "acceleration": 1.8359133126934986 }
+{ "name": "Communication", "size": 2625, "threadsNum": 9, "milliseconds": 604, "acceleration": 1.9635761589403973 }
+{ "name": "Communication", "size": 2625, "threadsNum": 10, "milliseconds": 629, "acceleration": 1.8855325914149443 }
+{ "name": "Communication", "size": 2625, "threadsNum": 11, "milliseconds": 615, "acceleration": 1.9284552845528455 }
+{ "name": "Communication", "size": 2625, "threadsNum": 12, "milliseconds": 599, "acceleration": 1.979966611018364 }
+{ "name": "Sequential", "size": 2625, "milliseconds": 1221 }
+{ "name": "Communication", "size": 2625, "threadsNum": 2, "milliseconds": 1635, "acceleration": 0.7467889908256881 }
+{ "name": "Communication", "size": 2625, "threadsNum": 3, "milliseconds": 988, "acceleration": 1.23582995951417 }
+{ "name": "Communication", "size": 2625, "threadsNum": 4, "milliseconds": 840, "acceleration": 1.4535714285714285 }
+{ "name": "Communication", "size": 2625, "threadsNum": 5, "milliseconds": 786, "acceleration": 1.5534351145038168 }
+{ "name": "Communication", "size": 2625, "threadsNum": 6, "milliseconds": 745, "acceleration": 1.6389261744966444 }
+{ "name": "Communication", "size": 2625, "threadsNum": 7, "milliseconds": 674, "acceleration": 1.811572700296736 }
+{ "name": "Communication", "size": 2625, "threadsNum": 8, "milliseconds": 636, "acceleration": 1.919811320754717 }
+{ "name": "Communication", "size": 2625, "threadsNum": 9, "milliseconds": 605, "acceleration": 2.018181818181818 }
+{ "name": "Communication", "size": 2625, "threadsNum": 10, "milliseconds": 605, "acceleration": 2.018181818181818 }
+{ "name": "Communication", "size": 2625, "threadsNum": 11, "milliseconds": 605, "acceleration": 2.018181818181818 }
+{ "name": "Communication", "size": 2625, "threadsNum": 12, "milliseconds": 743, "acceleration": 1.6433378196500672 }
+{ "name": "Sequential", "size": 2625, "milliseconds": 1249 }
+{ "name": "Communication", "size": 2625, "threadsNum": 2, "milliseconds": 1590, "acceleration": 0.7855345911949686 }
+{ "name": "Communication", "size": 2625, "threadsNum": 3, "milliseconds": 949, "acceleration": 1.316122233930453 }
+{ "name": "Communication", "size": 2625, "threadsNum": 4, "milliseconds": 900, "acceleration": 1.3877777777777778 }
+{ "name": "Communication", "size": 2625, "threadsNum": 5, "milliseconds": 739, "acceleration": 1.6901217861975644 }
+{ "name": "Communication", "size": 2625, "threadsNum": 6, "milliseconds": 692, "acceleration": 1.8049132947976878 }
+{ "name": "Communication", "size": 2625, "threadsNum": 7, "milliseconds": 648, "acceleration": 1.9274691358024691 }
+{ "name": "Communication", "size": 2625, "threadsNum": 8, "milliseconds": 663, "acceleration": 1.8838612368024132 }
+{ "name": "Communication", "size": 2625, "threadsNum": 9, "milliseconds": 596, "acceleration": 2.0956375838926173 }
+{ "name": "Communication", "size": 2625, "threadsNum": 10, "milliseconds": 621, "acceleration": 2.0112721417069244 }
+{ "name": "Communication", "size": 2625, "threadsNum": 11, "milliseconds": 590, "acceleration": 2.116949152542373 }
+{ "name": "Communication", "size": 2625, "threadsNum": 12, "milliseconds": 643, "acceleration": 1.9424572317262832 }
+{ "name": "Sequential", "size": 2625, "milliseconds": 1225 }
+{ "name": "Communication", "size": 2625, "threadsNum": 2, "milliseconds": 1356, "acceleration": 0.9033923303834809 }
+{ "name": "Communication", "size": 2625, "threadsNum": 3, "milliseconds": 936, "acceleration": 1.3087606837606838 }
+{ "name": "Communication", "size": 2625, "threadsNum": 4, "milliseconds": 833, "acceleration": 1.4705882352941178 }
+{ "name": "Communication", "size": 2625, "threadsNum": 5, "milliseconds": 805, "acceleration": 1.5217391304347827 }
+{ "name": "Communication", "size": 2625, "threadsNum": 6, "milliseconds": 719, "acceleration": 1.7037552155771905 }
+{ "name": "Communication", "size": 2625, "threadsNum": 7, "milliseconds": 707, "acceleration": 1.7326732673267327 }
+{ "name": "Communication", "size": 2625, "threadsNum": 8, "milliseconds": 661, "acceleration": 1.853252647503782 }
+{ "name": "Communication", "size": 2625, "threadsNum": 9, "milliseconds": 625, "acceleration": 1.96 }
+{ "name": "Communication", "size": 2625, "threadsNum": 10, "milliseconds": 608, "acceleration": 2.0148026315789473 }
+{ "name": "Communication", "size": 2625, "threadsNum": 11, "milliseconds": 613, "acceleration": 1.9983686786296901 }
+{ "name": "Communication", "size": 2625, "threadsNum": 12, "milliseconds": 590, "acceleration": 2.0762711864406778 }
+{ "name": "Sequential", "size": 2750, "milliseconds": 1433 }
+{ "name": "Communication", "size": 2750, "threadsNum": 2, "milliseconds": 1679, "acceleration": 0.8534842167957117 }
+{ "name": "Communication", "size": 2750, "threadsNum": 3, "milliseconds": 1043, "acceleration": 1.3739213806327901 }
+{ "name": "Communication", "size": 2750, "threadsNum": 4, "milliseconds": 903, "acceleration": 1.5869324473975637 }
+{ "name": "Communication", "size": 2750, "threadsNum": 5, "milliseconds": 815, "acceleration": 1.7582822085889571 }
+{ "name": "Communication", "size": 2750, "threadsNum": 6, "milliseconds": 829, "acceleration": 1.7285886610373944 }
+{ "name": "Communication", "size": 2750, "threadsNum": 7, "milliseconds": 715, "acceleration": 2.0041958041958043 }
+{ "name": "Communication", "size": 2750, "threadsNum": 8, "milliseconds": 679, "acceleration": 2.110456553755523 }
+{ "name": "Communication", "size": 2750, "threadsNum": 9, "milliseconds": 666, "acceleration": 2.1516516516516515 }
+{ "name": "Communication", "size": 2750, "threadsNum": 10, "milliseconds": 643, "acceleration": 2.228615863141524 }
+{ "name": "Communication", "size": 2750, "threadsNum": 11, "milliseconds": 651, "acceleration": 2.2012288786482337 }
+{ "name": "Communication", "size": 2750, "threadsNum": 12, "milliseconds": 649, "acceleration": 2.2080123266563945 }
+{ "name": "Sequential", "size": 2750, "milliseconds": 1433 }
+{ "name": "Communication", "size": 2750, "threadsNum": 2, "milliseconds": 1455, "acceleration": 0.9848797250859107 }
+{ "name": "Communication", "size": 2750, "threadsNum": 3, "milliseconds": 1105, "acceleration": 1.2968325791855204 }
+{ "name": "Communication", "size": 2750, "threadsNum": 4, "milliseconds": 1010, "acceleration": 1.4188118811881187 }
+{ "name": "Communication", "size": 2750, "threadsNum": 5, "milliseconds": 901, "acceleration": 1.590455049944506 }
+{ "name": "Communication", "size": 2750, "threadsNum": 6, "milliseconds": 775, "acceleration": 1.8490322580645162 }
+{ "name": "Communication", "size": 2750, "threadsNum": 7, "milliseconds": 738, "acceleration": 1.9417344173441735 }
+{ "name": "Communication", "size": 2750, "threadsNum": 8, "milliseconds": 705, "acceleration": 2.0326241134751775 }
+{ "name": "Communication", "size": 2750, "threadsNum": 9, "milliseconds": 718, "acceleration": 1.9958217270194987 }
+{ "name": "Communication", "size": 2750, "threadsNum": 10, "milliseconds": 687, "acceleration": 2.0858806404657932 }
+{ "name": "Communication", "size": 2750, "threadsNum": 11, "milliseconds": 689, "acceleration": 2.0798258345428158 }
+{ "name": "Communication", "size": 2750, "threadsNum": 12, "milliseconds": 670, "acceleration": 2.138805970149254 }
+{ "name": "Sequential", "size": 2750, "milliseconds": 1470 }
+{ "name": "Communication", "size": 2750, "threadsNum": 2, "milliseconds": 2044, "acceleration": 0.7191780821917808 }
+{ "name": "Communication", "size": 2750, "threadsNum": 3, "milliseconds": 1027, "acceleration": 1.4313534566699124 }
+{ "name": "Communication", "size": 2750, "threadsNum": 4, "milliseconds": 845, "acceleration": 1.7396449704142012 }
+{ "name": "Communication", "size": 2750, "threadsNum": 5, "milliseconds": 807, "acceleration": 1.821561338289963 }
+{ "name": "Communication", "size": 2750, "threadsNum": 6, "milliseconds": 824, "acceleration": 1.7839805825242718 }
+{ "name": "Communication", "size": 2750, "threadsNum": 7, "milliseconds": 730, "acceleration": 2.0136986301369864 }
+{ "name": "Communication", "size": 2750, "threadsNum": 8, "milliseconds": 705, "acceleration": 2.0851063829787235 }
+{ "name": "Communication", "size": 2750, "threadsNum": 9, "milliseconds": 711, "acceleration": 2.067510548523207 }
+{ "name": "Communication", "size": 2750, "threadsNum": 10, "milliseconds": 671, "acceleration": 2.1907600596125185 }
+{ "name": "Communication", "size": 2750, "threadsNum": 11, "milliseconds": 687, "acceleration": 2.1397379912663754 }
+{ "name": "Communication", "size": 2750, "threadsNum": 12, "milliseconds": 714, "acceleration": 2.0588235294117645 }
+{ "name": "Sequential", "size": 2750, "milliseconds": 1385 }
+{ "name": "Communication", "size": 2750, "threadsNum": 2, "milliseconds": 1731, "acceleration": 0.8001155401502021 }
+{ "name": "Communication", "size": 2750, "threadsNum": 3, "milliseconds": 1063, "acceleration": 1.3029162746942615 }
+{ "name": "Communication", "size": 2750, "threadsNum": 4, "milliseconds": 900, "acceleration": 1.538888888888889 }
+{ "name": "Communication", "size": 2750, "threadsNum": 5, "milliseconds": 851, "acceleration": 1.627497062279671 }
+{ "name": "Communication", "size": 2750, "threadsNum": 6, "milliseconds": 831, "acceleration": 1.6666666666666667 }
+{ "name": "Communication", "size": 2750, "threadsNum": 7, "milliseconds": 719, "acceleration": 1.9262865090403338 }
+{ "name": "Communication", "size": 2750, "threadsNum": 8, "milliseconds": 683, "acceleration": 2.0278184480234263 }
+{ "name": "Communication", "size": 2750, "threadsNum": 9, "milliseconds": 671, "acceleration": 2.0640834575260807 }
+{ "name": "Communication", "size": 2750, "threadsNum": 10, "milliseconds": 656, "acceleration": 2.111280487804878 }
+{ "name": "Communication", "size": 2750, "threadsNum": 11, "milliseconds": 655, "acceleration": 2.114503816793893 }
+{ "name": "Communication", "size": 2750, "threadsNum": 12, "milliseconds": 659, "acceleration": 2.101669195751138 }
+{ "name": "Sequential", "size": 2750, "milliseconds": 1329 }
+{ "name": "Communication", "size": 2750, "threadsNum": 2, "milliseconds": 1663, "acceleration": 0.7991581479254359 }
+{ "name": "Communication", "size": 2750, "threadsNum": 3, "milliseconds": 1001, "acceleration": 1.3276723276723277 }
+{ "name": "Communication", "size": 2750, "threadsNum": 4, "milliseconds": 988, "acceleration": 1.3451417004048583 }
+{ "name": "Communication", "size": 2750, "threadsNum": 5, "milliseconds": 887, "acceleration": 1.4983089064261557 }
+{ "name": "Communication", "size": 2750, "threadsNum": 6, "milliseconds": 753, "acceleration": 1.7649402390438247 }
+{ "name": "Communication", "size": 2750, "threadsNum": 7, "milliseconds": 713, "acceleration": 1.8639551192145862 }
+{ "name": "Communication", "size": 2750, "threadsNum": 8, "milliseconds": 773, "acceleration": 1.7192755498059509 }
+{ "name": "Communication", "size": 2750, "threadsNum": 9, "milliseconds": 722, "acceleration": 1.8407202216066483 }
+{ "name": "Communication", "size": 2750, "threadsNum": 10, "milliseconds": 714, "acceleration": 1.861344537815126 }
+{ "name": "Communication", "size": 2750, "threadsNum": 11, "milliseconds": 668, "acceleration": 1.9895209580838322 }
+{ "name": "Communication", "size": 2750, "threadsNum": 12, "milliseconds": 648, "acceleration": 2.050925925925926 }
+{ "name": "Sequential", "size": 2875, "milliseconds": 1825 }
+{ "name": "Communication", "size": 2875, "threadsNum": 2, "milliseconds": 2552, "acceleration": 0.7151253918495298 }
+{ "name": "Communication", "size": 2875, "threadsNum": 3, "milliseconds": 1127, "acceleration": 1.619343389529725 }
+{ "name": "Communication", "size": 2875, "threadsNum": 4, "milliseconds": 979, "acceleration": 1.86414708886619 }
+{ "name": "Communication", "size": 2875, "threadsNum": 5, "milliseconds": 910, "acceleration": 2.0054945054945055 }
+{ "name": "Communication", "size": 2875, "threadsNum": 6, "milliseconds": 830, "acceleration": 2.1987951807228914 }
+{ "name": "Communication", "size": 2875, "threadsNum": 7, "milliseconds": 796, "acceleration": 2.292713567839196 }
+{ "name": "Communication", "size": 2875, "threadsNum": 8, "milliseconds": 750, "acceleration": 2.433333333333333 }
+{ "name": "Communication", "size": 2875, "threadsNum": 9, "milliseconds": 732, "acceleration": 2.4931693989071038 }
+{ "name": "Communication", "size": 2875, "threadsNum": 10, "milliseconds": 725, "acceleration": 2.5172413793103448 }
+{ "name": "Communication", "size": 2875, "threadsNum": 11, "milliseconds": 719, "acceleration": 2.5382475660639776 }
+{ "name": "Communication", "size": 2875, "threadsNum": 12, "milliseconds": 720, "acceleration": 2.5347222222222223 }
+{ "name": "Sequential", "size": 2875, "milliseconds": 1552 }
+{ "name": "Communication", "size": 2875, "threadsNum": 2, "milliseconds": 1537, "acceleration": 1.0097592713077423 }
+{ "name": "Communication", "size": 2875, "threadsNum": 3, "milliseconds": 1285, "acceleration": 1.207782101167315 }
+{ "name": "Communication", "size": 2875, "threadsNum": 4, "milliseconds": 1173, "acceleration": 1.3231031543052003 }
+{ "name": "Communication", "size": 2875, "threadsNum": 5, "milliseconds": 972, "acceleration": 1.5967078189300412 }
+{ "name": "Communication", "size": 2875, "threadsNum": 6, "milliseconds": 922, "acceleration": 1.683297180043384 }
+{ "name": "Communication", "size": 2875, "threadsNum": 7, "milliseconds": 844, "acceleration": 1.838862559241706 }
+{ "name": "Communication", "size": 2875, "threadsNum": 8, "milliseconds": 816, "acceleration": 1.9019607843137254 }
+{ "name": "Communication", "size": 2875, "threadsNum": 9, "milliseconds": 793, "acceleration": 1.957124842370744 }
+{ "name": "Communication", "size": 2875, "threadsNum": 10, "milliseconds": 787, "acceleration": 1.9720457433290979 }
+{ "name": "Communication", "size": 2875, "threadsNum": 11, "milliseconds": 735, "acceleration": 2.11156462585034 }
+{ "name": "Communication", "size": 2875, "threadsNum": 12, "milliseconds": 762, "acceleration": 2.036745406824147 }
+{ "name": "Sequential", "size": 2875, "milliseconds": 1588 }
+{ "name": "Communication", "size": 2875, "threadsNum": 2, "milliseconds": 1917, "acceleration": 0.828377673448096 }
+{ "name": "Communication", "size": 2875, "threadsNum": 3, "milliseconds": 1074, "acceleration": 1.4785847299813781 }
+{ "name": "Communication", "size": 2875, "threadsNum": 4, "milliseconds": 988, "acceleration": 1.6072874493927125 }
+{ "name": "Communication", "size": 2875, "threadsNum": 5, "milliseconds": 880, "acceleration": 1.8045454545454545 }
+{ "name": "Communication", "size": 2875, "threadsNum": 6, "milliseconds": 824, "acceleration": 1.9271844660194175 }
+{ "name": "Communication", "size": 2875, "threadsNum": 7, "milliseconds": 783, "acceleration": 2.028097062579821 }
+{ "name": "Communication", "size": 2875, "threadsNum": 8, "milliseconds": 752, "acceleration": 2.1117021276595747 }
+{ "name": "Communication", "size": 2875, "threadsNum": 9, "milliseconds": 726, "acceleration": 2.18732782369146 }
+{ "name": "Communication", "size": 2875, "threadsNum": 10, "milliseconds": 713, "acceleration": 2.227208976157083 }
+{ "name": "Communication", "size": 2875, "threadsNum": 11, "milliseconds": 714, "acceleration": 2.224089635854342 }
+{ "name": "Communication", "size": 2875, "threadsNum": 12, "milliseconds": 777, "acceleration": 2.043758043758044 }
+{ "name": "Sequential", "size": 2875, "milliseconds": 1586 }
+{ "name": "Communication", "size": 2875, "threadsNum": 2, "milliseconds": 1934, "acceleration": 0.8200620475698035 }
+{ "name": "Communication", "size": 2875, "threadsNum": 3, "milliseconds": 1063, "acceleration": 1.4920037629350893 }
+{ "name": "Communication", "size": 2875, "threadsNum": 4, "milliseconds": 1029, "acceleration": 1.5413022351797863 }
+{ "name": "Communication", "size": 2875, "threadsNum": 5, "milliseconds": 991, "acceleration": 1.6004036326942481 }
+{ "name": "Communication", "size": 2875, "threadsNum": 6, "milliseconds": 924, "acceleration": 1.7164502164502164 }
+{ "name": "Communication", "size": 2875, "threadsNum": 7, "milliseconds": 798, "acceleration": 1.987468671679198 }
+{ "name": "Communication", "size": 2875, "threadsNum": 8, "milliseconds": 762, "acceleration": 2.0813648293963256 }
+{ "name": "Communication", "size": 2875, "threadsNum": 9, "milliseconds": 732, "acceleration": 2.1666666666666665 }
+{ "name": "Communication", "size": 2875, "threadsNum": 10, "milliseconds": 724, "acceleration": 2.1906077348066297 }
+{ "name": "Communication", "size": 2875, "threadsNum": 11, "milliseconds": 729, "acceleration": 2.175582990397805 }
+{ "name": "Communication", "size": 2875, "threadsNum": 12, "milliseconds": 825, "acceleration": 1.9224242424242424 }
+{ "name": "Sequential", "size": 2875, "milliseconds": 1679 }
+{ "name": "Communication", "size": 2875, "threadsNum": 2, "milliseconds": 1629, "acceleration": 1.0306936771025168 }
+{ "name": "Communication", "size": 2875, "threadsNum": 3, "milliseconds": 1090, "acceleration": 1.5403669724770641 }
+{ "name": "Communication", "size": 2875, "threadsNum": 4, "milliseconds": 1248, "acceleration": 1.345352564102564 }
+{ "name": "Communication", "size": 2875, "threadsNum": 5, "milliseconds": 1100, "acceleration": 1.5263636363636364 }
+{ "name": "Communication", "size": 2875, "threadsNum": 6, "milliseconds": 997, "acceleration": 1.6840521564694082 }
+{ "name": "Communication", "size": 2875, "threadsNum": 7, "milliseconds": 889, "acceleration": 1.8886389201349831 }
+{ "name": "Communication", "size": 2875, "threadsNum": 8, "milliseconds": 835, "acceleration": 2.0107784431137725 }
+{ "name": "Communication", "size": 2875, "threadsNum": 9, "milliseconds": 793, "acceleration": 2.1172761664564943 }
+{ "name": "Communication", "size": 2875, "threadsNum": 10, "milliseconds": 747, "acceleration": 2.247657295850067 }
+{ "name": "Communication", "size": 2875, "threadsNum": 11, "milliseconds": 816, "acceleration": 2.0575980392156863 }
+{ "name": "Communication", "size": 2875, "threadsNum": 12, "milliseconds": 945, "acceleration": 1.7767195767195767 }
+{ "name": "Sequential", "size": 3000, "milliseconds": 2171 }
+{ "name": "Communication", "size": 3000, "threadsNum": 2, "milliseconds": 1966, "acceleration": 1.1042726347914547 }
+{ "name": "Communication", "size": 3000, "threadsNum": 3, "milliseconds": 1221, "acceleration": 1.7780507780507782 }
+{ "name": "Communication", "size": 3000, "threadsNum": 4, "milliseconds": 1091, "acceleration": 1.989917506874427 }
+{ "name": "Communication", "size": 3000, "threadsNum": 5, "milliseconds": 1127, "acceleration": 1.9263531499556343 }
+{ "name": "Communication", "size": 3000, "threadsNum": 6, "milliseconds": 972, "acceleration": 2.233539094650206 }
+{ "name": "Communication", "size": 3000, "threadsNum": 7, "milliseconds": 874, "acceleration": 2.4839816933638446 }
+{ "name": "Communication", "size": 3000, "threadsNum": 8, "milliseconds": 835, "acceleration": 2.6 }
+{ "name": "Communication", "size": 3000, "threadsNum": 9, "milliseconds": 841, "acceleration": 2.581450653983353 }
+{ "name": "Communication", "size": 3000, "threadsNum": 10, "milliseconds": 826, "acceleration": 2.628329297820823 }
+{ "name": "Communication", "size": 3000, "threadsNum": 11, "milliseconds": 802, "acceleration": 2.7069825436408976 }
+{ "name": "Communication", "size": 3000, "threadsNum": 12, "milliseconds": 797, "acceleration": 2.72396486825596 }
+{ "name": "Sequential", "size": 3000, "milliseconds": 1764 }
+{ "name": "Communication", "size": 3000, "threadsNum": 2, "milliseconds": 2232, "acceleration": 0.7903225806451613 }
+{ "name": "Communication", "size": 3000, "threadsNum": 3, "milliseconds": 1174, "acceleration": 1.5025553662691653 }
+{ "name": "Communication", "size": 3000, "threadsNum": 4, "milliseconds": 1097, "acceleration": 1.6080218778486781 }
+{ "name": "Communication", "size": 3000, "threadsNum": 5, "milliseconds": 1009, "acceleration": 1.7482656095143707 }
+{ "name": "Communication", "size": 3000, "threadsNum": 6, "milliseconds": 931, "acceleration": 1.894736842105263 }
+{ "name": "Communication", "size": 3000, "threadsNum": 7, "milliseconds": 954, "acceleration": 1.849056603773585 }
+{ "name": "Communication", "size": 3000, "threadsNum": 8, "milliseconds": 849, "acceleration": 2.07773851590106 }
+{ "name": "Communication", "size": 3000, "threadsNum": 9, "milliseconds": 828, "acceleration": 2.130434782608696 }
+{ "name": "Communication", "size": 3000, "threadsNum": 10, "milliseconds": 802, "acceleration": 2.199501246882793 }
+{ "name": "Communication", "size": 3000, "threadsNum": 11, "milliseconds": 832, "acceleration": 2.1201923076923075 }
+{ "name": "Communication", "size": 3000, "threadsNum": 12, "milliseconds": 790, "acceleration": 2.232911392405063 }
+{ "name": "Sequential", "size": 3000, "milliseconds": 1744 }
+{ "name": "Communication", "size": 3000, "threadsNum": 2, "milliseconds": 1771, "acceleration": 0.9847543760587238 }
+{ "name": "Communication", "size": 3000, "threadsNum": 3, "milliseconds": 1279, "acceleration": 1.3635652853792024 }
+{ "name": "Communication", "size": 3000, "threadsNum": 4, "milliseconds": 1106, "acceleration": 1.576853526220615 }
+{ "name": "Communication", "size": 3000, "threadsNum": 5, "milliseconds": 991, "acceleration": 1.7598385469223008 }
+{ "name": "Communication", "size": 3000, "threadsNum": 6, "milliseconds": 948, "acceleration": 1.839662447257384 }
+{ "name": "Communication", "size": 3000, "threadsNum": 7, "milliseconds": 944, "acceleration": 1.847457627118644 }
+{ "name": "Communication", "size": 3000, "threadsNum": 8, "milliseconds": 842, "acceleration": 2.07125890736342 }
+{ "name": "Communication", "size": 3000, "threadsNum": 9, "milliseconds": 846, "acceleration": 2.061465721040189 }
+{ "name": "Communication", "size": 3000, "threadsNum": 10, "milliseconds": 940, "acceleration": 1.8553191489361702 }
+{ "name": "Communication", "size": 3000, "threadsNum": 11, "milliseconds": 1057, "acceleration": 1.6499526963103122 }
+{ "name": "Communication", "size": 3000, "threadsNum": 12, "milliseconds": 873, "acceleration": 1.997709049255441 }
+{ "name": "Sequential", "size": 3000, "milliseconds": 1724 }
+{ "name": "Communication", "size": 3000, "threadsNum": 2, "milliseconds": 2112, "acceleration": 0.8162878787878788 }
+{ "name": "Communication", "size": 3000, "threadsNum": 3, "milliseconds": 1179, "acceleration": 1.46225614927905 }
+{ "name": "Communication", "size": 3000, "threadsNum": 4, "milliseconds": 1116, "acceleration": 1.5448028673835126 }
+{ "name": "Communication", "size": 3000, "threadsNum": 5, "milliseconds": 916, "acceleration": 1.8820960698689957 }
+{ "name": "Communication", "size": 3000, "threadsNum": 6, "milliseconds": 910, "acceleration": 1.8945054945054944 }
+{ "name": "Communication", "size": 3000, "threadsNum": 7, "milliseconds": 834, "acceleration": 2.067146282973621 }
+{ "name": "Communication", "size": 3000, "threadsNum": 8, "milliseconds": 1080, "acceleration": 1.5962962962962963 }
+{ "name": "Communication", "size": 3000, "threadsNum": 9, "milliseconds": 940, "acceleration": 1.8340425531914895 }
+{ "name": "Communication", "size": 3000, "threadsNum": 10, "milliseconds": 819, "acceleration": 2.105006105006105 }
+{ "name": "Communication", "size": 3000, "threadsNum": 11, "milliseconds": 871, "acceleration": 1.9793340987370838 }
+{ "name": "Communication", "size": 3000, "threadsNum": 12, "milliseconds": 809, "acceleration": 2.131025957972806 }
+{ "name": "Sequential", "size": 3000, "milliseconds": 1660 }
+{ "name": "Communication", "size": 3000, "threadsNum": 2, "milliseconds": 2082, "acceleration": 0.7973102785782901 }
+{ "name": "Communication", "size": 3000, "threadsNum": 3, "milliseconds": 1159, "acceleration": 1.4322691975841242 }
+{ "name": "Communication", "size": 3000, "threadsNum": 4, "milliseconds": 1113, "acceleration": 1.4914645103324349 }
+{ "name": "Communication", "size": 3000, "threadsNum": 5, "milliseconds": 985, "acceleration": 1.6852791878172588 }
+{ "name": "Communication", "size": 3000, "threadsNum": 6, "milliseconds": 939, "acceleration": 1.7678381256656017 }
+{ "name": "Communication", "size": 3000, "threadsNum": 7, "milliseconds": 849, "acceleration": 1.9552414605418138 }
+{ "name": "Communication", "size": 3000, "threadsNum": 8, "milliseconds": 826, "acceleration": 2.009685230024213 }
+{ "name": "Communication", "size": 3000, "threadsNum": 9, "milliseconds": 788, "acceleration": 2.1065989847715736 }
+{ "name": "Communication", "size": 3000, "threadsNum": 10, "milliseconds": 793, "acceleration": 2.0933165195460277 }
+{ "name": "Communication", "size": 3000, "threadsNum": 11, "milliseconds": 777, "acceleration": 2.1364221364221363 }
+{ "name": "Communication", "size": 3000, "threadsNum": 12, "milliseconds": 780, "acceleration": 2.128205128205128 }
+{ "name": "Sequential", "size": 3125, "milliseconds": 1929 }
+{ "name": "Communication", "size": 3125, "threadsNum": 2, "milliseconds": 2369, "acceleration": 0.8142676234698185 }
+{ "name": "Communication", "size": 3125, "threadsNum": 3, "milliseconds": 1392, "acceleration": 1.3857758620689655 }
+{ "name": "Communication", "size": 3125, "threadsNum": 4, "milliseconds": 1216, "acceleration": 1.5863486842105263 }
+{ "name": "Communication", "size": 3125, "threadsNum": 5, "milliseconds": 1026, "acceleration": 1.8801169590643274 }
+{ "name": "Communication", "size": 3125, "threadsNum": 6, "milliseconds": 1023, "acceleration": 1.8856304985337244 }
+{ "name": "Communication", "size": 3125, "threadsNum": 7, "milliseconds": 960, "acceleration": 2.009375 }
+{ "name": "Communication", "size": 3125, "threadsNum": 8, "milliseconds": 904, "acceleration": 2.1338495575221237 }
+{ "name": "Communication", "size": 3125, "threadsNum": 9, "milliseconds": 869, "acceleration": 2.2197928653624857 }
+{ "name": "Communication", "size": 3125, "threadsNum": 10, "milliseconds": 846, "acceleration": 2.280141843971631 }
+{ "name": "Communication", "size": 3125, "threadsNum": 11, "milliseconds": 848, "acceleration": 2.2747641509433962 }
+{ "name": "Communication", "size": 3125, "threadsNum": 12, "milliseconds": 860, "acceleration": 2.2430232558139536 }
+{ "name": "Sequential", "size": 3125, "milliseconds": 1801 }
+{ "name": "Communication", "size": 3125, "threadsNum": 2, "milliseconds": 2235, "acceleration": 0.8058165548098434 }
+{ "name": "Communication", "size": 3125, "threadsNum": 3, "milliseconds": 1349, "acceleration": 1.335063009636768 }
+{ "name": "Communication", "size": 3125, "threadsNum": 4, "milliseconds": 1225, "acceleration": 1.4702040816326531 }
+{ "name": "Communication", "size": 3125, "threadsNum": 5, "milliseconds": 1066, "acceleration": 1.6894934333958724 }
+{ "name": "Communication", "size": 3125, "threadsNum": 6, "milliseconds": 1002, "acceleration": 1.7974051896207586 }
+{ "name": "Communication", "size": 3125, "threadsNum": 7, "milliseconds": 941, "acceleration": 1.9139213602550478 }
+{ "name": "Communication", "size": 3125, "threadsNum": 8, "milliseconds": 924, "acceleration": 1.949134199134199 }
+{ "name": "Communication", "size": 3125, "threadsNum": 9, "milliseconds": 892, "acceleration": 2.0190582959641254 }
+{ "name": "Communication", "size": 3125, "threadsNum": 10, "milliseconds": 865, "acceleration": 2.0820809248554912 }
+{ "name": "Communication", "size": 3125, "threadsNum": 11, "milliseconds": 861, "acceleration": 2.091753774680604 }
+{ "name": "Communication", "size": 3125, "threadsNum": 12, "milliseconds": 855, "acceleration": 2.106432748538012 }
+{ "name": "Sequential", "size": 3125, "milliseconds": 1835 }
+{ "name": "Communication", "size": 3125, "threadsNum": 2, "milliseconds": 1902, "acceleration": 0.9647739221871714 }
+{ "name": "Communication", "size": 3125, "threadsNum": 3, "milliseconds": 1348, "acceleration": 1.3612759643916914 }
+{ "name": "Communication", "size": 3125, "threadsNum": 4, "milliseconds": 1220, "acceleration": 1.5040983606557377 }
+{ "name": "Communication", "size": 3125, "threadsNum": 5, "milliseconds": 1050, "acceleration": 1.7476190476190476 }
+{ "name": "Communication", "size": 3125, "threadsNum": 6, "milliseconds": 990, "acceleration": 1.8535353535353536 }
+{ "name": "Communication", "size": 3125, "threadsNum": 7, "milliseconds": 951, "acceleration": 1.9295478443743428 }
+{ "name": "Communication", "size": 3125, "threadsNum": 8, "milliseconds": 922, "acceleration": 1.990238611713666 }
+{ "name": "Communication", "size": 3125, "threadsNum": 9, "milliseconds": 884, "acceleration": 2.07579185520362 }
+{ "name": "Communication", "size": 3125, "threadsNum": 10, "milliseconds": 864, "acceleration": 2.1238425925925926 }
+{ "name": "Communication", "size": 3125, "threadsNum": 11, "milliseconds": 843, "acceleration": 2.176749703440095 }
+{ "name": "Communication", "size": 3125, "threadsNum": 12, "milliseconds": 860, "acceleration": 2.133720930232558 }
+{ "name": "Sequential", "size": 3125, "milliseconds": 1845 }
+{ "name": "Communication", "size": 3125, "threadsNum": 2, "milliseconds": 2271, "acceleration": 0.8124174372523117 }
+{ "name": "Communication", "size": 3125, "threadsNum": 3, "milliseconds": 1254, "acceleration": 1.4712918660287082 }
+{ "name": "Communication", "size": 3125, "threadsNum": 4, "milliseconds": 1240, "acceleration": 1.4879032258064515 }
+{ "name": "Communication", "size": 3125, "threadsNum": 5, "milliseconds": 1051, "acceleration": 1.7554709800190296 }
+{ "name": "Communication", "size": 3125, "threadsNum": 6, "milliseconds": 1004, "acceleration": 1.8376494023904382 }
+{ "name": "Communication", "size": 3125, "threadsNum": 7, "milliseconds": 947, "acceleration": 1.9482576557550157 }
+{ "name": "Communication", "size": 3125, "threadsNum": 8, "milliseconds": 923, "acceleration": 1.9989165763813652 }
+{ "name": "Communication", "size": 3125, "threadsNum": 9, "milliseconds": 894, "acceleration": 2.063758389261745 }
+{ "name": "Communication", "size": 3125, "threadsNum": 10, "milliseconds": 870, "acceleration": 2.1206896551724137 }
+{ "name": "Communication", "size": 3125, "threadsNum": 11, "milliseconds": 873, "acceleration": 2.11340206185567 }
+{ "name": "Communication", "size": 3125, "threadsNum": 12, "milliseconds": 863, "acceleration": 2.137891077636153 }
+{ "name": "Sequential", "size": 3125, "milliseconds": 1923 }
+{ "name": "Communication", "size": 3125, "threadsNum": 2, "milliseconds": 2258, "acceleration": 0.8516386182462357 }
+{ "name": "Communication", "size": 3125, "threadsNum": 3, "milliseconds": 1379, "acceleration": 1.3944887599709934 }
+{ "name": "Communication", "size": 3125, "threadsNum": 4, "milliseconds": 1217, "acceleration": 1.580115036976171 }
+{ "name": "Communication", "size": 3125, "threadsNum": 5, "milliseconds": 1054, "acceleration": 1.8244781783681214 }
+{ "name": "Communication", "size": 3125, "threadsNum": 6, "milliseconds": 992, "acceleration": 1.938508064516129 }
+{ "name": "Communication", "size": 3125, "threadsNum": 7, "milliseconds": 971, "acceleration": 1.98043254376931 }
+{ "name": "Communication", "size": 3125, "threadsNum": 8, "milliseconds": 932, "acceleration": 2.063304721030043 }
+{ "name": "Communication", "size": 3125, "threadsNum": 9, "milliseconds": 890, "acceleration": 2.160674157303371 }
+{ "name": "Communication", "size": 3125, "threadsNum": 10, "milliseconds": 869, "acceleration": 2.2128883774453394 }
+{ "name": "Communication", "size": 3125, "threadsNum": 11, "milliseconds": 859, "acceleration": 2.2386495925494763 }
+{ "name": "Communication", "size": 3125, "threadsNum": 12, "milliseconds": 862, "acceleration": 2.230858468677494 }
+{ "name": "Sequential", "size": 3250, "milliseconds": 2134 }
+{ "name": "Communication", "size": 3250, "threadsNum": 2, "milliseconds": 2299, "acceleration": 0.9282296650717703 }
+{ "name": "Communication", "size": 3250, "threadsNum": 3, "milliseconds": 1488, "acceleration": 1.4341397849462365 }
+{ "name": "Communication", "size": 3250, "threadsNum": 4, "milliseconds": 1329, "acceleration": 1.6057185854025584 }
+{ "name": "Communication", "size": 3250, "threadsNum": 5, "milliseconds": 1183, "acceleration": 1.8038884192730347 }
+{ "name": "Communication", "size": 3250, "threadsNum": 6, "milliseconds": 1090, "acceleration": 1.9577981651376146 }
+{ "name": "Communication", "size": 3250, "threadsNum": 7, "milliseconds": 1015, "acceleration": 2.1024630541871923 }
+{ "name": "Communication", "size": 3250, "threadsNum": 8, "milliseconds": 993, "acceleration": 2.1490433031218528 }
+{ "name": "Communication", "size": 3250, "threadsNum": 9, "milliseconds": 948, "acceleration": 2.2510548523206753 }
+{ "name": "Communication", "size": 3250, "threadsNum": 10, "milliseconds": 949, "acceleration": 2.24868282402529 }
+{ "name": "Communication", "size": 3250, "threadsNum": 11, "milliseconds": 925, "acceleration": 2.307027027027027 }
+{ "name": "Communication", "size": 3250, "threadsNum": 12, "milliseconds": 929, "acceleration": 2.2970936490850375 }
+{ "name": "Sequential", "size": 3250, "milliseconds": 2102 }
+{ "name": "Communication", "size": 3250, "threadsNum": 2, "milliseconds": 2155, "acceleration": 0.9754060324825986 }
+{ "name": "Communication", "size": 3250, "threadsNum": 3, "milliseconds": 1741, "acceleration": 1.2073520964962665 }
+{ "name": "Communication", "size": 3250, "threadsNum": 4, "milliseconds": 1518, "acceleration": 1.3847167325428196 }
+{ "name": "Communication", "size": 3250, "threadsNum": 5, "milliseconds": 1170, "acceleration": 1.7965811965811966 }
+{ "name": "Communication", "size": 3250, "threadsNum": 6, "milliseconds": 1095, "acceleration": 1.919634703196347 }
+{ "name": "Communication", "size": 3250, "threadsNum": 7, "milliseconds": 1010, "acceleration": 2.0811881188118813 }
+{ "name": "Communication", "size": 3250, "threadsNum": 8, "milliseconds": 1010, "acceleration": 2.0811881188118813 }
+{ "name": "Communication", "size": 3250, "threadsNum": 9, "milliseconds": 944, "acceleration": 2.2266949152542375 }
+{ "name": "Communication", "size": 3250, "threadsNum": 10, "milliseconds": 1019, "acceleration": 2.0628066732090287 }
+{ "name": "Communication", "size": 3250, "threadsNum": 11, "milliseconds": 956, "acceleration": 2.198744769874477 }
+{ "name": "Communication", "size": 3250, "threadsNum": 12, "milliseconds": 954, "acceleration": 2.20335429769392 }
+{ "name": "Sequential", "size": 3250, "milliseconds": 2259 }
+{ "name": "Communication", "size": 3250, "threadsNum": 2, "milliseconds": 2963, "acceleration": 0.7624029699628755 }
+{ "name": "Communication", "size": 3250, "threadsNum": 3, "milliseconds": 1576, "acceleration": 1.4333756345177664 }
+{ "name": "Communication", "size": 3250, "threadsNum": 4, "milliseconds": 1383, "acceleration": 1.6334056399132322 }
+{ "name": "Communication", "size": 3250, "threadsNum": 5, "milliseconds": 1206, "acceleration": 1.873134328358209 }
+{ "name": "Communication", "size": 3250, "threadsNum": 6, "milliseconds": 1117, "acceleration": 2.0223813786929274 }
+{ "name": "Communication", "size": 3250, "threadsNum": 7, "milliseconds": 1113, "acceleration": 2.0296495956873315 }
+{ "name": "Communication", "size": 3250, "threadsNum": 8, "milliseconds": 1062, "acceleration": 2.1271186440677967 }
+{ "name": "Communication", "size": 3250, "threadsNum": 9, "milliseconds": 959, "acceleration": 2.3555787278415017 }
+{ "name": "Communication", "size": 3250, "threadsNum": 10, "milliseconds": 982, "acceleration": 2.3004073319755602 }
+{ "name": "Communication", "size": 3250, "threadsNum": 11, "milliseconds": 1022, "acceleration": 2.210371819960861 }
+{ "name": "Communication", "size": 3250, "threadsNum": 12, "milliseconds": 994, "acceleration": 2.272635814889336 }
+{ "name": "Sequential", "size": 3250, "milliseconds": 2242 }
+{ "name": "Communication", "size": 3250, "threadsNum": 2, "milliseconds": 2941, "acceleration": 0.7623257395443727 }
+{ "name": "Communication", "size": 3250, "threadsNum": 3, "milliseconds": 1620, "acceleration": 1.3839506172839506 }
+{ "name": "Communication", "size": 3250, "threadsNum": 4, "milliseconds": 1330, "acceleration": 1.6857142857142857 }
+{ "name": "Communication", "size": 3250, "threadsNum": 5, "milliseconds": 1187, "acceleration": 1.8887952822240943 }
+{ "name": "Communication", "size": 3250, "threadsNum": 6, "milliseconds": 1169, "acceleration": 1.9178785286569717 }
+{ "name": "Communication", "size": 3250, "threadsNum": 7, "milliseconds": 1040, "acceleration": 2.1557692307692307 }
+{ "name": "Communication", "size": 3250, "threadsNum": 8, "milliseconds": 1048, "acceleration": 2.1393129770992365 }
+{ "name": "Communication", "size": 3250, "threadsNum": 9, "milliseconds": 998, "acceleration": 2.246492985971944 }
+{ "name": "Communication", "size": 3250, "threadsNum": 10, "milliseconds": 1117, "acceleration": 2.007162041181737 }
+{ "name": "Communication", "size": 3250, "threadsNum": 11, "milliseconds": 1145, "acceleration": 1.9580786026200874 }
+{ "name": "Communication", "size": 3250, "threadsNum": 12, "milliseconds": 1114, "acceleration": 2.012567324955117 }
+{ "name": "Sequential", "size": 3250, "milliseconds": 2226 }
+{ "name": "Communication", "size": 3250, "threadsNum": 2, "milliseconds": 2726, "acceleration": 0.8165810711665444 }
+{ "name": "Communication", "size": 3250, "threadsNum": 3, "milliseconds": 1483, "acceleration": 1.5010114632501685 }
+{ "name": "Communication", "size": 3250, "threadsNum": 4, "milliseconds": 1428, "acceleration": 1.5588235294117647 }
+{ "name": "Communication", "size": 3250, "threadsNum": 5, "milliseconds": 1241, "acceleration": 1.7937147461724416 }
+{ "name": "Communication", "size": 3250, "threadsNum": 6, "milliseconds": 1102, "acceleration": 2.019963702359347 }
+{ "name": "Communication", "size": 3250, "threadsNum": 7, "milliseconds": 1019, "acceleration": 2.184494602551521 }
+{ "name": "Communication", "size": 3250, "threadsNum": 8, "milliseconds": 991, "acceleration": 2.2462159434914226 }
+{ "name": "Communication", "size": 3250, "threadsNum": 9, "milliseconds": 947, "acceleration": 2.350580781414995 }
+{ "name": "Communication", "size": 3250, "threadsNum": 10, "milliseconds": 938, "acceleration": 2.373134328358209 }
+{ "name": "Communication", "size": 3250, "threadsNum": 11, "milliseconds": 932, "acceleration": 2.388412017167382 }
+{ "name": "Communication", "size": 3250, "threadsNum": 12, "milliseconds": 944, "acceleration": 2.358050847457627 }
+{ "name": "Sequential", "size": 3500, "milliseconds": 2591 }
+{ "name": "Communication", "size": 3500, "threadsNum": 2, "milliseconds": 3149, "acceleration": 0.8228008891711655 }
+{ "name": "Communication", "size": 3500, "threadsNum": 3, "milliseconds": 1724, "acceleration": 1.5029002320185614 }
+{ "name": "Communication", "size": 3500, "threadsNum": 4, "milliseconds": 1571, "acceleration": 1.6492679821769574 }
+{ "name": "Communication", "size": 3500, "threadsNum": 5, "milliseconds": 1387, "acceleration": 1.868060562364816 }
+{ "name": "Communication", "size": 3500, "threadsNum": 6, "milliseconds": 1293, "acceleration": 2.0038669760247485 }
+{ "name": "Communication", "size": 3500, "threadsNum": 7, "milliseconds": 1381, "acceleration": 1.8761766835626357 }
+{ "name": "Communication", "size": 3500, "threadsNum": 8, "milliseconds": 1378, "acceleration": 1.8802612481857766 }
+{ "name": "Communication", "size": 3500, "threadsNum": 9, "milliseconds": 1282, "acceleration": 2.0210608424336973 }
+{ "name": "Communication", "size": 3500, "threadsNum": 10, "milliseconds": 1109, "acceleration": 2.3363390441839496 }
+{ "name": "Communication", "size": 3500, "threadsNum": 11, "milliseconds": 1089, "acceleration": 2.3792470156106518 }
+{ "name": "Communication", "size": 3500, "threadsNum": 12, "milliseconds": 1084, "acceleration": 2.390221402214022 }
+{ "name": "Sequential", "size": 3500, "milliseconds": 3061 }
+{ "name": "Communication", "size": 3500, "threadsNum": 2, "milliseconds": 3469, "acceleration": 0.8823868550014413 }
+{ "name": "Communication", "size": 3500, "threadsNum": 3, "milliseconds": 1694, "acceleration": 1.806965761511216 }
+{ "name": "Communication", "size": 3500, "threadsNum": 4, "milliseconds": 1612, "acceleration": 1.8988833746898264 }
+{ "name": "Communication", "size": 3500, "threadsNum": 5, "milliseconds": 1402, "acceleration": 2.183309557774608 }
+{ "name": "Communication", "size": 3500, "threadsNum": 6, "milliseconds": 1442, "acceleration": 2.122746185852982 }
+{ "name": "Communication", "size": 3500, "threadsNum": 7, "milliseconds": 1280, "acceleration": 2.39140625 }
+{ "name": "Communication", "size": 3500, "threadsNum": 8, "milliseconds": 1182, "acceleration": 2.589678510998308 }
+{ "name": "Communication", "size": 3500, "threadsNum": 9, "milliseconds": 1147, "acceleration": 2.6687009590235395 }
+{ "name": "Communication", "size": 3500, "threadsNum": 10, "milliseconds": 1110, "acceleration": 2.7576576576576577 }
+{ "name": "Communication", "size": 3500, "threadsNum": 11, "milliseconds": 1105, "acceleration": 2.7701357466063348 }
+{ "name": "Communication", "size": 3500, "threadsNum": 12, "milliseconds": 1166, "acceleration": 2.6252144082332762 }
+{ "name": "Sequential", "size": 3500, "milliseconds": 2643 }
+{ "name": "Communication", "size": 3500, "threadsNum": 2, "milliseconds": 3303, "acceleration": 0.8001816530426885 }
+{ "name": "Communication", "size": 3500, "threadsNum": 3, "milliseconds": 1715, "acceleration": 1.5411078717201165 }
+{ "name": "Communication", "size": 3500, "threadsNum": 4, "milliseconds": 1587, "acceleration": 1.665406427221172 }
+{ "name": "Communication", "size": 3500, "threadsNum": 5, "milliseconds": 1382, "acceleration": 1.9124457308248914 }
+{ "name": "Communication", "size": 3500, "threadsNum": 6, "milliseconds": 1295, "acceleration": 2.040926640926641 }
+{ "name": "Communication", "size": 3500, "threadsNum": 7, "milliseconds": 1171, "acceleration": 2.2570452604611444 }
+{ "name": "Communication", "size": 3500, "threadsNum": 8, "milliseconds": 1167, "acceleration": 2.2647814910025708 }
+{ "name": "Communication", "size": 3500, "threadsNum": 9, "milliseconds": 1113, "acceleration": 2.3746630727762805 }
+{ "name": "Communication", "size": 3500, "threadsNum": 10, "milliseconds": 1079, "acceleration": 2.449490268767377 }
+{ "name": "Communication", "size": 3500, "threadsNum": 11, "milliseconds": 1094, "acceleration": 2.415904936014625 }
+{ "name": "Communication", "size": 3500, "threadsNum": 12, "milliseconds": 1081, "acceleration": 2.444958371877891 }
+{ "name": "Sequential", "size": 3500, "milliseconds": 2646 }
+{ "name": "Communication", "size": 3500, "threadsNum": 2, "milliseconds": 3191, "acceleration": 0.8292071450955814 }
+{ "name": "Communication", "size": 3500, "threadsNum": 3, "milliseconds": 1797, "acceleration": 1.4724540901502505 }
+{ "name": "Communication", "size": 3500, "threadsNum": 4, "milliseconds": 1604, "acceleration": 1.6496259351620948 }
+{ "name": "Communication", "size": 3500, "threadsNum": 5, "milliseconds": 1357, "acceleration": 1.9498894620486367 }
+{ "name": "Communication", "size": 3500, "threadsNum": 6, "milliseconds": 1283, "acceleration": 2.0623538581449727 }
+{ "name": "Communication", "size": 3500, "threadsNum": 7, "milliseconds": 1219, "acceleration": 2.170631665299426 }
+{ "name": "Communication", "size": 3500, "threadsNum": 8, "milliseconds": 1177, "acceleration": 2.248088360237893 }
+{ "name": "Communication", "size": 3500, "threadsNum": 9, "milliseconds": 1138, "acceleration": 2.3251318101933216 }
+{ "name": "Communication", "size": 3500, "threadsNum": 10, "milliseconds": 1096, "acceleration": 2.414233576642336 }
+{ "name": "Communication", "size": 3500, "threadsNum": 11, "milliseconds": 1101, "acceleration": 2.4032697547683926 }
+{ "name": "Communication", "size": 3500, "threadsNum": 12, "milliseconds": 1081, "acceleration": 2.4477335800185016 }
+{ "name": "Sequential", "size": 3500, "milliseconds": 2561 }
+{ "name": "Communication", "size": 3500, "threadsNum": 2, "milliseconds": 3209, "acceleration": 0.7980679339358056 }
+{ "name": "Communication", "size": 3500, "threadsNum": 3, "milliseconds": 1720, "acceleration": 1.488953488372093 }
+{ "name": "Communication", "size": 3500, "threadsNum": 4, "milliseconds": 1600, "acceleration": 1.600625 }
+{ "name": "Communication", "size": 3500, "threadsNum": 5, "milliseconds": 1377, "acceleration": 1.859840232389252 }
+{ "name": "Communication", "size": 3500, "threadsNum": 6, "milliseconds": 1284, "acceleration": 1.9945482866043613 }
+{ "name": "Communication", "size": 3500, "threadsNum": 7, "milliseconds": 1225, "acceleration": 2.0906122448979594 }
+{ "name": "Communication", "size": 3500, "threadsNum": 8, "milliseconds": 1146, "acceleration": 2.2347294938917974 }
+{ "name": "Communication", "size": 3500, "threadsNum": 9, "milliseconds": 1105, "acceleration": 2.3176470588235296 }
+{ "name": "Communication", "size": 3500, "threadsNum": 10, "milliseconds": 1104, "acceleration": 2.3197463768115942 }
+{ "name": "Communication", "size": 3500, "threadsNum": 11, "milliseconds": 1084, "acceleration": 2.3625461254612548 }
+{ "name": "Communication", "size": 3500, "threadsNum": 12, "milliseconds": 1090, "acceleration": 2.34954128440367 }
+{ "name": "Sequential", "size": 3635, "milliseconds": 2946 }
+{ "name": "Communication", "size": 3635, "threadsNum": 2, "milliseconds": 3662, "acceleration": 0.8044784270890224 }
+{ "name": "Communication", "size": 3635, "threadsNum": 3, "milliseconds": 2055, "acceleration": 1.4335766423357663 }
+{ "name": "Communication", "size": 3635, "threadsNum": 4, "milliseconds": 1836, "acceleration": 1.6045751633986929 }
+{ "name": "Communication", "size": 3635, "threadsNum": 5, "milliseconds": 1473, "acceleration": 2 }
+{ "name": "Communication", "size": 3635, "threadsNum": 6, "milliseconds": 1436, "acceleration": 2.051532033426184 }
+{ "name": "Communication", "size": 3635, "threadsNum": 7, "milliseconds": 1366, "acceleration": 2.156661786237189 }
+{ "name": "Communication", "size": 3635, "threadsNum": 8, "milliseconds": 1279, "acceleration": 2.3033620015637215 }
+{ "name": "Communication", "size": 3635, "threadsNum": 9, "milliseconds": 1236, "acceleration": 2.383495145631068 }
+{ "name": "Communication", "size": 3635, "threadsNum": 10, "milliseconds": 1209, "acceleration": 2.436724565756824 }
+{ "name": "Communication", "size": 3635, "threadsNum": 11, "milliseconds": 1188, "acceleration": 2.4797979797979797 }
+{ "name": "Communication", "size": 3635, "threadsNum": 12, "milliseconds": 1177, "acceleration": 2.5029736618521667 }
+{ "name": "Sequential", "size": 3635, "milliseconds": 2915 }
+{ "name": "Communication", "size": 3635, "threadsNum": 2, "milliseconds": 3680, "acceleration": 0.7921195652173914 }
+{ "name": "Communication", "size": 3635, "threadsNum": 3, "milliseconds": 2129, "acceleration": 1.3691874119304839 }
+{ "name": "Communication", "size": 3635, "threadsNum": 4, "milliseconds": 1957, "acceleration": 1.4895247828308635 }
+{ "name": "Communication", "size": 3635, "threadsNum": 5, "milliseconds": 1761, "acceleration": 1.6553094832481545 }
+{ "name": "Communication", "size": 3635, "threadsNum": 6, "milliseconds": 1460, "acceleration": 1.9965753424657535 }
+{ "name": "Communication", "size": 3635, "threadsNum": 7, "milliseconds": 1335, "acceleration": 2.183520599250936 }
+{ "name": "Communication", "size": 3635, "threadsNum": 8, "milliseconds": 1434, "acceleration": 2.0327754532775453 }
+{ "name": "Communication", "size": 3635, "threadsNum": 9, "milliseconds": 1357, "acceleration": 2.148120854826824 }
+{ "name": "Communication", "size": 3635, "threadsNum": 10, "milliseconds": 1218, "acceleration": 2.3932676518883413 }
+{ "name": "Communication", "size": 3635, "threadsNum": 11, "milliseconds": 1210, "acceleration": 2.409090909090909 }
+{ "name": "Communication", "size": 3635, "threadsNum": 12, "milliseconds": 1196, "acceleration": 2.4372909698996654 }
+{ "name": "Sequential", "size": 3635, "milliseconds": 3022 }
+{ "name": "Communication", "size": 3635, "threadsNum": 2, "milliseconds": 3529, "acceleration": 0.856333238877869 }
+{ "name": "Communication", "size": 3635, "threadsNum": 3, "milliseconds": 2065, "acceleration": 1.4634382566585957 }
+{ "name": "Communication", "size": 3635, "threadsNum": 4, "milliseconds": 1705, "acceleration": 1.772434017595308 }
+{ "name": "Communication", "size": 3635, "threadsNum": 5, "milliseconds": 1472, "acceleration": 2.0529891304347827 }
+{ "name": "Communication", "size": 3635, "threadsNum": 6, "milliseconds": 1449, "acceleration": 2.085576259489303 }
+{ "name": "Communication", "size": 3635, "threadsNum": 7, "milliseconds": 1342, "acceleration": 2.2518628912071534 }
+{ "name": "Communication", "size": 3635, "threadsNum": 8, "milliseconds": 1275, "acceleration": 2.3701960784313725 }
+{ "name": "Communication", "size": 3635, "threadsNum": 9, "milliseconds": 1235, "acceleration": 2.4469635627530364 }
+{ "name": "Communication", "size": 3635, "threadsNum": 10, "milliseconds": 1232, "acceleration": 2.4529220779220777 }
+{ "name": "Communication", "size": 3635, "threadsNum": 11, "milliseconds": 1314, "acceleration": 2.2998477929984777 }
+{ "name": "Communication", "size": 3635, "threadsNum": 12, "milliseconds": 1187, "acceleration": 2.545914069081719 }
+{ "name": "Sequential", "size": 3635, "milliseconds": 2981 }
+{ "name": "Communication", "size": 3635, "threadsNum": 2, "milliseconds": 3033, "acceleration": 0.9828552588196505 }
+{ "name": "Communication", "size": 3635, "threadsNum": 3, "milliseconds": 2160, "acceleration": 1.3800925925925926 }
+{ "name": "Communication", "size": 3635, "threadsNum": 4, "milliseconds": 1785, "acceleration": 1.6700280112044819 }
+{ "name": "Communication", "size": 3635, "threadsNum": 5, "milliseconds": 1576, "acceleration": 1.891497461928934 }
+{ "name": "Communication", "size": 3635, "threadsNum": 6, "milliseconds": 1831, "acceleration": 1.6280720917531404 }
+{ "name": "Communication", "size": 3635, "threadsNum": 7, "milliseconds": 1716, "acceleration": 1.7371794871794872 }
+{ "name": "Communication", "size": 3635, "threadsNum": 8, "milliseconds": 1570, "acceleration": 1.8987261146496814 }
+{ "name": "Communication", "size": 3635, "threadsNum": 9, "milliseconds": 1426, "acceleration": 2.090462833099579 }
+{ "name": "Communication", "size": 3635, "threadsNum": 10, "milliseconds": 1398, "acceleration": 2.132331902718169 }
+{ "name": "Communication", "size": 3635, "threadsNum": 11, "milliseconds": 1366, "acceleration": 2.1822840409956075 }
+{ "name": "Communication", "size": 3635, "threadsNum": 12, "milliseconds": 1394, "acceleration": 2.1384505021520805 }
+{ "name": "Sequential", "size": 3635, "milliseconds": 3650 }
+{ "name": "Communication", "size": 3635, "threadsNum": 2, "milliseconds": 3808, "acceleration": 0.9585084033613446 }
+{ "name": "Communication", "size": 3635, "threadsNum": 3, "milliseconds": 2407, "acceleration": 1.5164104694640632 }
+{ "name": "Communication", "size": 3635, "threadsNum": 4, "milliseconds": 2025, "acceleration": 1.8024691358024691 }
+{ "name": "Communication", "size": 3635, "threadsNum": 5, "milliseconds": 1633, "acceleration": 2.2351500306184935 }
+{ "name": "Communication", "size": 3635, "threadsNum": 6, "milliseconds": 1576, "acceleration": 2.315989847715736 }
+{ "name": "Communication", "size": 3635, "threadsNum": 7, "milliseconds": 1549, "acceleration": 2.356358941252421 }
+{ "name": "Communication", "size": 3635, "threadsNum": 8, "milliseconds": 1462, "acceleration": 2.496580027359781 }
+{ "name": "Communication", "size": 3635, "threadsNum": 9, "milliseconds": 1389, "acceleration": 2.6277897768178544 }
+{ "name": "Communication", "size": 3635, "threadsNum": 10, "milliseconds": 1376, "acceleration": 2.6526162790697674 }
+{ "name": "Communication", "size": 3635, "threadsNum": 11, "milliseconds": 1373, "acceleration": 2.6584122359796067 }
+{ "name": "Communication", "size": 3635, "threadsNum": 12, "milliseconds": 1424, "acceleration": 2.563202247191011 }
+{ "name": "Sequential", "size": 3750, "milliseconds": 4176 }
+{ "name": "Communication", "size": 3750, "threadsNum": 2, "milliseconds": 5371, "acceleration": 0.7775088437907279 }
+{ "name": "Communication", "size": 3750, "threadsNum": 3, "milliseconds": 2757, "acceleration": 1.514689880304679 }
+{ "name": "Communication", "size": 3750, "threadsNum": 4, "milliseconds": 2134, "acceleration": 1.9568884723523898 }
+{ "name": "Communication", "size": 3750, "threadsNum": 5, "milliseconds": 1855, "acceleration": 2.251212938005391 }
+{ "name": "Communication", "size": 3750, "threadsNum": 6, "milliseconds": 1736, "acceleration": 2.4055299539170507 }
+{ "name": "Communication", "size": 3750, "threadsNum": 7, "milliseconds": 1570, "acceleration": 2.659872611464968 }
+{ "name": "Communication", "size": 3750, "threadsNum": 8, "milliseconds": 1542, "acceleration": 2.708171206225681 }
+{ "name": "Communication", "size": 3750, "threadsNum": 9, "milliseconds": 1493, "acceleration": 2.797052913596785 }
+{ "name": "Communication", "size": 3750, "threadsNum": 10, "milliseconds": 1453, "acceleration": 2.8740536820371645 }
+{ "name": "Communication", "size": 3750, "threadsNum": 11, "milliseconds": 1446, "acceleration": 2.887966804979253 }
+{ "name": "Communication", "size": 3750, "threadsNum": 12, "milliseconds": 1465, "acceleration": 2.8505119453924914 }
+{ "name": "Sequential", "size": 3750, "milliseconds": 3608 }
+{ "name": "Communication", "size": 3750, "threadsNum": 2, "milliseconds": 2922, "acceleration": 1.2347707049965777 }
+{ "name": "Communication", "size": 3750, "threadsNum": 3, "milliseconds": 2251, "acceleration": 1.6028431808085295 }
+{ "name": "Communication", "size": 3750, "threadsNum": 4, "milliseconds": 2229, "acceleration": 1.6186630776132795 }
+{ "name": "Communication", "size": 3750, "threadsNum": 5, "milliseconds": 1827, "acceleration": 1.9748221127531473 }
+{ "name": "Communication", "size": 3750, "threadsNum": 6, "milliseconds": 1893, "acceleration": 1.9059693608029582 }
+{ "name": "Communication", "size": 3750, "threadsNum": 7, "milliseconds": 1703, "acceleration": 2.1186142102172636 }
+{ "name": "Communication", "size": 3750, "threadsNum": 8, "milliseconds": 1733, "acceleration": 2.081938834391229 }
+{ "name": "Communication", "size": 3750, "threadsNum": 9, "milliseconds": 1432, "acceleration": 2.5195530726256985 }
+{ "name": "Communication", "size": 3750, "threadsNum": 10, "milliseconds": 1395, "acceleration": 2.586379928315412 }
+{ "name": "Communication", "size": 3750, "threadsNum": 11, "milliseconds": 1404, "acceleration": 2.5698005698005697 }
+{ "name": "Communication", "size": 3750, "threadsNum": 12, "milliseconds": 1375, "acceleration": 2.624 }
+{ "name": "Sequential", "size": 3750, "milliseconds": 3494 }
+{ "name": "Communication", "size": 3750, "threadsNum": 2, "milliseconds": 3336, "acceleration": 1.0473621103117505 }
+{ "name": "Communication", "size": 3750, "threadsNum": 3, "milliseconds": 2502, "acceleration": 1.3964828137490009 }
+{ "name": "Communication", "size": 3750, "threadsNum": 4, "milliseconds": 2535, "acceleration": 1.3783037475345168 }
+{ "name": "Communication", "size": 3750, "threadsNum": 5, "milliseconds": 1861, "acceleration": 1.877485222998388 }
+{ "name": "Communication", "size": 3750, "threadsNum": 6, "milliseconds": 1668, "acceleration": 2.094724220623501 }
+{ "name": "Communication", "size": 3750, "threadsNum": 7, "milliseconds": 1594, "acceleration": 2.191969887076537 }
+{ "name": "Communication", "size": 3750, "threadsNum": 8, "milliseconds": 1637, "acceleration": 2.1343921808185704 }
+{ "name": "Communication", "size": 3750, "threadsNum": 9, "milliseconds": 1454, "acceleration": 2.4030261348005504 }
+{ "name": "Communication", "size": 3750, "threadsNum": 10, "milliseconds": 1524, "acceleration": 2.2926509186351707 }
+{ "name": "Communication", "size": 3750, "threadsNum": 11, "milliseconds": 1473, "acceleration": 2.372029871011541 }
+{ "name": "Communication", "size": 3750, "threadsNum": 12, "milliseconds": 1375, "acceleration": 2.5410909090909093 }
+{ "name": "Sequential", "size": 3750, "milliseconds": 3399 }
+{ "name": "Communication", "size": 3750, "threadsNum": 2, "milliseconds": 4616, "acceleration": 0.7363518197573656 }
+{ "name": "Communication", "size": 3750, "threadsNum": 3, "milliseconds": 2530, "acceleration": 1.3434782608695652 }
+{ "name": "Communication", "size": 3750, "threadsNum": 4, "milliseconds": 2134, "acceleration": 1.592783505154639 }
+{ "name": "Communication", "size": 3750, "threadsNum": 5, "milliseconds": 1852, "acceleration": 1.8353131749460043 }
+{ "name": "Communication", "size": 3750, "threadsNum": 6, "milliseconds": 1666, "acceleration": 2.0402160864345738 }
+{ "name": "Communication", "size": 3750, "threadsNum": 7, "milliseconds": 1504, "acceleration": 2.259973404255319 }
+{ "name": "Communication", "size": 3750, "threadsNum": 8, "milliseconds": 1426, "acceleration": 2.3835904628330997 }
+{ "name": "Communication", "size": 3750, "threadsNum": 9, "milliseconds": 1414, "acceleration": 2.4038189533239036 }
+{ "name": "Communication", "size": 3750, "threadsNum": 10, "milliseconds": 1565, "acceleration": 2.171884984025559 }
+{ "name": "Communication", "size": 3750, "threadsNum": 11, "milliseconds": 1375, "acceleration": 2.472 }
+{ "name": "Communication", "size": 3750, "threadsNum": 12, "milliseconds": 1605, "acceleration": 2.1177570093457945 }
+{ "name": "Sequential", "size": 3750, "milliseconds": 3416 }
+{ "name": "Communication", "size": 3750, "threadsNum": 2, "milliseconds": 4391, "acceleration": 0.7779549077658847 }
+{ "name": "Communication", "size": 3750, "threadsNum": 3, "milliseconds": 2180, "acceleration": 1.5669724770642202 }
+{ "name": "Communication", "size": 3750, "threadsNum": 4, "milliseconds": 2155, "acceleration": 1.585150812064965 }
+{ "name": "Communication", "size": 3750, "threadsNum": 5, "milliseconds": 1656, "acceleration": 2.0628019323671496 }
+{ "name": "Communication", "size": 3750, "threadsNum": 6, "milliseconds": 1587, "acceleration": 2.1524889729048517 }
+{ "name": "Communication", "size": 3750, "threadsNum": 7, "milliseconds": 1558, "acceleration": 2.1925545571245184 }
+{ "name": "Communication", "size": 3750, "threadsNum": 8, "milliseconds": 1495, "acceleration": 2.28494983277592 }
+{ "name": "Communication", "size": 3750, "threadsNum": 9, "milliseconds": 1410, "acceleration": 2.422695035460993 }
+{ "name": "Communication", "size": 3750, "threadsNum": 10, "milliseconds": 1394, "acceleration": 2.4505021520803445 }
+{ "name": "Communication", "size": 3750, "threadsNum": 11, "milliseconds": 1395, "acceleration": 2.4487455197132615 }
+{ "name": "Communication", "size": 3750, "threadsNum": 12, "milliseconds": 1369, "acceleration": 2.4952520087655223 }
+{ "name": "Sequential", "size": 3875, "milliseconds": 3695 }
+{ "name": "Communication", "size": 3875, "threadsNum": 2, "milliseconds": 4665, "acceleration": 0.7920685959271169 }
+{ "name": "Communication", "size": 3875, "threadsNum": 3, "milliseconds": 2654, "acceleration": 1.3922381311228336 }
+{ "name": "Communication", "size": 3875, "threadsNum": 4, "milliseconds": 2274, "acceleration": 1.6248900615655233 }
+{ "name": "Communication", "size": 3875, "threadsNum": 5, "milliseconds": 1933, "acceleration": 1.9115364718054837 }
+{ "name": "Communication", "size": 3875, "threadsNum": 6, "milliseconds": 1797, "acceleration": 2.0562047857540344 }
+{ "name": "Communication", "size": 3875, "threadsNum": 7, "milliseconds": 1824, "acceleration": 2.025767543859649 }
+{ "name": "Communication", "size": 3875, "threadsNum": 8, "milliseconds": 1877, "acceleration": 1.968566862013852 }
+{ "name": "Communication", "size": 3875, "threadsNum": 9, "milliseconds": 1778, "acceleration": 2.078177727784027 }
+{ "name": "Communication", "size": 3875, "threadsNum": 10, "milliseconds": 1721, "acceleration": 2.147007553747821 }
+{ "name": "Communication", "size": 3875, "threadsNum": 11, "milliseconds": 1463, "acceleration": 2.525632262474368 }
+{ "name": "Communication", "size": 3875, "threadsNum": 12, "milliseconds": 1484, "acceleration": 2.4898921832884096 }
+{ "name": "Sequential", "size": 3875, "milliseconds": 3680 }
+{ "name": "Communication", "size": 3875, "threadsNum": 2, "milliseconds": 5002, "acceleration": 0.7357057177129148 }
+{ "name": "Communication", "size": 3875, "threadsNum": 3, "milliseconds": 2543, "acceleration": 1.4471097129374755 }
+{ "name": "Communication", "size": 3875, "threadsNum": 4, "milliseconds": 2173, "acceleration": 1.6935112747353889 }
+{ "name": "Communication", "size": 3875, "threadsNum": 5, "milliseconds": 1918, "acceleration": 1.91866527632951 }
+{ "name": "Communication", "size": 3875, "threadsNum": 6, "milliseconds": 1761, "acceleration": 2.0897217490062463 }
+{ "name": "Communication", "size": 3875, "threadsNum": 7, "milliseconds": 1682, "acceleration": 2.187871581450654 }
+{ "name": "Communication", "size": 3875, "threadsNum": 8, "milliseconds": 1605, "acceleration": 2.292834890965732 }
+{ "name": "Communication", "size": 3875, "threadsNum": 9, "milliseconds": 1526, "acceleration": 2.4115334207077326 }
+{ "name": "Communication", "size": 3875, "threadsNum": 10, "milliseconds": 1523, "acceleration": 2.416283650689429 }
+{ "name": "Communication", "size": 3875, "threadsNum": 11, "milliseconds": 1570, "acceleration": 2.343949044585987 }
+{ "name": "Communication", "size": 3875, "threadsNum": 12, "milliseconds": 1593, "acceleration": 2.310106716886378 }
+{ "name": "Sequential", "size": 3875, "milliseconds": 3688 }
+{ "name": "Communication", "size": 3875, "threadsNum": 2, "milliseconds": 5103, "acceleration": 0.7227121301195375 }
+{ "name": "Communication", "size": 3875, "threadsNum": 3, "milliseconds": 2729, "acceleration": 1.351410773176988 }
+{ "name": "Communication", "size": 3875, "threadsNum": 4, "milliseconds": 2431, "acceleration": 1.5170711641299877 }
+{ "name": "Communication", "size": 3875, "threadsNum": 5, "milliseconds": 1882, "acceleration": 1.9596174282678003 }
+{ "name": "Communication", "size": 3875, "threadsNum": 6, "milliseconds": 1576, "acceleration": 2.3401015228426396 }
+{ "name": "Communication", "size": 3875, "threadsNum": 7, "milliseconds": 1646, "acceleration": 2.240583232077764 }
+{ "name": "Communication", "size": 3875, "threadsNum": 8, "milliseconds": 1715, "acceleration": 2.1504373177842564 }
+{ "name": "Communication", "size": 3875, "threadsNum": 9, "milliseconds": 1601, "acceleration": 2.3035602748282322 }
+{ "name": "Communication", "size": 3875, "threadsNum": 10, "milliseconds": 1490, "acceleration": 2.475167785234899 }
+{ "name": "Communication", "size": 3875, "threadsNum": 11, "milliseconds": 1494, "acceleration": 2.468540829986613 }
+{ "name": "Communication", "size": 3875, "threadsNum": 12, "milliseconds": 1444, "acceleration": 2.554016620498615 }
+{ "name": "Sequential", "size": 4000, "milliseconds": 3994 }
+{ "name": "Communication", "size": 4000, "threadsNum": 2, "milliseconds": 4528, "acceleration": 0.8820671378091873 }
+{ "name": "Communication", "size": 4000, "threadsNum": 3, "milliseconds": 2714, "acceleration": 1.4716285924834194 }
+{ "name": "Communication", "size": 4000, "threadsNum": 4, "milliseconds": 2490, "acceleration": 1.604016064257028 }
+{ "name": "Communication", "size": 4000, "threadsNum": 5, "milliseconds": 1937, "acceleration": 2.0619514713474447 }
+{ "name": "Communication", "size": 4000, "threadsNum": 6, "milliseconds": 1969, "acceleration": 2.0284408329101065 }
+{ "name": "Communication", "size": 4000, "threadsNum": 7, "milliseconds": 1813, "acceleration": 2.2029784886927746 }
+{ "name": "Communication", "size": 4000, "threadsNum": 8, "milliseconds": 1706, "acceleration": 2.3411488862837047 }
+{ "name": "Communication", "size": 4000, "threadsNum": 9, "milliseconds": 1644, "acceleration": 2.429440389294404 }
+{ "name": "Communication", "size": 4000, "threadsNum": 10, "milliseconds": 1606, "acceleration": 2.4869240348692405 }
+{ "name": "Communication", "size": 4000, "threadsNum": 11, "milliseconds": 1571, "acceleration": 2.542329726288988 }
+{ "name": "Communication", "size": 4000, "threadsNum": 12, "milliseconds": 1557, "acceleration": 2.565189466923571 }
+{ "name": "Sequential", "size": 4000, "milliseconds": 3941 }
+{ "name": "Communication", "size": 4000, "threadsNum": 2, "milliseconds": 4718, "acceleration": 0.8353115727002968 }
+{ "name": "Communication", "size": 4000, "threadsNum": 3, "milliseconds": 2795, "acceleration": 1.4100178890876565 }
+{ "name": "Communication", "size": 4000, "threadsNum": 4, "milliseconds": 2500, "acceleration": 1.5764 }
+{ "name": "Communication", "size": 4000, "threadsNum": 5, "milliseconds": 2217, "acceleration": 1.7776274244474515 }
+{ "name": "Communication", "size": 4000, "threadsNum": 6, "milliseconds": 1985, "acceleration": 1.9853904282115868 }
+{ "name": "Communication", "size": 4000, "threadsNum": 7, "milliseconds": 1798, "acceleration": 2.1918798665183536 }
+{ "name": "Communication", "size": 4000, "threadsNum": 8, "milliseconds": 1700, "acceleration": 2.318235294117647 }
+{ "name": "Communication", "size": 4000, "threadsNum": 9, "milliseconds": 1621, "acceleration": 2.431215299198026 }
+{ "name": "Communication", "size": 4000, "threadsNum": 10, "milliseconds": 1651, "acceleration": 2.387038158691702 }
+{ "name": "Communication", "size": 4000, "threadsNum": 11, "milliseconds": 1863, "acceleration": 2.1154052603327966 }
+{ "name": "Communication", "size": 4000, "threadsNum": 12, "milliseconds": 1612, "acceleration": 2.444789081885856 }
+{ "name": "Sequential", "size": 4000, "milliseconds": 4474 }
+{ "name": "Communication", "size": 4000, "threadsNum": 2, "milliseconds": 5062, "acceleration": 0.8838403792967207 }
+{ "name": "Communication", "size": 4000, "threadsNum": 3, "milliseconds": 2832, "acceleration": 1.5798022598870056 }
+{ "name": "Communication", "size": 4000, "threadsNum": 4, "milliseconds": 2828, "acceleration": 1.582036775106082 }
+{ "name": "Communication", "size": 4000, "threadsNum": 5, "milliseconds": 2203, "acceleration": 2.0308669995460735 }
+{ "name": "Communication", "size": 4000, "threadsNum": 6, "milliseconds": 1952, "acceleration": 2.2920081967213113 }
+{ "name": "Communication", "size": 4000, "threadsNum": 7, "milliseconds": 1809, "acceleration": 2.473189607517966 }
+{ "name": "Communication", "size": 4000, "threadsNum": 8, "milliseconds": 1701, "acceleration": 2.630217519106408 }
+{ "name": "Communication", "size": 4000, "threadsNum": 9, "milliseconds": 1621, "acceleration": 2.7600246761258482 }
+{ "name": "Communication", "size": 4000, "threadsNum": 10, "milliseconds": 1601, "acceleration": 2.7945034353529046 }
+{ "name": "Communication", "size": 4000, "threadsNum": 11, "milliseconds": 1572, "acceleration": 2.846055979643766 }
+{ "name": "Communication", "size": 4000, "threadsNum": 12, "milliseconds": 1569, "acceleration": 2.851497769279796 }
+{ "name": "Sequential", "size": 4000, "milliseconds": 3919 }
+{ "name": "Communication", "size": 4000, "threadsNum": 2, "milliseconds": 4456, "acceleration": 0.8794883303411131 }
+{ "name": "Communication", "size": 4000, "threadsNum": 3, "milliseconds": 2833, "acceleration": 1.3833392163783975 }
+{ "name": "Communication", "size": 4000, "threadsNum": 4, "milliseconds": 2492, "acceleration": 1.5726324237560192 }
+{ "name": "Communication", "size": 4000, "threadsNum": 5, "milliseconds": 2086, "acceleration": 1.8787152444870565 }
+{ "name": "Communication", "size": 4000, "threadsNum": 6, "milliseconds": 1948, "acceleration": 2.011806981519507 }
+{ "name": "Communication", "size": 4000, "threadsNum": 7, "milliseconds": 1802, "acceleration": 2.1748057713651496 }
+{ "name": "Communication", "size": 4000, "threadsNum": 8, "milliseconds": 1736, "acceleration": 2.2574884792626726 }
+{ "name": "Communication", "size": 4000, "threadsNum": 9, "milliseconds": 1646, "acceleration": 2.3809234507897936 }
+{ "name": "Communication", "size": 4000, "threadsNum": 10, "milliseconds": 1592, "acceleration": 2.461683417085427 }
+{ "name": "Communication", "size": 4000, "threadsNum": 11, "milliseconds": 1586, "acceleration": 2.470996216897856 }
+{ "name": "Communication", "size": 4000, "threadsNum": 12, "milliseconds": 1573, "acceleration": 2.491417673235855 }
+{ "name": "Sequential", "size": 4000, "milliseconds": 3987 }
+{ "name": "Communication", "size": 4000, "threadsNum": 2, "milliseconds": 5008, "acceleration": 0.7961261980830671 }
+{ "name": "Communication", "size": 4000, "threadsNum": 3, "milliseconds": 2529, "acceleration": 1.5765124555160142 }
+{ "name": "Communication", "size": 4000, "threadsNum": 4, "milliseconds": 2386, "acceleration": 1.670997485331098 }
+{ "name": "Communication", "size": 4000, "threadsNum": 5, "milliseconds": 1886, "acceleration": 2.1139978791092258 }
+{ "name": "Communication", "size": 4000, "threadsNum": 6, "milliseconds": 2498, "acceleration": 1.5960768614891914 }
+{ "name": "Communication", "size": 4000, "threadsNum": 7, "milliseconds": 2291, "acceleration": 1.7402880838061983 }
+{ "name": "Communication", "size": 4000, "threadsNum": 8, "milliseconds": 1739, "acceleration": 2.2926969522714202 }
+{ "name": "Communication", "size": 4000, "threadsNum": 9, "milliseconds": 1646, "acceleration": 2.422235722964763 }
+{ "name": "Communication", "size": 4000, "threadsNum": 10, "milliseconds": 1628, "acceleration": 2.449017199017199 }
+{ "name": "Communication", "size": 4000, "threadsNum": 11, "milliseconds": 1588, "acceleration": 2.510705289672544 }
+{ "name": "Communication", "size": 4000, "threadsNum": 12, "milliseconds": 1585, "acceleration": 2.5154574132492113 }
