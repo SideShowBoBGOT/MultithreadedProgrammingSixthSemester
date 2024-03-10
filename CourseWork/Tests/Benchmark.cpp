@@ -66,7 +66,7 @@ void TTestBFSFixture::WriteToReport(const std::string& str) {
 }
 
 TEST_F(TTestBFSFixture, Test) {
-	constexpr auto totalRepeats = 1u;
+	constexpr auto totalRepeats = 5u;
 	const auto sizes = std::vector<unsigned>{2500, 2625, 2750, 2875, 3000, 3125, 3250, 3500, 3635, 3750, 3875, 4000};
 	// const auto sizes = std::vector<unsigned>{1000, 1200, 1300, 1400};
 	const auto threadsNums = std::vector<unsigned>{2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12};
