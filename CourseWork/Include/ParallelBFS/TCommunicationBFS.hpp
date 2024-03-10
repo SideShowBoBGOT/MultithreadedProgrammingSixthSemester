@@ -4,12 +4,14 @@
 #include <ParallelBFS/THelpers.hpp>
 #include <ParallelBFS/TPipes.hpp>
 #include <ParallelBFS/TDeque.hpp>
-#include <ParallelBFS/TParallelBFSMixin.hpp>
+#include <ParallelBFS/TBaseBFSMixin.hpp>
+
+#include <thread>
 
 namespace bfs {
 
 template<CBFSUsable T>
-class TCommunicationBFS : public TParallelBFSMixin<T, TCommunicationBFS<T>> {
+class TCommunicationBFS : public TBaseBFSMixin<T, TCommunicationBFS<T>> {
 	protected:
 	friend class TBaseBFSMixin<T, TCommunicationBFS<T>>;
 
@@ -17,7 +19,16 @@ class TCommunicationBFS : public TParallelBFSMixin<T, TCommunicationBFS<T>> {
 	TCommunicationBFS(const AGraph<T>& graph, const T& start, const T& end, const unsigned threadsNum);
 
 	protected:
-	std::optional<typename TCommunicationBFS::AVisitorMap> PredecessorNodesImpl() const;
+	using AVisitorMap = std::unordered_map<T, std::pair<std::atomic_flag, T>>;
+
+	protected:
+	AVisitorMap CreateVisitorMap() const;
+
+	protected:
+	const unsigned m_uThreadsNum = 0;
+
+	protected:
+	std::optional<AVisitorMap> PredecessorNodesImpl() const;
 
 	protected:
 	// Messages
@@ -56,25 +67,25 @@ class TCommunicationBFS : public TParallelBFSMixin<T, TCommunicationBFS<T>> {
 	ACommunicationResult Communicate(
 		TDeque<T>& deque,
 		size_t& totalEnqueuedNum,
-		typename TCommunicationBFS::AVisitorMap& visitorMap,
+		AVisitorMap& visitorMap,
 		std::vector<TPipeWriter<AParentMessage>>& senders,
 		std::vector<TPipeReader<AChildrenMessage>>& listeners
 	) const;
 
 	AChildrenMessage DoPartialWork(
 		const SQueueView& queueView,
-		typename TCommunicationBFS::AVisitorMap& visitorMap) const;
+		AVisitorMap& visitorMap) const;
 
 	void ChildThreadWork(
 		const TPipeWriter<AChildrenMessage>& childSender,
 		const TPipeReader<AParentMessage>& parentListener,
-		typename TCommunicationBFS::AVisitorMap& visitorMap
+		AVisitorMap& visitorMap
 	) const;
 
 	AChildrenMessage IterateWork(
 		const TDeque<T>& deque,
 		const std::vector<TPipeWriter<AParentMessage>>& senders,
-		typename TCommunicationBFS::AVisitorMap& visitorMap
+		AVisitorMap& visitorMap
 	) const;
 
 	auto ProcessIterationResult(
@@ -94,7 +105,21 @@ TCommunicationBFS<T>::TCommunicationBFS(
 	const T& start,
 	const T& end,
 	const unsigned threadsNum
-) : TParallelBFSMixin<T, TCommunicationBFS>(graph, start, end, threadsNum) {}
+) :	TBaseBFSMixin<T, TCommunicationBFS>(graph, start, end),
+	m_uThreadsNum{threadsNum} {}
+
+template<CBFSUsable T>
+std::unordered_map<T, std::pair<std::atomic_flag, T>>
+	TCommunicationBFS<T>::CreateVisitorMap() const {
+	auto visitorMap = std::unordered_map<T, std::pair<std::atomic_flag, T>>();
+	visitorMap.reserve(this->m_refGraph.size());
+	for(const auto& [key, _] : this->m_refGraph) {
+		auto [it, isEnqueued] = visitorMap.emplace(std::piecewise_construct,
+			std::forward_as_tuple(key), std::forward_as_tuple());
+		it->second.first.clear();
+	}
+	return visitorMap;
+}
 
 template<CBFSUsable T>
 std::optional<typename TCommunicationBFS<T>::AVisitorMap>
@@ -127,7 +152,7 @@ template<CBFSUsable T>
 auto TCommunicationBFS<T>::Communicate(
 		TDeque<T>& deque,
 		size_t& totalEnqueuedNum,
-		typename TCommunicationBFS::AVisitorMap& visitorMap,
+		AVisitorMap& visitorMap,
 		std::vector<TPipeWriter<AParentMessage>>& senders,
 		std::vector<TPipeReader<AChildrenMessage>>& listeners
 	) const -> ACommunicationResult {
@@ -200,7 +225,7 @@ auto TCommunicationBFS<T>::ProcessIterationResult(
 template<CBFSUsable T>
 auto TCommunicationBFS<T>::DoPartialWork(
 	const SQueueView& queueView,
-	typename TCommunicationBFS::AVisitorMap& visitorMap
+	AVisitorMap& visitorMap
 ) const -> AChildrenMessage {
 
 	auto frontier = SFrontier();
@@ -229,7 +254,7 @@ template<CBFSUsable T>
 void TCommunicationBFS<T>::ChildThreadWork(
 	const TPipeWriter<AChildrenMessage>& childSender,
 	const TPipeReader<AParentMessage>& parentListener,
-	typename TCommunicationBFS::AVisitorMap& visitorMap
+	AVisitorMap& visitorMap
 ) const {
 	while(true) {
 		const auto parentMessage = parentListener.Read();
@@ -254,7 +279,7 @@ template<CBFSUsable T>
 auto TCommunicationBFS<T>::IterateWork(
 	const TDeque<T>& deque,
 	const std::vector<TPipeWriter<AParentMessage>>& senders,
-	typename TCommunicationBFS::AVisitorMap& visitorMap
+	AVisitorMap& visitorMap
 ) const -> AChildrenMessage {
 	const auto dequeSize = deque.Size();
 	const auto step = dequeSize / this->m_uThreadsNum;
