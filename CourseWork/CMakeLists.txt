@@ -15,7 +15,10 @@ add_library(${PROJECT_NAME} STATIC
     Include/${PROJECT_NAME}/TPipes.hpp
     Include/${PROJECT_NAME}/TSequentialBFS.hpp
     Include/${PROJECT_NAME}/TSharedBFS.hpp
+    Include/${PROJECT_NAME}/TSpecialQueue.hpp
+    Include/${PROJECT_NAME}/TCursor.hpp
     Source/THelpers.cpp
+    Source/TCursor.cpp
 )
 
 target_include_directories(${PROJECT_NAME} PUBLIC Include)

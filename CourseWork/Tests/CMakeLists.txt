@@ -15,3 +15,7 @@ target_link_libraries(Pipes PRIVATE GTest::gtest_main)
 add_executable(Deque Deque.cpp)
 target_link_libraries(Deque PRIVATE ${PROJECT_NAME})
 target_link_libraries(Deque PRIVATE GTest::gtest_main)
+
+add_executable(Cursor Cursor.cpp)
+target_link_libraries(Cursor PRIVATE ${PROJECT_NAME})
+target_link_libraries(Cursor PRIVATE GTest::gtest_main)
