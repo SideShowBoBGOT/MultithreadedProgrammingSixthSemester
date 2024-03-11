@@ -22,44 +22,44 @@ import java.util.List;
 public class MatrixClient {
 
     public static void main(String[] args) throws Exception {
-        var stats = generateStats();
-        writeRecordsToCSV(stats, "records.csv");
-    }
+        var client = HttpClient.newHttpClient();
 
-    private static void writeRecordsToCSV(List<MulStat> records, String fileName) {
-        // Header for the CSV file
-        String header = "MillisServer,MillisClient,Size,ThreadsNum,AlgType\n";
+        var threadsNums = new int[] {2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12};
+//        var matrixSizes = new int[] {100, 300, 500, 700, 1000, 1200, 1400, 1500, 1700, 1800, 2000};
+        var matrixSizes = new int[] {200, 400, 600};
 
-        try (FileWriter fileWriter = new FileWriter(fileName)) {
-            // Write the header
-            fileWriter.append(header);
+        // String header = "MillisServer,MillisClient,Size,ThreadsNum,AlgType\n";
 
-            // Write the data
-            for (MulStat record : records) {
-                fileWriter.append(String.valueOf(record.millisServer()))
-                        .append(",")
-                        .append(String.valueOf(record.millisClient()))
-                        .append(",")
-                        .append(String.valueOf(record.size()))
-                        .append(",")
-                        .append(String.valueOf(record.threadsNum()))
-                        .append(",")
-                        .append(record.algType().toString())
-                        .append("\n");
+        try (FileWriter fileWriter = new FileWriter("records.csv")) {
+            // fileWriter.append(header);
+
+            for(var size : matrixSizes) {
+                var matCreateStat = createMatrices(size);
+                for(var threadsNum : threadsNums) {
+                    for(var algType : AlgType.values()) {
+                        var clientReqMillis = sendClientMultiply(client, algType,
+                                matCreateStat.first, matCreateStat.second, threadsNum);
+                        var serverReqMillis = sendServerMultiply(client, algType, threadsNum, size);
+                        fileWriter.append(String.valueOf(serverReqMillis))
+                                .append(",")
+                                .append(String.valueOf(clientReqMillis + matCreateStat.millis()))
+                                .append(",")
+                                .append(String.valueOf(size))
+                                .append(",")
+                                .append(String.valueOf(threadsNum))
+                                .append(",")
+                                .append(algType.toString())
+                                .append("\n");
+                    }
+                }
             }
 
-            System.out.println("CSV file was created successfully: " + fileName);
-
         } catch (IOException e) {
-            System.out.println("An error occurred while writing the CSV file.");
             e.printStackTrace();
         }
     }
 
-
-    private static record MulStat(long millisServer, long millisClient, int size, int threadsNum, AlgType algType) {}
-
-    private static record MatrixCreationStat(Matrix2D first, Matrix2D second, long millis) {}
+    private record MatrixCreationStat(Matrix2D first, Matrix2D second, long millis) {}
 
     static MatrixCreationStat createMatrices(int size) {
         var minVal = 1;
@@ -113,31 +113,5 @@ public class MatrixClient {
         client.send(request, BodyHandlers.ofString());
 
         return System.currentTimeMillis() - cur;
-    }
-
-    private static ArrayList<MulStat> generateStats() throws Exception {
-
-        var client = HttpClient.newHttpClient();
-
-        var threadsNums = new int[] {2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12};
-        var matrixSizes = new int[] {100, 300, 500, 700, 1000, 1200, 1400, 1500, 1700, 1800, 2000};
-
-        var stats = new ArrayList<MulStat>();
-
-        for(var threadsNum : threadsNums) {
-            for(var size : matrixSizes) {
-                var matCreateStat = createMatrices(size);
-                for(var algType : AlgType.values()) {
-                    var clientReqMillis = sendClientMultiply(client, algType,
-                            matCreateStat.first, matCreateStat.second, threadsNum);
-                    var serverReqMillis = sendServerMultiply(client, algType, threadsNum, size);
-                    var stat = new MulStat(serverReqMillis,
-                            clientReqMillis + matCreateStat.millis(), size, threadsNum, algType);
-                    stats.add(stat);
-                }
-            }
-        }
-
-        return stats;
     }
 }

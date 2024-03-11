@@ -29,7 +29,7 @@ public class MatrixController {
         var first = matrixFactory.getRandom(request.size(), request.size(), minVal, maxVal);
         var second = matrixFactory.getRandom(request.size(), request.size(), minVal, maxVal);
 
-        return ResponseEntity.ok(first.getMul(second));
+        return ResponseEntity.ok(MultiplyService.solve(request.algType(), request.threadsNum(), first, second));
     }
 
     @PostMapping("/multiply_client")
