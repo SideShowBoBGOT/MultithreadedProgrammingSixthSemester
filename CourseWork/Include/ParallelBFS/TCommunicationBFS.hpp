@@ -96,7 +96,9 @@ class TCommunicationBFS : public TBaseBFSMixin<T, TCommunicationBFS<T>> {
 	) const -> AIterationResult;
 
 	template<typename MessageType>
-	MessageType SendMessageToAll(const std::vector<TPipeWriter<AParentMessage>>& senders) const;
+	MessageType SendMessageToAll(
+		const std::vector<TPipeWriter<AParentMessage>>& senders
+	) const;
 };
 
 template<CBFSUsable T>
