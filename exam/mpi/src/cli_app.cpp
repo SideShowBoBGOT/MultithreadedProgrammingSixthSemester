@@ -1,7 +1,12 @@
 #include <exam_mpi/cli_app.hpp>
+#include <exam_mpi/constants.hpp>
+
 #include <boost/mpi.hpp>
+#include <boost/serialization/vector.hpp>
+
 #include <magic_enum/magic_enum.hpp>
 #include <fmt/core.h>
+
 
 namespace exam_mpi {
 	// static const auto MAPPED_ALG_TYPES = [] {
@@ -48,11 +53,29 @@ namespace exam_mpi {
 	// 	return std::nullopt;
 	// }
 
+	struct SomeStruct {
+		private:
+		friend class boost::serialization::access;
+		template<class Archive>
+		void serialize(Archive & ar, const unsigned int version) {}
+	};
+
 	void main_logic() {
 		const auto env = boost::mpi::environment();
 		const auto world = boost::mpi::communicator();
 		const auto rank = world.rank();
 		fmt::println("Process: {}", rank);
+
+
+		if(rank == 0) {
+			std::vector<SomeStruct>	vv;
+			for(int i = 1; i < world.size(); ++i) {
+				world.send(i, FROM_MAIN_THREAD_TAG, vv);
+			}
+		} else {
+			std::vector<SomeStruct>	vv;
+			world.recv(0, FROM_MAIN_THREAD_TAG, vv);
+		}
 	}
 
 	CliApp::CliApp() : CLI::App("exam_mpi") {

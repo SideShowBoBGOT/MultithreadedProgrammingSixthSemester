@@ -13,6 +13,7 @@ link_directories(/usr/lib/x86_64-linux-gnu/openmpi/lib)
 set(HEADERS
         include/exam_mpi/cli_app.hpp
         include/exam_mpi/helpers.hpp
+        include/exam_mpi/constants.hpp
 )
 
 set(SOURCES
