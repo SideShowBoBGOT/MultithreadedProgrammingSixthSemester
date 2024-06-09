@@ -26,33 +26,24 @@ public class MatrixClient {
 
         var threadsNums = new int[] {2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12};
 //        var matrixSizes = new int[] {100, 300, 500, 700, 1000, 1200, 1400, 1500, 1700, 1800, 2000};
-        var matrixSizes = new int[] {200, 400, 600};
+        var matrixSizes = new int[] {100};
 
         // String header = "MillisServer,MillisClient,Size,ThreadsNum,AlgType\n";
 
         try (FileWriter fileWriter = new FileWriter("records.csv")) {
             // fileWriter.append(header);
 
-            for(var size : matrixSizes) {
-                var matCreateStat = createMatrices(size);
-                for(var threadsNum : threadsNums) {
-                    for(var algType : AlgType.values()) {
-                        var clientReqMillis = sendClientMultiply(client, algType,
-                                matCreateStat.first, matCreateStat.second, threadsNum);
-                        var serverReqMillis = sendServerMultiply(client, algType, threadsNum, size);
-                        fileWriter.append(String.valueOf(serverReqMillis))
-                                .append(",")
-                                .append(String.valueOf(clientReqMillis + matCreateStat.millis()))
-                                .append(",")
-                                .append(String.valueOf(size))
-                                .append(",")
-                                .append(String.valueOf(threadsNum))
-                                .append(",")
-                                .append(algType.toString())
-                                .append("\n");
+
+            for(int i = 0; i < 10000; ++i) {
+                for(var size : matrixSizes) {
+                    for(var threadsNum : threadsNums) {
+                        for(var algType : AlgType.values()) {
+                            sendServerMultiply(client, algType, threadsNum, size);
+                        }
                     }
                 }
             }
+
 
         } catch (IOException e) {
             e.printStackTrace();

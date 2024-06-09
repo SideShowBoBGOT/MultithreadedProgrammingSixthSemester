@@ -1,0 +1,1 @@
+. "/home/sideshowbobgot/university/MultithreadedProgrammingSixthSemester/exam/mpi/conan_external/generators/deactivate_conanrunenv-release-x86_64.sh"

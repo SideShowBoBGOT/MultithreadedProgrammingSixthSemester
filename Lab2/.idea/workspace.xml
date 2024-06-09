@@ -10,19 +10,39 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="fe65f168-1ae9-41d7-aacc-4bb917f65ae2" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/Lab2/src/test/java/test/MatrixMulTester.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../mkr1/.gitignore" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../mkr1/pom.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../mkr1/src/main/java/org/LabMath/Enums/Coords.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../mkr1/src/main/java/org/LabMath/Interfaces/General/Addable.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../mkr1/src/main/java/org/LabMath/Interfaces/General/Divisible.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../mkr1/src/main/java/org/LabMath/Interfaces/General/DoubleAddable.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../mkr1/src/main/java/org/LabMath/Interfaces/General/DoubleDivisible.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../mkr1/src/main/java/org/LabMath/Interfaces/General/DoubleMultipliable.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../mkr1/src/main/java/org/LabMath/Interfaces/General/DoubleSubtractable.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../mkr1/src/main/java/org/LabMath/Interfaces/General/GetMultipliable.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../mkr1/src/main/java/org/LabMath/Interfaces/General/Multipliable.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../mkr1/src/main/java/org/LabMath/Interfaces/General/Settable.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../mkr1/src/main/java/org/LabMath/Interfaces/General/Subtractable.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../mkr1/src/main/java/org/LabMath/Interfaces/MathMatrix.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../mkr1/src/main/java/org/LabMath/Interfaces/MathVector.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../mkr1/src/main/java/org/LabMath/Matrixes/GeneralMatrix.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../mkr1/src/main/java/org/LabMath/Matrixes/Matrix2D.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../mkr1/src/main/java/org/LabMath/Matrixes/Matrix2DFactory.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../mkr1/src/main/java/org/LabMath/Vectors/GeneralVector.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../mkr1/src/main/java/org/LabMath/Vectors/Vector2D.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../mkr1/src/main/resources/META-INF/maven/archetype.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../mkr1/src/main/resources/archetype-resources/pom.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../mkr1/src/main/resources/archetype-resources/src/main/java/App.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../mkr1/src/main/resources/archetype-resources/src/test/java/AppTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CourseWork/DocumentationUA/Паралельна реалізація алгоритму BFS.pdf" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Lab1/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../Lab1/.idea/vcs.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/IP_11_Panchenko_2.odt" beforeDir="false" afterPath="$PROJECT_DIR$/IP_11_Panchenko_2.odt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/IP_11_Panchenko_2.pdf" beforeDir="false" afterPath="$PROJECT_DIR$/IP_11_Panchenko_2.pdf" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Lab2/src/main/java/org/LabMath/Interfaces/MathMatrix.java" beforeDir="false" afterPath="$PROJECT_DIR$/Lab2/src/main/java/org/LabMath/Interfaces/MathMatrix.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Lab2/src/main/java/org/LabMath/Matrixes/GeneralMatrix.java" beforeDir="false" afterPath="$PROJECT_DIR$/Lab2/src/main/java/org/LabMath/Matrixes/GeneralMatrix.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Lab2/src/main/java/org/LabMath/Matrixes/Matrix2D.java" beforeDir="false" afterPath="$PROJECT_DIR$/Lab2/src/main/java/org/LabMath/Matrixes/Matrix2D.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Lab2/src/main/java/org/MultiplicationAlgorithms/BlockStriped/BlockStripedAlgorithm.java" beforeDir="false" afterPath="$PROJECT_DIR$/Lab2/src/main/java/org/MultiplicationAlgorithms/BlockStriped/BlockStripedAlgorithm.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Lab2/src/main/java/org/MultiplicationAlgorithms/BlockStriped/BlockStripedAlgorithmTask.java" beforeDir="false" afterPath="$PROJECT_DIR$/Lab2/src/main/java/org/MultiplicationAlgorithms/BlockStriped/BlockStripedAlgorithmTask.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Lab2/src/main/java/org/MultiplicationAlgorithms/Fox/FoxAlgorithm.java" beforeDir="false" afterPath="$PROJECT_DIR$/Lab2/src/main/java/org/MultiplicationAlgorithms/Fox/FoxAlgorithm.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Lab2/src/main/resources/META-INF/MANIFEST.MF" beforeDir="false" afterPath="$PROJECT_DIR$/Lab2/src/main/resources/META-INF/MANIFEST.MF" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Lab2/src/test/java/test/MatrixTester.java" beforeDir="false" afterPath="$PROJECT_DIR$/Lab2/src/test/java/test/MatrixAlgoTester.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../file_type_to_txt.py" beforeDir="false" afterPath="$PROJECT_DIR$/../file_type_to_txt.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Lab3/.idea/Lab3.iml" beforeDir="false" afterPath="$PROJECT_DIR$/../Lab3/.idea/Lab3.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Lab8/Server/src/main/java/org/Client/MatrixClient.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Lab8/Server/src/main/java/org/Client/MatrixClient.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Lab8/Server/src/main/java/org/LabMatrixService/Controllers/MatrixController.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Lab8/Server/src/main/java/org/LabMatrixService/Controllers/MatrixController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Lab8/records.csv" beforeDir="false" afterPath="$PROJECT_DIR$/../Lab8/records.csv" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -40,13 +60,9 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
   </component>
-  <component name="MavenImportPreferences">
-    <option name="generalSettings">
-      <MavenGeneralSettings>
-        <option name="useMavenConfig" value="true" />
-      </MavenGeneralSettings>
-    </option>
-  </component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 7
+}</component>
   <component name="ProjectId" id="2QjGeIzJoZqbKJjz8C5hU1QkVLc" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
@@ -59,7 +75,8 @@
     &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
     &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
     &quot;git-widget-placeholder&quot;: &quot;main&quot;,
-    &quot;last_opened_file_path&quot;: &quot;/home/choleraplague/university/MultithreadedProgramming/labs/Lab2&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/home/sideshowbobgot/university/MultithreadedProgrammingSixthSemester/Lab3&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
     &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
@@ -143,6 +160,13 @@
         <item itemvalue="Application.BlockStripedAlgorithm" />
       </list>
     </recent_temporary>
+  </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="jdk-21.0.2-openjdk-21.0.2-4caba194b151-78a6f59c" />
+      </set>
+    </attachedChunks>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">

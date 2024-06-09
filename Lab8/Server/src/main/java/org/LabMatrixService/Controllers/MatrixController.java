@@ -21,6 +21,8 @@ public class MatrixController {
 
     @PostMapping("/multiply_server")
     public ResponseEntity<?> multiplyServer(@RequestBody ServerMultiplyRequest request) {
+        System.out.println(request.toString());
+
         var matrixFactory = new Matrix2DFactory();
 
         var minVal = 0;
