@@ -1,1 +1,0 @@
-. "/home/sideshowbobgot/university/MultithreadedProgrammingSixthSemester/exam/mpi/conan_external/generators/conanrunenv-release-x86_64.sh"

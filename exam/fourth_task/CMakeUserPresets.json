@@ -1,0 +1,9 @@
+{
+    "version": 4,
+    "vendor": {
+        "conan": {}
+    },
+    "include": [
+        "/home/sideshowbobgot/university/MultithreadedProgrammingSixthSemester/exam/fourth_task/conan_external/generators/CMakePresets.json"
+    ]
+}
